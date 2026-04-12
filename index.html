@@ -79,7 +79,7 @@
             <em></em><em></em><em></em>
           </span>
           <span class="hero__terminal-title">
-            jae@vps:~/produccion — runtime.log
+            jae@vps:~ — terminal
           </span>
           <span class="hero__terminal-live"><span class="hero__terminal-pulse"></span>LIVE</span>
         </div>
@@ -117,40 +117,61 @@
         <div class="card__corner card__corner--br"></div>
 
         <div class="dossier__header mono">
+          <span class="dossier__cam" aria-hidden="true">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="12" cy="12" r="9"/>
+              <circle cx="12" cy="12" r="3.5"/>
+              <line x1="12" y1="2" x2="12" y2="5.5"/>
+              <line x1="12" y1="18.5" x2="12" y2="22"/>
+              <line x1="2" y1="12" x2="5.5" y2="12"/>
+              <line x1="18.5" y1="12" x2="22" y2="12"/>
+            </svg>
+          </span>
           <span>// subject</span>
           <span class="dossier__id">JAE–001</span>
         </div>
 
         <div class="dossier__frame">
-          <!-- <img class="dossier__img" src="assets/portrait.jpg" alt="Jorge Armando Escobar" /> -->
-          <svg class="dossier__placeholder" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-            <rect width="200" height="240" fill="#110f0b"/>
-            <circle cx="100" cy="94" r="40" fill="#1c1a14"/>
-            <path d="M30 240 Q 32 162 100 156 Q 168 162 170 240 Z" fill="#1c1a14"/>
-            <g stroke="#ffb627" stroke-width="1" opacity=".75" fill="none">
-              <path d="M12 22 L12 10 L24 10"/>
-              <path d="M188 22 L188 10 L176 10"/>
-              <path d="M12 218 L12 230 L24 230"/>
-              <path d="M188 218 L188 230 L176 230"/>
-            </g>
-            <g stroke="#ffb627" stroke-width=".5" opacity=".22">
-              <line x1="100" y1="20" x2="100" y2="220"/>
-              <line x1="22" y1="120" x2="178" y2="120"/>
-            </g>
-            <circle cx="100" cy="120" r="3" fill="none" stroke="#ffb627" stroke-width=".8" opacity=".6"/>
-            <text x="100" y="220" text-anchor="middle"
-                  font-family="JetBrains Mono, monospace" font-size="8"
-                  fill="#8a8578" letter-spacing="2">NO IMAGE</text>
-            <text x="12" y="14" font-family="JetBrains Mono, monospace"
-                  font-size="6" fill="#ffb627" letter-spacing="1">CLASIFICADO</text>
+          <img class="dossier__img" src="assets/yo.jpeg" alt="Jorge Armando Escobar" />
+
+          <!-- reticula de puntería -->
+          <svg class="dossier__reticle" viewBox="0 0 200 240" preserveAspectRatio="none" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+            <!-- esquinas de targeting -->
+            <path d="M14 42 L14 14 L42 14" />
+            <path d="M158 14 L186 14 L186 42" />
+            <path d="M14 198 L14 226 L42 226" />
+            <path d="M158 226 L186 226 L186 198" />
+            <!-- cruces de medición laterales -->
+            <line x1="0" y1="120" x2="10" y2="120"/>
+            <line x1="190" y1="120" x2="200" y2="120"/>
+            <line x1="100" y1="0" x2="100" y2="10"/>
+            <line x1="100" y1="230" x2="100" y2="240"/>
+            <!-- diana central -->
+            <circle cx="100" cy="120" r="11" fill="none"/>
+            <circle cx="100" cy="120" r="2" fill="currentColor"/>
+            <line x1="93" y1="120" x2="97" y2="120"/>
+            <line x1="103" y1="120" x2="107" y2="120"/>
+            <line x1="100" y1="113" x2="100" y2="117"/>
+            <line x1="100" y1="123" x2="100" y2="127"/>
           </svg>
+
+          <!-- indicador REC -->
+          <div class="dossier__rec" aria-hidden="true">
+            <span class="dossier__rec-dot"></span>REC
+          </div>
+
           <div class="dossier__scan" aria-hidden="true"></div>
           <div class="dossier__glow" aria-hidden="true"></div>
         </div>
 
+        <!-- tira de barcode decorativa -->
+        <div class="dossier__barcode" aria-hidden="true"></div>
+
         <dl class="dossier__meta mono">
-          <div><dt>name</dt><dd>escobar, j.a.</dd></div>
-          <div><dt>github</dt><dd><a href="https://github.com/jorgearma" target="_blank" rel="noopener">github.com/jorgearma</a></dd></div>
+          <div><dt>nombre</dt><dd>escobar, j.a.</dd></div>
+          <div><dt>rol</dt><dd>pentester · sec</dd></div>
+          <div><dt>acceso</dt><dd><span class="ok">● concedido</span></dd></div>
+          <div><dt>github</dt><dd><a href="https://github.com/jorgearma" target="_blank" rel="noopener">jorgearma</a></dd></div>
         </dl>
       </figure>
 
@@ -167,10 +188,34 @@
 
   <!-- ──────────────── WHOAMI ──────────────── -->
   <section class="section whoami" id="whoami">
-    <header class="section__head">
-      <span class="section__num mono">§ 00</span>
-      <h2 class="section__title">./whoami</h2>
-      <span class="section__line" aria-hidden="true"></span>
+    <header class="whoami__head">
+      <div class="whoami__head-bar mono">
+        <span class="whoami__head-status">
+          <span class="whoami__head-dot" aria-hidden="true"></span>ACCESO CONCEDIDO
+        </span>
+        <span class="whoami__head-id">REC://JAE-001</span>
+        <span class="whoami__head-ts" id="whoami-ts" aria-hidden="true">--:--:--</span>
+      </div>
+
+      <div class="whoami__head-main">
+        <span class="section__num mono">§ 00</span>
+        <h2 class="whoami__title" data-text="./whoami">./whoami</h2>
+        <span class="section__line" aria-hidden="true"></span>
+        <div class="case__links mono">
+          <a class="case__link" href="https://linkedin.com/in/tu-usuario" target="_blank" rel="noopener noreferrer">
+            <span class="case__link-dot">●</span> linkedin
+          </a>
+          <a class="case__link case__link--demo" href="https://instagram.com/tu-usuario" target="_blank" rel="noopener noreferrer">
+            <span class="case__link-dot">▶</span> instagram
+          </a>
+        </div>
+      </div>
+
+      <div class="whoami__head-meta mono" aria-hidden="true">
+        <span>// clasificación: público</span>
+        <span>// nivel: operativo</span>
+        <span>// estado: <span class="ok">● activo</span></span>
+      </div>
     </header>
 
     <div class="whoami__grid">
@@ -191,25 +236,13 @@
       </aside>
 
       <div class="whoami__copy">
-        <p class="whoami__cmd mono" aria-label="terminal root session">
-          <span class="whoami__cmd-user">root</span><span class="whoami__cmd-at">@</span><span class="whoami__cmd-host">jae-vps</span><span class="whoami__cmd-sep">:</span><span class="whoami__cmd-path">~</span><span class="whoami__cmd-hash"># </span><span class="whoami__cmd-exec">./whoami</span><span class="whoami__cmd-flag">&nbsp;--verbose</span>
-        </p>
-        <p class="whoami__out mono">
-          <span class="whoami__out-lbl">[ok]</span> ejecutando como <span class="whoami__out-uid">uid=0(root)</span> · sesión autenticada · salida →
-        </p>
+
+
         <p class="lede">
-          Construyo sistemas <em>aburridos</em> en el mejor sentido de la
-          palabra: los que arrancan en el boot del VPS, encajan golpes de
-          tráfico real y no necesitan que el autor esté cerca para seguir
-          funcionando.
-        </p>
-        <p>
-          Mi zona cómoda es donde se cruzan el backend, la infraestructura
-          y la seguridad: webhooks firmados con HMAC, colas de mensajes,
-          máquinas de estado en Redis, integraciones con APIs de pago,
-          NLP en español, y despliegues con Docker detrás de Nginx. No
-          escribo código para impresionar en un IDE; lo escribo para que
-          aguante un lunes por la noche en producción con la cocina llena.
+          Especialista en seguridad ofensiva con base técnica en backend, Linux e infraestructura.
+          Experiencia en pentesting de aplicaciones web y sistemas, análisis de vulnerabilidades
+          y elaboración de reportes técnicos. Certificación OSCP en curso. Busco incorporarme
+          a un equipo donde la seguridad sea parte del trabajo real, no un trámite.
         </p>
         <p class="mono whoami__sign">
           — <span>./jae</span>

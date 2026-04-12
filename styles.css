@@ -129,6 +129,8 @@ em { font-style: italic; }
 .fx-grain {
   position: fixed; inset: 0;
   pointer-events: none; z-index: 9000;
+  will-change: transform;
+  transform: translateZ(0);
   opacity: .055;
   /* sin mix-blend-mode: overlay — impide promoción a capa GPU y fuerza blending
      por software en cada repaint; la diferencia visual a esta opacidad es nula */
@@ -140,6 +142,8 @@ em { font-style: italic; }
 .fx-scanlines {
   position: fixed; inset: 0;
   pointer-events: none; z-index: 9001;
+  will-change: transform;
+  transform: translateZ(0);
   opacity: .06;
   background-image: repeating-linear-gradient(
     to bottom,
@@ -153,6 +157,8 @@ em { font-style: italic; }
 .fx-vignette {
   position: fixed; inset: 0;
   pointer-events: none; z-index: 9002;
+  will-change: transform;
+  transform: translateZ(0);
   background: radial-gradient(
     ellipse at 50% 45%,
     transparent 45%,
@@ -483,6 +489,22 @@ em { font-style: italic; }
   from { opacity: 0; transform: translateY(14px); }
   to   { opacity: 1; transform: translateY(0); }
 }
+
+/* ── cat jae_perfil.txt · JSON output ──────────────────────── */
+.log.jl {
+  display: block;
+  white-space: pre;
+  animation: none;   /* sin slide-in: el efecto es el tipeo carácter a carácter */
+  opacity: 1;
+}
+.jl__key   { color: var(--amber); }
+.jl__val   { color: #7fd37f; }
+.jl__pun   { color: var(--ink-mute); }
+.jl__caret {
+  color: var(--amber);
+  animation: blink .7s step-start infinite;
+  font-size: .9em;
+}
 @keyframes logOut {
   from { opacity: .5; transform: none; max-height: 28px; }
   to   { opacity: 0; transform: translateY(-6px); max-height: 0; margin: 0; padding: 0; }
@@ -534,7 +556,7 @@ em { font-style: italic; }
   align-self: center;
   display: grid;
   gap: 18px;
-  width: clamp(196px, 20vw, 294px);
+  width: clamp(235px, 24vw, 353px);
 }
 
 /* ── dossier photo card ── */
@@ -547,8 +569,8 @@ em { font-style: italic; }
 }
 .dossier__header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 8px;
   padding: 10px 14px;
   border-bottom: 1px solid var(--rule);
   background: var(--bg-3);
@@ -557,11 +579,22 @@ em { font-style: italic; }
   letter-spacing: 0.2em;
   color: var(--ink-mute);
 }
-.dossier__id { color: var(--amber); letter-spacing: 0.18em; }
+.dossier__id {
+  color: var(--amber);
+  letter-spacing: 0.18em;
+  margin-left: auto;
+}
+.dossier__cam {
+  display: flex;
+  align-items: center;
+  color: var(--amber);
+  opacity: .75;
+  flex-shrink: 0;
+}
 
 .dossier__frame {
   position: relative;
-  aspect-ratio: 5 / 6;
+  aspect-ratio: 5 / 4.8;
   overflow: hidden;
   background: #0d0c09;
   isolation: isolate;
@@ -616,6 +649,77 @@ em { font-style: italic; }
   z-index: 3;
 }
 
+/* reticula de puntería */
+.dossier__reticle {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  color: var(--amber);
+  stroke: currentColor;
+  stroke-width: 1.2;
+  fill: none;
+  opacity: .28;
+  pointer-events: none;
+  z-index: 6;
+  transition: opacity .5s var(--ease);
+}
+.dossier:hover .dossier__reticle { opacity: .55; }
+
+/* indicador REC */
+.dossier__rec {
+  position: absolute;
+  top: 10px; right: 11px;
+  z-index: 8;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--f-mono);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,.45);
+  pointer-events: none;
+}
+.dossier__rec-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #e5484d;
+  flex-shrink: 0;
+  animation: rec-pulse 1.9s step-start infinite;
+}
+@keyframes rec-pulse {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+
+/* barcode decorativa */
+.dossier__barcode {
+  height: 18px;
+  border-top: 1px solid var(--rule);
+  background-image: repeating-linear-gradient(
+    90deg,
+    var(--amber) 0,
+    var(--amber) 1px,
+    transparent 1px,
+    transparent 3px,
+    var(--amber) 3px,
+    var(--amber) 4px,
+    transparent 4px,
+    transparent 7px,
+    var(--amber) 7px,
+    var(--amber) 9px,
+    transparent 9px,
+    transparent 11px,
+    var(--amber) 11px,
+    var(--amber) 12px,
+    transparent 12px,
+    transparent 15px,
+    var(--amber) 15px,
+    var(--amber) 16px,
+    transparent 16px,
+    transparent 20px
+  );
+  opacity: .18;
+}
+
 .dossier__scan {
   position: absolute; inset: 0;
   background-image: repeating-linear-gradient(
@@ -643,8 +747,8 @@ em { font-style: italic; }
 .dossier__meta {
   margin: 0;
   display: grid;
-  gap: 8px;
-  padding: 14px 16px;
+  gap: 7px;
+  padding: 12px 16px;
   border-top: 1px solid var(--rule);
   font-size: 10px;
   text-transform: uppercase;
@@ -746,6 +850,114 @@ em { font-style: italic; }
 }
 
 /* ═══════════ whoami ═══════════ */
+
+.whoami__head {
+  position: relative;
+  border: 1px solid var(--rule);
+  margin-bottom: clamp(40px, 5vw, 72px);
+  overflow: hidden;
+}
+.whoami__head::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 3px;
+  height: 100%;
+  background: var(--amber);
+}
+.whoami__head-bar {
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 2vw, 28px);
+  padding: 7px 16px 7px 20px;
+  background: var(--bg-2);
+  border-bottom: 1px solid var(--rule);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+}
+.whoami__head-status {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: var(--ok);
+}
+.whoami__head-dot {
+  display: inline-block;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--ok);
+  animation: whoami-pulse 2.4s ease infinite;
+}
+@keyframes whoami-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%       { opacity: 0.2; transform: scale(.7); }
+}
+.whoami__head-id { color: var(--amber); }
+.whoami__head-ts { margin-left: auto; color: var(--ink-mute); }
+
+.whoami__head-main {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: clamp(12px, 2vw, 24px);
+  padding: clamp(18px, 2.4vw, 30px) 20px;
+}
+.whoami__title {
+  font-family: var(--f-mono);
+  font-weight: 700;
+  font-size: clamp(30px, 4.4vw, 62px);
+  line-height: 1;
+  margin: 0;
+  letter-spacing: -0.025em;
+  text-transform: uppercase;
+  color: var(--ink);
+  font-feature-settings: "ss01", "zero" 1;
+  position: relative;
+}
+.whoami__title::before,
+.whoami__title::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  clip-path: inset(0 0 100% 0);
+  pointer-events: none;
+  white-space: nowrap;
+}
+.whoami__title::before {
+  color: var(--amber);
+  animation: glitch-a 7s steps(1) infinite;
+}
+.whoami__title::after {
+  color: var(--danger);
+  animation: glitch-b 7s steps(1) infinite;
+  animation-delay: 0.08s;
+}
+@keyframes glitch-a {
+  0%, 88%, 100% { clip-path: inset(0 0 100% 0); transform: none; }
+  90%  { clip-path: inset(5%  0 65% 0); transform: translateX(-4px); }
+  92%  { clip-path: inset(30% 0 40% 0); transform: translateX( 3px); }
+  94%  { clip-path: inset(0 0 100% 0);  transform: none; }
+}
+@keyframes glitch-b {
+  0%, 88%, 100% { clip-path: inset(100% 0 0 0); transform: none; }
+  91%  { clip-path: inset(55% 0 10% 0); transform: translateX( 4px); }
+  93%  { clip-path: inset(70% 0  5% 0); transform: translateX(-3px); }
+  95%  { clip-path: inset(100% 0 0 0);  transform: none; }
+}
+
+.whoami__head-meta {
+  display: flex;
+  gap: clamp(16px, 3vw, 40px);
+  flex-wrap: wrap;
+  padding: 7px 16px 7px 20px;
+  border-top: 1px solid var(--rule);
+  font-size: 10px;
+  color: var(--ink-mute);
+  letter-spacing: 0.12em;
+  background: var(--bg-2);
+}
 
 .whoami__grid {
   display: grid;
@@ -1744,12 +1956,14 @@ em { font-style: italic; }
   [data-reveal] {
     opacity: 0;
     transform: translateY(18px);
+    will-change: transform, opacity;
     transition:
       opacity .9s var(--ease),
       transform .9s var(--ease);
     transition-delay: var(--d, 0ms);
   }
   [data-reveal].is-in {
+    will-change: auto;
     opacity: 1;
     transform: none;
   }

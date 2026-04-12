@@ -283,6 +283,19 @@
      INTERACCIONES
      ══════════════════════════════════════════════════════════════════ */
 
+  /* ── 00 · whoami header timestamp ─────────────────────────────── */
+  const whoamiTs = $("#whoami-ts");
+  if (whoamiTs) {
+    const pad = (n) => String(n).padStart(2, "0");
+    const tickTs = () => {
+      const d = new Date();
+      whoamiTs.textContent =
+        `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    };
+    tickTs();
+    setInterval(tickTs, 1000);
+  }
+
   /* ── 01 · session uptime counter ───────────────────────────────── */
   const uptimeEl = $("[data-uptime]");
   if (uptimeEl) {
@@ -297,47 +310,71 @@
     setInterval(tick, 1000);
   }
 
-  /* ── 02 · hero runtime log streamer ────────────────────────────── */
+  /* ── 02 · hero terminal: cat jae_perfil.txt ─────────────────── */
   const term   = $("[data-logs]");
   const cursor = $(".hero__terminal-cursor");
   const foot   = $(".hero__terminal-foot");
 
   if (term && cursor && foot) {
-    /* logs reales sobre jorge como candidato.
-       formato: [level, tag, message] · level: ok|inf|wrn|err  */
-    const LOGS = [
-      ["ok",  "init",  "escaneando sujeto: jorge.armando.escobar"],
-      ["ok",  "os",    "linux · bash avanzado · scripting ofensivo"],
-      ["ok",  "lang",  "python 3.12 · automatización · exploits"],
-      ["ok",  "recon", "nmap · enumeración de puertos y servicios"],
-      ["ok",  "web",   "burp suite · análisis de tráfico http/s"],
-      ["ok",  "web",   "inyecciones · broken auth · owasp top 10"],
-      ["ok",  "ad",    "active directory · kerberoasting · bloodhound"],
-      ["ok",  "ad",    "pass-the-hash · privilege escalation"],
-      ["ok",  "api",   "rest api hacking · jwt abuse · fuzzing"],
-      ["ok",  "infra", "docker · redes · pivoting · tunneling"],
-      ["ok",  "ctf",   "htb · thm · ctf activo"],
-      ["inf", "tools", "metasploit · impacket · crackmapexec"],
-      ["inf", "tools", "gobuster · ffuf · hashcat · john"],
-      ["inf", "back",  "flask · fastapi · sql · redis"],
-      ["wrn", "avail", "candidato activamente buscando"],
-      ["ok",  "ready", "sistema listo · esperando oferta"],
+    const CMD        = "cat jae_perfil.txt";
+    const BOOT_DELAY = 900;  /* ms antes de empezar a escribir */
+    const CMD_SPEED  = 62;   /* ms entre carácter del comando */
+
+    /* helpers de marcado de color */
+    const k   = (s) => `<span class="jl__key">"${s}"</span>`;
+    const v   = (s) => `<span class="jl__val">"${s}"</span>`;
+    const p   = (s) => `<span class="jl__pun">${s}</span>`;
+    const arr = (items) =>
+      p("[") + items.map((i) => v(i)).join(p(", ")) + p("]");
+
+    /* cada entrada tiene el texto plano (para tipear) y el html coloreado */
+    const LINES = [
+      { plain: `{`,                                                                                                          html: p(`{`) },
+      { plain: `  "name": "Jorge Armando",`,                                                                                html: `  ${k("name")}${p(":")} ${v("Jorge Armando")}${p(",")}` },
+      { plain: `  "role": "Junior Cybersecurity Candidate",`,                                                               html: `  ${k("role")}${p(":")} ${v("Junior Cybersecurity Candidate")}${p(",")}` },
+      { plain: `  "focus": "Pentesting & Web Security",`,                                                                   html: `  ${k("focus")}${p(":")} ${v("Pentesting &amp; Web Security")}${p(",")}` },
+      { plain: `  "skills": ["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"],`,                                 html: `  ${k("skills")}${p(":")} ${arr(["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"])}${p(",")}` },
+      { plain: `  "ad": ["Active Directory", "BloodHound", "Kerberoasting", ],`,                                           html: `  ${k("ad")}${p(":")} ${arr(["Active Directory", "BloodHound", "Kerberoasting", "Pass-the-Hash", "LDAP enum"])}${p(",")}` },
+      { plain: `  "tools": ["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",],`,                              html: `  ${k("tools")}${p(":")} ${arr(["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",])}${p(",")}` },
+      { plain: `  "projects": ["Panchi-Bot", "VPS Hardening", "Atalaya"],`,                                                html: `  ${k("projects")}${p(":")} ${arr(["Panchi-Bot", "VPS Hardening", "Atalaya"])}${p(",")}` },
+      { plain: `  "goal": "Start as a junior pentester and grow fast"`,                                                    html: `  ${k("goal")}${p(":")} ${v("Start as a junior pentester and grow fast")}` },
+      { plain: `}`,                                                                                                          html: p(`}`) },
     ];
 
-    const TOTAL      = 10;
-    const STEP       = 240;  /* ms entre log y log */
-    const BOOT_DELAY = 1000; /* ms antes de empezar a escribir */
-    const TYPE_SPEED = 55;   /* ms entre carácter y carácter */
-    const CMD        = "./scan-candidate.sh --subject=jae";
-
-    const pad    = (n) => String(n).padStart(2, "0");
-    const fmtTs  = (s) => `+${pad(Math.floor(s / 60))}:${pad(s % 60)}`;
-    const fmtTag = (t) => {
-      const w = 5, sp = w - t.length;
-      const l = Math.floor(sp / 2), r = sp - l;
-      return "[" + "\u00a0".repeat(l) + t + "\u00a0".repeat(r) + "]";
+    /* tipea una línea carácter a carácter; al terminar llama a cb */
+    const typeLine = (li, plain, html, cb) => {
+      let ci = 0;
+      const next = () => {
+        if (ci < plain.length) {
+          ci++;
+          /* muestra texto plano + cursor de bloque al final */
+          li.innerHTML = escHtml(plain.slice(0, ci)) + `<span class="jl__caret">█</span>`;
+          setTimeout(next, 13 + Math.floor(Math.random() * 14));
+        } else {
+          /* línea completa: aplica colores y elimina caret */
+          li.innerHTML = html;
+          cb();
+        }
+      };
+      next();
     };
-    const pick   = LOGS.slice(0, TOTAL);
+
+    /* escapa HTML básico para el texto plano durante la escritura */
+    const escHtml = (s) =>
+      s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+    /* tipea todas las líneas en secuencia */
+    const typeAll = (lines, idx = 0) => {
+      if (idx >= lines.length) return;
+      const { plain, html } = lines[idx];
+      const li = document.createElement("li");
+      li.className = "log jl";
+      term.appendChild(li);
+      typeLine(li, plain, html, () => {
+        /* pausa corta entre líneas (imita al hacker que respira) */
+        setTimeout(() => typeAll(lines, idx + 1), 35 + Math.floor(Math.random() * 55));
+      });
+    };
 
     /* span donde se escribe el comando, insertado antes del cursor */
     const cmdSpan = document.createElement("span");
@@ -352,29 +389,14 @@
         if (ci >= CMD.length) {
           clearInterval(typer);
 
-          /* fase 2 · pausa corta, "enter", empieza el output */
+          /* fase 2 · "enter" → tipear JSON línea a línea */
           setTimeout(() => {
             cursor.classList.remove("blink");
             cursor.style.opacity = "0";
-
-            let t = 0;
-            pick.forEach(([lvl, tag, msg], i) => {
-              t += 1 + Math.floor(Math.random() * 3);
-              const ts = t;
-              setTimeout(() => {
-                const li = document.createElement("li");
-                li.className = "log";
-                li.innerHTML =
-                  `<span class="log__ts">[${fmtTs(ts)}]</span>` +
-                  `<span class="log__lvl log__lvl--${lvl}">${lvl.toUpperCase()}</span>` +
-                  `<span class="log__tag">${fmtTag(tag)}</span>` +
-                  `<span class="log__msg">${msg}</span>`;
-                term.appendChild(li);
-              }, i * STEP);
-            });
-          }, 400);
+            typeAll(LINES);
+          }, 380);
         }
-      }, TYPE_SPEED);
+      }, CMD_SPEED);
     }, BOOT_DELAY);
   }
 
