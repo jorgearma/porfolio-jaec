@@ -1,0 +1,958 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="dark" />
+  <title>Jorge Armando Escobar · Backend / Sistemas / Seguridad</title>
+  <meta name="description" content="Ingeniero backend especializado en sistemas distribuidos, integraciones de mensajería y ciberseguridad. Constructor de Panchi-Bot." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Fraunces:opsz,wght,SOFT@9..144,300..900,0..100&family=JetBrains+Mono:wght@300;400;500;700&display=swap"
+    rel="stylesheet"
+  />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- grain + scanlines overlays -->
+  <div class="fx-grain" aria-hidden="true"></div>
+  <div class="fx-scanlines" aria-hidden="true"></div>
+  <div class="fx-vignette" aria-hidden="true"></div>
+
+  <!-- engineering grid lines -->
+  <div class="grid-rails" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span>
+  </div>
+
+  <!-- ──────────────── TOP STATUS BAR ──────────────── -->
+  <header class="statusbar" role="banner">
+    <div class="statusbar__left">
+      <span class="statusbar__dot" aria-hidden="true"></span>
+      <span class="mono statusbar__tag">JAE-PORTFOLIO</span>
+      <span class="mono statusbar__ver">v1.0.0</span>
+    </div>
+    <div class="statusbar__center mono">
+      <span class="statusbar__label">SESSION</span>
+      <span class="statusbar__uptime" data-uptime>00:00:00</span>
+    </div>
+    <div class="statusbar__right mono">
+      <a href="#panchibot" class="statusbar__link">01 panchi</a>
+      <a href="#vps" class="statusbar__link">02 vps</a>
+      <a href="#cyber" class="statusbar__link">03 cyber</a>
+      <a href="#contact" class="statusbar__link">04 contacto</a>
+    </div>
+  </header>
+
+  <!-- ──────────────── HERO ──────────────── -->
+  <section class="hero" id="top">
+    <div class="hero__body">
+      <p class="hero__kicker mono">
+        <span class="blink">█</span>&nbsp; informe técnico del candidato
+      </p>
+
+      <h1 class="hero__name">
+        <span class="hero__first">Jorge&nbsp;Armando</span>
+        <span class="hero__last">Escobar<em class="hero__stop">.</em></span>
+      </h1>
+
+      <p class="hero__role">
+        <span>Backend</span>
+        <span class="hero__sep">·</span>
+        <span>Sistemas</span>
+        <span class="hero__sep">·</span>
+        <span>Pentesting</span>
+        <span class="hero__sep">·</span>
+        <span>Ciberseguridad</span>
+      </p>
+
+      <div class="hero__meta mono">
+        <div class="hero__coord">
+          <span class="hero__coord-label">COORD</span>
+          <span>40°00′49″N&nbsp;&nbsp;3°00′25″W</span>
+        </div>
+        <div class="hero__stamp">
+          <span class="hero__stamp-label">DOSSIER</span>
+          <span>JAE–001 / ABR 2026</span>
+        </div>
+      </div>
+
+      <div class="hero__terminal mono" aria-label="runtime logs">
+        <div class="hero__terminal-bar">
+          <span class="hero__terminal-dots" aria-hidden="true">
+            <em></em><em></em><em></em>
+          </span>
+          <span class="hero__terminal-title">
+            jae@vps:~/produccion — runtime.log
+          </span>
+          <span class="hero__terminal-live"><span class="hero__terminal-pulse"></span>LIVE</span>
+        </div>
+        <ol class="hero__terminal-body" data-logs aria-live="polite"></ol>
+        <div class="hero__terminal-foot">
+          <span class="hero__terminal-prompt">
+            <span class="hero__prompt-sym">root</span><span class="hero__prompt-at">@</span><span class="hero__prompt-host">jae-vps</span><span class="hero__prompt-sep">:</span><span class="hero__prompt-path">~</span><span class="hero__prompt-hash">#</span>
+          </span>
+          <span class="hero__terminal-cursor blink">█</span>
+        </div>
+      </div>
+
+      <div class="hero__actions">
+        <a class="btn btn--primary mono" href="#panchibot">
+          <span>leer caso de estudio</span>
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+        <a class="btn btn--ghost mono" href="#contact">
+          <span>contactar</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero__right">
+      <!-- ───── dossier photo card ─────
+           Para usar tu foto real:
+             1. guárdala en ./assets/portrait.jpg (o .webp) · ~600×720 funciona bien
+             2. borra el <svg class="dossier__placeholder">…</svg> de abajo
+             3. descomenta la <img …> justo debajo
+      -->
+      <figure class="dossier" aria-label="sujeto del dossier">
+        <div class="card__corner card__corner--tl"></div>
+        <div class="card__corner card__corner--tr"></div>
+        <div class="card__corner card__corner--bl"></div>
+        <div class="card__corner card__corner--br"></div>
+
+        <div class="dossier__header mono">
+          <span>// subject</span>
+          <span class="dossier__id">JAE–001</span>
+        </div>
+
+        <div class="dossier__frame">
+          <!-- <img class="dossier__img" src="assets/portrait.jpg" alt="Jorge Armando Escobar" /> -->
+          <svg class="dossier__placeholder" viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <rect width="200" height="240" fill="#110f0b"/>
+            <circle cx="100" cy="94" r="40" fill="#1c1a14"/>
+            <path d="M30 240 Q 32 162 100 156 Q 168 162 170 240 Z" fill="#1c1a14"/>
+            <g stroke="#ffb627" stroke-width="1" opacity=".75" fill="none">
+              <path d="M12 22 L12 10 L24 10"/>
+              <path d="M188 22 L188 10 L176 10"/>
+              <path d="M12 218 L12 230 L24 230"/>
+              <path d="M188 218 L188 230 L176 230"/>
+            </g>
+            <g stroke="#ffb627" stroke-width=".5" opacity=".22">
+              <line x1="100" y1="20" x2="100" y2="220"/>
+              <line x1="22" y1="120" x2="178" y2="120"/>
+            </g>
+            <circle cx="100" cy="120" r="3" fill="none" stroke="#ffb627" stroke-width=".8" opacity=".6"/>
+            <text x="100" y="220" text-anchor="middle"
+                  font-family="JetBrains Mono, monospace" font-size="8"
+                  fill="#8a8578" letter-spacing="2">NO IMAGE</text>
+            <text x="12" y="14" font-family="JetBrains Mono, monospace"
+                  font-size="6" fill="#ffb627" letter-spacing="1">CLASIFICADO</text>
+          </svg>
+          <div class="dossier__scan" aria-hidden="true"></div>
+          <div class="dossier__glow" aria-hidden="true"></div>
+        </div>
+
+        <dl class="dossier__meta mono">
+          <div><dt>name</dt><dd>escobar, j.a.</dd></div>
+          <div><dt>github</dt><dd><a href="https://github.com/jorgearma" target="_blank" rel="noopener">github.com/jorgearma</a></dd></div>
+        </dl>
+      </figure>
+
+      <div class="hero__side mono" aria-hidden="true">
+        <div class="hero__side-row"><span>STATUS</span><span class="hero__ok">● OPERATIONAL</span></div>
+        <div class="hero__side-row"><span>BUILD</span><span>stable / main</span></div>
+        <div class="hero__side-row"><span>TZ</span><span>Europe/Madrid</span></div>
+        <div class="hero__side-row"><span>LANG</span><span>es · en</span></div>
+        <div class="hero__side-row"><span>UPTIME</span><span>7+ años</span></div>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ──────────────── WHOAMI ──────────────── -->
+  <section class="section whoami" id="whoami">
+    <header class="section__head">
+      <span class="section__num mono">§ 00</span>
+      <h2 class="section__title">./whoami</h2>
+      <span class="section__line" aria-hidden="true"></span>
+    </header>
+
+    <div class="whoami__grid">
+      <aside class="whoami__card" aria-label="perfil">
+        <div class="card__corner card__corner--tl"></div>
+        <div class="card__corner card__corner--tr"></div>
+        <div class="card__corner card__corner--bl"></div>
+        <div class="card__corner card__corner--br"></div>
+
+        <dl class="mono whoami__dl">
+          <dt>nombre</dt><dd>jorge armando escobar</dd>
+          <dt>rol</dt><dd>backend engineer · red team</dd>
+          <dt>base</dt><dd>tarancón · es</dd>
+          <dt>foco</dt><dd>pentesting · análisis de vulns</dd>
+          <dt>cert</dt><dd>oscp <span class="whoami__badge mono">← en preparación</span></dd>
+          <dt>disponibilidad</dt><dd><span class="ok">● abierto a ofertas</span></dd>
+        </dl>
+      </aside>
+
+      <div class="whoami__copy">
+        <p class="whoami__cmd mono" aria-label="terminal root session">
+          <span class="whoami__cmd-user">root</span><span class="whoami__cmd-at">@</span><span class="whoami__cmd-host">jae-vps</span><span class="whoami__cmd-sep">:</span><span class="whoami__cmd-path">~</span><span class="whoami__cmd-hash"># </span><span class="whoami__cmd-exec">./whoami</span><span class="whoami__cmd-flag">&nbsp;--verbose</span>
+        </p>
+        <p class="whoami__out mono">
+          <span class="whoami__out-lbl">[ok]</span> ejecutando como <span class="whoami__out-uid">uid=0(root)</span> · sesión autenticada · salida →
+        </p>
+        <p class="lede">
+          Construyo sistemas <em>aburridos</em> en el mejor sentido de la
+          palabra: los que arrancan en el boot del VPS, encajan golpes de
+          tráfico real y no necesitan que el autor esté cerca para seguir
+          funcionando.
+        </p>
+        <p>
+          Mi zona cómoda es donde se cruzan el backend, la infraestructura
+          y la seguridad: webhooks firmados con HMAC, colas de mensajes,
+          máquinas de estado en Redis, integraciones con APIs de pago,
+          NLP en español, y despliegues con Docker detrás de Nginx. No
+          escribo código para impresionar en un IDE; lo escribo para que
+          aguante un lunes por la noche en producción con la cocina llena.
+        </p>
+        <p class="mono whoami__sign">
+          — <span>./jae</span>
+          <span class="blink">█</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────── CASE STUDY: PANCHI-BOT ──────────────── -->
+  <section class="section case" id="panchibot">
+    <header class="section__head">
+      <span class="section__num mono">§ 01</span>
+      <h2 class="section__title">Panchi-Bot</h2>
+      <span class="section__line" aria-hidden="true"></span>
+      <span class="section__tag mono">CASE STUDY</span>
+      <div class="case__links mono">
+        <a class="case__link" href="https://www.panchibot.es" target="_blank" rel="noopener noreferrer">
+          <span class="case__link-dot">●</span> landing
+        </a>
+        <a class="case__link case__link--demo" href="https://www.panchibot.es/demo" target="_blank" rel="noopener noreferrer">
+          <span class="case__link-dot">▶</span> demo en vivo
+        </a>
+      </div>
+    </header>
+
+    <p class="case__lede">
+      Bot de pedidos por WhatsApp para un restaurante en España.
+      Gestiona el ciclo completo del pedido: desde el primer mensaje
+      del cliente hasta el cobro y la entrega.
+    </p>
+    <p class="case__lede case__lede--body">
+      Arquitectura Flask en capas estrictas con procesamiento asíncrono
+      de mensajes via Redis Queue, máquina de estados para el registro
+      de usuarios, integración con Monei (pagos online) y validación
+      de direcciones mediante geofencing + catálogo de calles.
+    </p>
+    <p class="case__lede case__lede--body">
+      Panel de operaciones con roles diferenciados: dashboard de
+      administración, PWA de cocina, app de picking para almacén
+      y app de reparto para repartidores.
+    </p>
+
+    <div class="case__footer mono">
+      <span class="case__footer-label">// en producción</span>
+      <a class="case__footer-link" href="https://www.panchibot.es" target="_blank" rel="noopener noreferrer">
+        www.panchibot.es
+        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+      </a>
+    </div>
+
+    <!-- stack badges -->
+    <div class="stack" aria-label="stack técnico">
+      <span class="stack__label mono">// stack</span>
+      <ul class="stack__list mono">
+        <li>Python 3.12</li>
+        <li>Flask 3</li>
+        <li>SQLAlchemy 2</li>
+        <li>SQL Server</li>
+        <li>Redis</li>
+        <li>RQ</li>
+        <li>Twilio</li>
+        <li>Meta Cloud API</li>
+        <li>Monei</li>
+        <li>Google Maps</li>
+        <li>Shapely</li>
+        <li>SpaCy&nbsp;·&nbsp;es</li>
+        <li>OpenAI</li>
+        <li>Gunicorn</li>
+        <li>Docker</li>
+        <li>Nginx</li>
+        <li>Sentry</li>
+        <li>Pytest</li>
+      </ul>
+    </div>
+
+    <!-- architecture ascii diagram (tabbed) -->
+    <div class="arch" aria-label="diagramas de arquitectura" data-arch>
+      <div class="arch__head mono">
+        <div class="arch__tabs" role="tablist">
+          <button class="arch__tab is-active" role="tab" aria-selected="true"  data-arch-tab="0">arquitectura</button>
+          <button class="arch__tab"            role="tab" aria-selected="false" data-arch-tab="1">flujo de pedido</button>
+          <button class="arch__tab"            role="tab" aria-selected="false" data-arch-tab="2">roles</button>
+        </div>
+        <span class="arch__file">panchi-bot/diagrams.txt</span>
+      </div>
+
+      <pre class="arch__ascii mono arch__panel is-active" role="tabpanel" data-arch-panel="0">
+   cliente whatsapp            stripe/monei               google maps
+         │                         ▲                           ▲
+         │ mensajes                │ webhook pago              │ geocoding
+         ▼                         │                           │
+ ┌───────────────┐  verify HMAC  ┌─┴───────────────────────────┴─┐
+ │  BLUEPRINTS   │◄─────────────►│        SERVICES (adapters)    │
+ │  webhook/meta │                │  whatsapp · monei · maps ·   │
+ │  webhook/twil │                │  tokens · auth · sessions    │
+ │  /api  /menu  │                └─┬─────────────────────────────┘
+ │  /dashboard   │                  │
+ │  /cocina /rep │                  ▼
+ └──────┬────────┘           ┌──────────────┐
+        │                    │ CONTROLLERS  │    lógica de negocio
+        │                    │  registro    │    (carrito, pago,
+        │                    │  carrito     │     pedido, notifiers)
+        │                    │  pago        │
+        │                    └──────┬───────┘
+        │                           │
+        ▼                           ▼
+ ┌──────────────────────────────────────────────────┐
+ │   MANAGERS     ·   acceso a estado y persistencia │
+ │   gestor_pedidos · gestor_productos · gestor_redis│
+ │   gestor_usuarios · gestor_metricas · dashboard   │
+ └──────┬──────────────────────────┬─────────────────┘
+        │                          │
+        ▼                          ▼
+   ┌─────────┐               ┌───────────┐
+   │ SQL SVR │               │   REDIS   │   state machine
+   │  ORM    │               │   queues  │   ephemeral state
+   └─────────┘               └───────────┘   RQ workers
+</pre>
+
+      <pre class="arch__ascii mono arch__panel" role="tabpanel" data-arch-panel="1">
+  WhatsApp (Meta Cloud API)
+        │
+        │  POST /webhook/meta  ←  HMAC-SHA256 verificado
+        ▼
+  ┌─────────────────┐
+  │   blueprint     │   webhook recibe mensaje del cliente
+  │   webhook/meta  │──► Redis Queue (RQ worker)
+  └─────────────────┘        │
+                             │  ¿cliente registrado?
+                    ┌────────┴────────┐
+                   no                sí
+                    │                 │
+                    ▼                 ▼
+           máquina de estados    menú / carrito
+           Redis · TTL/conv.          │
+                    │                 │
+           enviar SMS verif.    selección de productos
+           número confirmado         │
+                    │                 ▼
+                    └────────►  introducir dirección
+                                      │
+                               geofencing + catálogo calles
+                               ¿dentro del polígono de reparto?
+                                  ┌───┴───┐
+                                 sí       no → rechazar con msg
+                                  │
+                                  ▼
+                            pago online · Monei
+                            webhook pago verificado
+                                  │
+                                  ▼
+                       pedido confirmado en BD (SQL Server)
+                                  │
+                       ┌──────────┼──────────┐
+                       ▼          ▼          ▼
+                    cocina      picker   repartidor
+                  notificado  notificado  asignado
+</pre>
+
+      <pre class="arch__ascii mono arch__panel" role="tabpanel" data-arch-panel="2">
+  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+  │    DASHBOARD     │  │      COCINA       │  │      PICKER      │  │    REPARTIDOR    │
+  │    /admin        │  │      PWA          │  │    /almacen      │  │    /reparto      │
+  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤
+  │ pedidos del día  │  │ cola de pedidos   │  │ lista de items   │  │ pedidos asign.   │
+  │ ingresos / ticket│  │ en tiempo real    │  │ a preparar       │  │ nombre cliente   │
+  │ mapa de reparto  │  │ líneas de producto│  │ cantidad / ubic. │  │ dirección exacta │
+  │ gestión usuarios │  │ marcar listo      │  │ en almacén       │  │ ubicación en map │
+  │ catálogo productos│ │ tiempo por pedido │  │ marcar preparado │  │ marcar entregado │
+  │ zonas de reparto │  │                  │  │                  │  │ historial ruta   │
+  └──────────────────┘  └──────────────────┘  └──────────────────┘  └──────────────────┘
+           │                    │                      │                      │
+           └────────────────────┴──────────────────────┴──────────────────────┘
+                                               │
+                                    JWT por rol · sesión propia
+                                    estado sincronizado vía Redis
+</pre>
+    </div>
+
+    <!-- feature cards -->
+    <div class="features">
+      <article class="feat">
+        <span class="feat__idx mono">f/01</span>
+        <h3 class="feat__title">WhatsApp provider-agnóstico</h3>
+        <p class="feat__body">
+          Twilio y Meta Cloud API son intercambiables mediante una variable
+          de entorno. Los controladores, managers y BD no saben cuál está
+          activo. Una interfaz común, dos implementaciones, verificación
+          HMAC específica para cada una.
+        </p>
+        <p class="feat__code mono">
+          WHATSAPP_PROVIDER=meta&nbsp;·&nbsp;twilio
+        </p>
+      </article>
+
+      <article class="feat">
+        <span class="feat__idx mono">f/02</span>
+        <h3 class="feat__title">Arquitectura en capas</h3>
+        <p class="feat__body">
+          <span class="mono">blueprints → controllers → managers → services.</span>
+          Una regla de importación estricta: nadie importa hacia arriba.
+          Los tests aíslan cada capa y la capa de services es el único
+          punto de contacto con el mundo exterior.
+        </p>
+        <a class="feat__doc mono" href="https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/controllers.md" target="_blank" rel="noopener noreferrer">
+          ver docs
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="feat">
+        <span class="feat__idx mono">f/03</span>
+        <h3 class="feat__title">Máquina de estados en Redis</h3>
+        <p class="feat__body">
+          El flujo de registro y de pedido vive en Redis como estado
+          efímero. Transiciones validadas, TTL por conversación, y
+          recuperación elegante si el usuario desaparece a mitad del flujo.
+        </p>
+      </article>
+
+      <article class="feat">
+        <span class="feat__idx mono">f/04</span>
+        <h3 class="feat__title">Triple verificación HMAC</h3>
+        <p class="feat__body">
+          Tres webhooks entrantes, tres algoritmos de firma distintos:
+          Twilio (<span class="mono">X-Twilio-Signature</span>),
+          Meta (<span class="mono">HMAC-SHA256</span> con app secret),
+          Monei (<span class="mono">HMAC</span> con webhook secret). Ningún
+          endpoint confía en el cliente.
+        </p>
+      </article>
+
+      <article class="feat">
+        <span class="feat__idx mono">f/05</span>
+        <h3 class="feat__title">Validación geoespacial</h3>
+        <p class="feat__body">
+          Las direcciones pasan por Google Maps → Shapely → polígono de
+          zona de reparto. Si un cliente cae fuera del polígono, la
+          conversación lo explica antes de que la cocina se entere.
+        </p>
+      </article>
+
+      <article class="feat">
+        <span class="feat__idx mono">f/06</span>
+        <h3 class="feat__title">NLP en español</h3>
+        <p class="feat__body">
+          SpaCy con <span class="mono">es_core_news_sm</span> más un
+          pase por OpenAI para intenciones ambiguas. Rapidfuzz para
+          tolerar erratas en nombres de productos. El cliente escribe
+          como habla; el bot entiende.
+        </p>
+      </article>
+
+      <article class="feat">
+        <span class="feat__idx mono">f/07</span>
+        <h3 class="feat__title">Workers y colas</h3>
+        <p class="feat__body">
+          Tareas largas (notificaciones, métricas, integraciones pesadas)
+          salen del request cycle vía RQ. El webhook responde en
+          milisegundos; el trabajo real ocurre detrás.
+        </p>
+      </article>
+
+      <article class="feat">
+        <span class="feat__idx mono">f/08</span>
+        <h3 class="feat__title">Paneles por rol</h3>
+        <p class="feat__body">
+          Cliente, empleado, cocina, repartidor, picker. Cada uno con
+          su vista, sus permisos JWT, sus métricas. No es un bot: es
+          el sistema operativo del restaurante.
+        </p>
+      </article>
+    </div>
+  </section>
+
+  <!-- ──────────────── OTROS PROYECTOS ──────────────── -->
+  <section class="section projects" id="otros">
+    <header class="section__head">
+      <span class="section__num mono">§ 02</span>
+      <h2 class="section__title">Otros sistemas</h2>
+      <span class="section__line" aria-hidden="true"></span>
+    </header>
+
+    <div class="projects__list">
+
+      <!-- ── Atalaya ── -->
+      <article class="proj proj--wide" id="vps">
+        <div class="proj__content" data-idx="a">
+          <header class="proj__head mono">
+            <span class="proj__idx">02/a</span>
+            <span class="proj__status">● activo</span>
+          </header>
+          <h3 class="proj__title">Atalaya</h3>
+          <p class="proj__tag mono">// observabilidad y seguridad de host en tiempo real</p>
+          <p class="proj__lede">
+            Dashboard de observabilidad para un VPS en producción. Lee
+            logs de nginx y del bot de forma incremental (inode + offset),
+            agrega métricas de sistema vía psutil y detecta amenazas reales:
+            enumeración de rutas, logins SSH, cambios en ficheros críticos,
+            nuevos listeners TCP y conexiones a puertos C2 conocidos.
+            Sin tocar el código de ninguna aplicación observada.
+          </p>
+          <ul class="proj__feats mono">
+            <li><span class="proj__arr">→</span> seis detectores independientes con sistema de puntuación y alerta Telegram en tiempo real</li>
+            <li><span class="proj__arr">→</span> file integrity monitor con baseline persistido — detecta cambios en /etc/ssh, sudoers y cron</li>
+            <li><span class="proj__arr">→</span> caché TTL por recurso — reduce llamadas a docker stats en ~90% sin dependencias externas</li>
+          </ul>
+          <ul class="proj__stack mono">
+            <li>python</li><li>fastapi</li><li>psutil</li><li>watchdog</li><li>docker</li><li>systemd</li>
+          </ul>
+        </div>
+
+        <!-- reemplaza el span por <img src="assets/atalaya-demo.gif" alt="Atalaya dashboard en acción" loading="lazy"> -->
+        <figure class="proj__demo" aria-label="demo del dashboard">
+          <div class="proj__btns mono">
+            <a class="proj__repo-btn" href="https://github.com/jorgearma/atalaya" target="_blank" rel="noopener noreferrer">github</a>
+            <a class="proj__repo-btn" href="#" target="_blank" rel="noopener noreferrer">demo</a>
+            <a class="proj__repo-btn" href="#" target="_blank" rel="noopener noreferrer">docs</a>
+          </div>
+          <div class="proj__demo-frame">
+            <div class="proj__demo-bar">
+              <span class="proj__demo-dot" style="--c:#ff5f56"></span>
+              <span class="proj__demo-dot" style="--c:#ffbd2e"></span>
+              <span class="proj__demo-dot" style="--c:#27c93f"></span>
+              <span class="proj__demo-title">atalaya — dashboard</span>
+            </div>
+            <div class="proj__demo-screen">
+              <img src="assets/atalaya-demo.png" alt="Atalaya dashboard en acción" loading="lazy">
+            </div>
+            <figcaption class="proj__demo-cap">// captura en vivo</figcaption>
+          </div>
+        </figure>
+      </article>
+
+      <!-- ── Cyber Toolkit ── -->
+      <article class="proj proj--wide" id="cyber">
+        <div class="proj__content" data-idx="b">
+          <header class="proj__head mono">
+            <span class="proj__idx">02/b</span>
+            <span class="proj__status">● activo</span>
+          </header>
+          <h3 class="proj__title">Cyber Toolkit</h3>
+          <p class="proj__tag">// scripts de ciberseguridad</p>
+          <p class="proj__lede">
+            Colección de scripts ofensivos y defensivos para
+            reconocimiento, auditoría y respuesta. Hechos para uso real
+            en laboratorio y CTFs, no para impresionar en un readme.
+          </p>
+          <!-- añade aquí las líneas de detalle reales del proyecto -->
+          <ul class="proj__feats mono">
+            <li><span class="proj__arr">→</span> módulos de reconocimiento activo y pasivo</li>
+            <li><span class="proj__arr">→</span> scripts de auditoría y hardening de hosts</li>
+            <li><span class="proj__arr">→</span> respuesta a incidentes y análisis de red</li>
+          </ul>
+          <ul class="proj__stack mono">
+            <li>bash</li><li>python</li><li>nmap</li><li>openssl</li><li>tcpdump</li>
+          </ul>
+        </div>
+
+        <!-- reemplaza el span por <img src="assets/cyber-demo.gif" alt="Cyber Toolkit en acción" loading="lazy"> -->
+        <figure class="proj__demo" aria-label="demo de la herramienta">
+          <div class="proj__demo-frame">
+            <div class="proj__demo-bar">
+              <span class="proj__demo-dot" style="--c:#ff5f56"></span>
+              <span class="proj__demo-dot" style="--c:#ffbd2e"></span>
+              <span class="proj__demo-dot" style="--c:#27c93f"></span>
+              <span class="proj__demo-title mono">cyber-toolkit — terminal</span>
+            </div>
+            <div class="proj__demo-screen">
+              <span class="proj__demo-ph mono">[ gif del toolkit ]</span>
+            </div>
+            <figcaption class="proj__demo-cap">// captura en vivo</figcaption>
+          </div>
+        </figure>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ──────────────── CTF WRITE-UPS ──────────────── -->
+  <section class="section writeups" id="writeups">
+    <header class="section__head">
+      <span class="section__num mono">§ 03</span>
+      <h2 class="section__title">Write-ups</h2>
+      <span class="section__line" aria-hidden="true"></span>
+      <span class="section__tag mono">FIELD REPORTS</span>
+    </header>
+
+    <div class="wu__grid">
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--easy">● easy</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Broker</h3>
+        <ul class="wu__tags mono">
+          <li>activemq</li><li>cve-2023-46604</li><li>nginx</li>
+        </ul>
+        <a class="wu__link mono" href="https://panchi.gitbook.io/untitled/broker/broker_report" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--easy">● easy</span>
+          <span class="wu__os">windows</span>
+        </header>
+        <h3 class="wu__name">Blue</h3>
+        <ul class="wu__tags mono">
+          <li>ms17-010</li><li>eternalblue</li><li>smb</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--medium">● medium</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Bastard</h3>
+        <ul class="wu__tags mono">
+          <li>drupal</li><li>web</li><li>privesc</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--easy">● easy</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Shocker</h3>
+        <ul class="wu__tags mono">
+          <li>shellshock</li><li>cgi</li><li>sudo</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--medium">● medium</span>
+          <span class="wu__os">windows</span>
+        </header>
+        <h3 class="wu__name">Optimum</h3>
+        <ul class="wu__tags mono">
+          <li>httpfileserver</li><li>cve-2014-6287</li><li>privesc</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--hard">● hard</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Valentine</h3>
+        <ul class="wu__tags mono">
+          <li>heartbleed</li><li>openssl</li><li>ssh</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--easy">● easy</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Nibbles</h3>
+        <ul class="wu__tags mono">
+          <li>web</li><li>php</li><li>sudo</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--medium">● medium</span>
+          <span class="wu__os">windows</span>
+        </header>
+        <h3 class="wu__name">Active</h3>
+        <ul class="wu__tags mono">
+          <li>active-directory</li><li>gpp</li><li>kerberoasting</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--easy">● easy</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Bashed</h3>
+        <ul class="wu__tags mono">
+          <li>web</li><li>sudo</li><li>cron</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--hard">● hard</span>
+          <span class="wu__os">windows</span>
+        </header>
+        <h3 class="wu__name">Silo</h3>
+        <ul class="wu__tags mono">
+          <li>oracle</li><li>odat</li><li>volatility</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--easy">● easy</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Lame</h3>
+        <ul class="wu__tags mono">
+          <li>smb</li><li>samba</li><li>metasploit</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--medium">● medium</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Beep</h3>
+        <ul class="wu__tags mono">
+          <li>lfi</li><li>elastix</li><li>sudo</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--easy">● easy</span>
+          <span class="wu__os">windows</span>
+        </header>
+        <h3 class="wu__name">Legacy</h3>
+        <ul class="wu__tags mono">
+          <li>smb</li><li>ms08-067</li><li>xp</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--medium">● medium</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Cronos</h3>
+        <ul class="wu__tags mono">
+          <li>dns</li><li>sqli</li><li>cron</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+      <article class="wu">
+        <header class="wu__head mono">
+          <span class="wu__platform">HTB</span>
+          <span class="wu__diff wu__diff--hard">● hard</span>
+          <span class="wu__os">linux</span>
+        </header>
+        <h3 class="wu__name">Jail</h3>
+        <ul class="wu__tags mono">
+          <li>nfs</li><li>buffer-overflow</li><li>kernel</li>
+        </ul>
+        <a class="wu__link mono" href="#" target="_blank" rel="noopener noreferrer">
+          ver write-up
+          <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+        </a>
+      </article>
+
+    </div>
+  </section>
+
+  <!-- ──────────────── STACK GENERAL ──────────────── -->
+  <section class="section skills" id="stack">
+    <header class="section__head">
+      <span class="section__num mono">§ 03</span>
+      <h2 class="section__title">Arsenal</h2>
+      <span class="section__line" aria-hidden="true"></span>
+    </header>
+
+    <div class="skills__grid">
+      <div class="skills__col">
+        <h4 class="mono skills__h">lenguajes</h4>
+        <ul class="mono"><li>python</li><li>bash</li><li>sql</li><li>javascript</li></ul>
+      </div>
+      <div class="skills__col">
+        <h4 class="mono skills__h">frameworks</h4>
+        <ul class="mono"><li>flask</li><li>sqlalchemy</li><li>pydantic</li><li>pytest</li></ul>
+      </div>
+      <div class="skills__col">
+        <h4 class="mono skills__h">datos</h4>
+        <ul class="mono"><li>sql server</li><li>postgres</li><li>redis</li><li>rq</li></ul>
+      </div>
+      <div class="skills__col">
+        <h4 class="mono skills__h">infra</h4>
+        <ul class="mono"><li>linux</li><li>docker</li><li>nginx</li><li>gunicorn</li><li>systemd</li><li>let's encrypt</li></ul>
+      </div>
+      <div class="skills__col">
+        <h4 class="mono skills__h">seguridad</h4>
+        <ul class="mono"><li>hmac / jwt</li><li>hardening linux</li><li>nmap · burp</li><li>owasp top 10</li></ul>
+      </div>
+      <div class="skills__col">
+        <h4 class="mono skills__h">observabilidad</h4>
+        <ul class="mono"><li>sentry</li><li>logs estructurados</li><li>dashboards custom</li></ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────── CONTACTO ──────────────── -->
+  <section class="section contact" id="contact">
+    <header class="section__head">
+      <span class="section__num mono">§ 04</span>
+      <h2 class="section__title">Abrir canal</h2>
+      <span class="section__line" aria-hidden="true"></span>
+    </header>
+
+    <div class="contact__box">
+      <div class="card__corner card__corner--tl"></div>
+      <div class="card__corner card__corner--tr"></div>
+      <div class="card__corner card__corner--bl"></div>
+      <div class="card__corner card__corner--br"></div>
+
+      <p class="contact__lede">
+        Si tienes un sistema que necesita construirse, rescatarse, o
+        endurecerse, escríbeme. Respondo rápido y hablo claro.
+      </p>
+
+      <ul class="contact__list mono">
+        <li>
+          <span class="contact__k">email</span>
+          <a class="contact__v" href="mailto:hola@ejemplo.com">hola@ejemplo.com</a>
+        </li>
+        <li>
+          <span class="contact__k">github</span>
+          <a class="contact__v" href="https://github.com/" target="_blank" rel="noopener noreferrer">github.com/tu-usuario</a>
+        </li>
+        <li>
+          <span class="contact__k">linkedin</span>
+          <a class="contact__v" href="https://linkedin.com/" target="_blank" rel="noopener noreferrer">linkedin.com/in/tu-usuario</a>
+        </li>
+        <li>
+          <span class="contact__k">cv</span>
+          <a class="contact__v" href="#">jae-cv.pdf</a>
+        </li>
+      </ul>
+
+      <p class="mono contact__prompt">
+        jae@vps:~$ <span class="blink">█</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ──────────────── FOOTER ──────────────── -->
+  <footer class="footer mono">
+    <div class="footer__row">
+      <span>© 2026 Jorge Armando Escobar</span>
+      <span class="footer__sep">·</span>
+      <span>construido a mano · sin frameworks</span>
+      <span class="footer__sep">·</span>
+      <span>servido desde un VPS propio</span>
+    </div>
+    <div class="footer__row footer__row--mini">
+      <span>build · stable</span>
+      <span>·</span>
+      <span>nginx:alpine</span>
+      <span>·</span>
+      <span>tls · let's encrypt</span>
+    </div>
+  </footer>
+
+  <!-- lightbox -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="imagen ampliada">
+    <button class="lightbox__close" id="lightbox-close">[ esc · cerrar ]</button>
+    <img class="lightbox__img" id="lightbox-img" src="" alt="">
+  </div>
+
+  <script src="main.js" defer></script>
+</body>
+</html>

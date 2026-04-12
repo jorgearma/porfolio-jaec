@@ -1,0 +1,18 @@
+services:
+  portfolio:
+    build: .
+    image: jae-portfolio:latest
+    container_name: jae-portfolio
+    restart: unless-stopped
+    ports:
+      # host_port:container_port
+      # Si usas nginx del VPS como reverse-proxy, expón solo a localhost:
+      - "127.0.0.1:8088:80"
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+    labels:
+      project: "jae-portfolio"
+      owner:   "jorge.armando.escobar"
