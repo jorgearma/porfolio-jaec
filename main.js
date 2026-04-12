@@ -45,6 +45,10 @@
       body:  "El flujo de registro y de pedido vive en Redis como estado " +
              "efímero. Transiciones validadas, TTL por conversación, y " +
              "recuperación elegante si el usuario desaparece a mitad del flujo.",
+      doc:   {
+        href: "https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/managers/gestor_redis.md",
+        text: "ver docs",
+      },
     },
     {
       idx:   "f/04",
@@ -54,6 +58,10 @@
              'Meta (<span class="mono">HMAC-SHA256</span> con app secret), ' +
              'Monei (<span class="mono">HMAC</span> con webhook secret). Ningún ' +
              "endpoint confía en el cliente.",
+      doc:   {
+        href: "https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/blueprints.md",
+        text: "ver docs",
+      },
     },
     {
       idx:   "f/05",
@@ -91,99 +99,301 @@
     {
       tab: "arquitectura",
       content: `
-   cliente whatsapp            stripe/monei               google maps
-         │                         ▲                           ▲
-         │ mensajes                │ webhook pago              │ geocoding
-         ▼                         │                           │
- ┌───────────────┐  verify HMAC  ┌─┴───────────────────────────┴─┐
- │  BLUEPRINTS   │◄─────────────►│        SERVICES (adapters)    │
- │  webhook/meta │                │  whatsapp · monei · maps ·   │
- │  webhook/twil │                │  tokens · auth · sessions    │
- │  /api  /menu  │                └─┬─────────────────────────────┘
- │  /dashboard   │                  │
- │  /cocina /rep │                  ▼
- └──────┬────────┘           ┌──────────────┐
-        │                    │ CONTROLLERS  │    lógica de negocio
-        │                    │  registro    │    (carrito, pago,
-        │                    │  carrito     │     pedido, notifiers)
-        │                    │  pago        │
-        │                    └──────┬───────┘
-        │                           │
-        ▼                           ▼
- ┌──────────────────────────────────────────────────┐
- │   MANAGERS     ·   acceso a estado y persistencia │
- │   gestor_pedidos · gestor_productos · gestor_redis│
- │   gestor_usuarios · gestor_metricas · dashboard   │
- └──────┬──────────────────────────┬─────────────────┘
-        │                          │
-        ▼                          ▼
-   ┌─────────┐               ┌───────────┐
-   │ SQL SVR │               │   REDIS   │   state machine
-   │  ORM    │               │   queues  │   ephemeral state
-   └─────────┘               └───────────┘   RQ workers
+  ╔══════════════════════════════════════════════════════════════════════════╗
+  ║        PANCHI-BOT · WhatsApp Restaurant Bot · Flask + SQL Server        ║
+  ╚══════════════════════════════════════════════════════════════════════════╝
+
+  WhatsApp Client
+  (Twilio / Meta Cloud API)
+         │
+         ▼
+  ┌──────────────────────┐     ┌───────────────────────┐     ┌─────────────────────┐
+  │  FLASK BLUEPRINTS    │────►│  CONTROLLERS          │────►│  MANAGERS           │
+  ├──────────────────────┤     ├───────────────────────┤     ├─────────────────────┤
+  │ /webhook → messages  │     │ registro (state mach) │     │ usuarios · pedidos  │
+  │ /menu    → cart      │     │ pedido   (lifecycle)  │     │ productos · dashboard│
+  │ /dashboard → ops     │     │ pago     (Monei)      │     │ empleado            │
+  │ /cocina  → kitchen   │     └───────────────────────┘     └──────┬────────┬─────┘
+  │ /api     → payments  │                                          │        │
+  └──────────────────────┘                                   ┌──────▼──┐  ┌──▼─────┐
+                                                             │ SQL SVR │  │ REDIS  │
+                                                             │  (DB)   │  │(State) │
+                                                             └─────────┘  └───┬────┘
+                                                                              ▼
+                                                                          RQ Worker
 `,
     },
     {
       tab: "flujo de pedido",
       content: `
-  WhatsApp (Meta Cloud API)
-        │
-        │  POST /webhook/meta  ←  HMAC-SHA256 verificado
-        ▼
-  ┌─────────────────┐
-  │   blueprint     │   webhook recibe mensaje del cliente
-  │   webhook/meta  │──► Redis Queue (RQ worker)
-  └─────────────────┘        │
-                             │  ¿cliente registrado?
-                    ┌────────┴────────┐
-                   no                sí
-                    │                 │
-                    ▼                 ▼
-           máquina de estados    menú / carrito
-           Redis · TTL/conv.          │
-                    │                 │
-           enviar SMS verif.    selección de productos
-           número confirmado         │
-                    │                 ▼
-                    └────────►  introducir dirección
-                                      │
-                               geofencing + catálogo calles
-                               ¿dentro del polígono de reparto?
-                                  ┌───┴───┐
-                                 sí       no → rechazar con msg
-                                  │
-                                  ▼
-                            pago online · Monei
-                            webhook pago verificado
-                                  │
-                                  ▼
-                       pedido confirmado en BD (SQL Server)
-                                  │
-                       ┌──────────┼──────────┐
-                       ▼          ▼          ▼
-                    cocina      picker   repartidor
-                  notificado  notificado  asignado
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║              ORDER FLOW: From WhatsApp to Delivery                       ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+
+  Cliente WhatsApp → "Hola" → Registro NLP
+         │
+         ▼
+      PENDIENTE ── Generate menu token (Redis TTL)
+         │
+         ▼
+      ENLACE ◄──── (user can revoke & restart)
+         │  GET /menu/<token> · JS cart builder
+         ▼
+      ENLACE2
+         │  POST /api/confirmacion · save cart → Redis
+         ▼
+  ┌─────────────────────┐
+  │   CONFIRMANDO_PAGO  │
+  └──────┬──────────────┘
+         │
+         ├──────────────────────────────────────────────────────┐
+         │                                                      │
+  ONLINE PAYMENT (Monei)                              CASH PAYMENT
+  ──────────────────────                              ────────────
+  POST /api/agregar_pedido                            POST /api/agregar_pedido_efectivo
+  └─ Validate prices vs DB                            (skip Monei)
+  └─ Create Monei payment session                          │
+         │                                                  ▼
+  PAGADO ◄── POST /webhook/monei (HMAC verified)    CONTRA_REEMBOLSO
+         │                                                  │
+         └───────────────────┬──────────────────────────────┘
+                             │
+                      EN_PREPARACION
+                             │
+                             ▼
+                         PREPARADO
+                             │
+                             ▼
+                        EN_REPARTO
+                             │
+                             ▼
+                       ENTREGADO ✓
+
+  CANCELLATION: Any state → POST /cancelar → CANCELADO → REEMBOLSADO ✓ (if paid)
 `,
     },
     {
       tab: "roles",
       content: `
-  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
-  │    DASHBOARD     │  │      COCINA       │  │      PICKER      │  │    REPARTIDOR    │
-  │    /admin        │  │      PWA          │  │    /almacen      │  │    /reparto      │
-  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤  ├──────────────────┤
-  │ pedidos del día  │  │ cola de pedidos   │  │ lista de items   │  │ pedidos asign.   │
-  │ ingresos / ticket│  │ en tiempo real    │  │ a preparar       │  │ nombre cliente   │
-  │ mapa de reparto  │  │ líneas de producto│  │ cantidad / ubic. │  │ dirección exacta │
-  │ gestión usuarios │  │ marcar listo      │  │ en almacén       │  │ ubicación en map │
-  │ catálogo productos│ │ tiempo por pedido │  │ marcar preparado │  │ marcar entregado │
-  │ zonas de reparto │  │                  │  │                  │  │ historial ruta   │
-  └──────────────────┘  └──────────────────┘  └──────────────────┘  └──────────────────┘
-           │                    │                      │                      │
-           └────────────────────┴──────────────────────┴──────────────────────┘
-                                               │
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║                          ROLES & PERMISSIONS                             ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+
+  CUSTOMER (WhatsApp)          STAFF (Dashboard)            KITCHEN (Cocina PWA)
+  ───────────────────          ─────────────────            ────────────────────
+  ✓ Register via NLP           ✓ View all active orders     ✓ View prep queue
+  ✓ Browse menu & cart         ✓ Change order states        ✓ Mark items PREPARADO
+  ✓ Pay online or cash         ✓ View metrics & KPIs        ✓ See special instructions
+  ✓ Track order status         ✓ Manage own shift           ✗ View payment info
+  ✓ Cancel order               ✓ See picking/reparto queues ✗ Assign delivery
+  ✗ Access dashboard           ✗ Modify prices              ✗ Access dashboard
+  ✗ View other orders          ✗ Manage other staff
+
+  PICKER (Warehouse)           DELIVERY (Repartidor)        ADMIN (not yet impl.)
+  ──────────────────           ─────────────────────        ─────────────────────
+  ✓ View picking queue         ✓ View delivery queue        ✓ Create/edit products
+  ✓ Mark items picked          ✓ Accept delivery            ✓ Manage prices & staff
+  ✓ Log picking incidents      ✓ Update location (map)      ✓ View all analytics
+  ✗ Change order state         ✓ Mark ENTREGADO             ✓ Configure app settings
+  ✗ View delivery queue        ✓ Handle NO_ENTREGADO        ✓ View payment history
+  ✗ Access kitchen             ✗ Modify order details       ✓ (needs role_id in BD)
+                               ✗ View prices / picking
+
                                     JWT por rol · sesión propia
                                     estado sincronizado vía Redis
+`,
+    },
+    {
+      tab: "base de datos",
+      content: `
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║           PANCHI-BOT: Database Schema (SQL Server)                       ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+
+  CORE CHAIN ──────────────────────────────────────────────────────────────────────────
+  ┌─────────┐ 1:N ┌──────────────────────┐ 1:N ┌────────────────────┐ 1:1 ┌──────────┐
+  │usuarios │────►│      pedidos         │────►│ pedido_detalles    │────►│picking   │
+  ├─────────┤     ├──────────────────────┤     ├────────────────────┤     ├──────────┤
+  │ id (PK) │     │ PedidoID (PK)        │     │ DetalleID (PK)     │     │ id (PK)  │
+  │ nombre  │     │ ClienteID (FK)       │     │ PedidoID (FK)      │     │ estado   │
+  │ numero  │◄WA  │ Estado ◄─ state mach │     │ ProductoID (FK)    │     │ubicacion │
+  │direccion│     │ Total · forma_pago   │     │ Cantidad           │     │◄warehouse│
+  │verified │     │ DireccionEntrega     │     │ PrecioUnitario     │     └──────────┘
+  └─────────┘     │ lat/lng·cancelled_by │     │ Notas (comments)   │
+                  └──────────────────────┘     └────────────────────┘
+
+  CATALOG                         PAYMENTS & AUDIT              OPERATIONS
+  ───────                         ────────────────              ──────────
+  ┌────────┐  ┌──────────┐        ┌────────┐  ┌─────────────┐  ┌──────────────┐
+  │categorias  │productos │        │ pagos  │  │historial_  │  │ empleados    │
+  ├────────┤  ├──────────┤        ├────────┤  │estados_ped │  ├──────────────┤
+  │id (PK) │  │ProductoID│        │id (PK) │  ├─────────────┤  │ EmpleadoID   │
+  │nombre  │1:N│categoria │        │pedido_ │  │ id (PK)    │  │ nombre       │
+  │orden   │◄►│Nombre    │        │id (FK) │  │ pedido_id  │  │ rol ◄─ tipos │
+  │activa  │  │Precio    │        │proveedor  │ estado_nuevo│  │ activo       │
+  └────────┘  │Stock     │        │estado  │  │ cambiado_en│  └──────────────┘
+              │Disponible│        │importe │  └─────────────┘
+              └──────────┘        └────────┘  1:N pagos · 1:N cambios estado
+
+  REPARTO & PICKING
+  ─────────────────
+  ┌──────────┐          ┌─────────────────┐
+  │ reparto  │          │ picking_pedido  │
+  ├──────────┤          ├─────────────────┤
+  │id (PK)   │          │ id (PK)         │
+  │pedido_id │          │ pedido_id (FK)  │
+  │repartidor│          │ estado ◄─────┐  │
+  │estado    │          │ actualizado  │  │
+  │lat/lng   │          └─────────────────┘
+  └──────────┘               PENDIENTE · EN_PROCESO · COMPLETADO
+                             warehouse mode (item-level)
+                             restaurant mode (simplified queue)
+`,
+    },
+    {
+      tab: "validación de dirección",
+      content: `
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║         ADDRESS VALIDATION: Microservice-Ready Module                    ║
+  ║              (currently embedded, extractable to sidecar)                 ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+
+  INPUT: "Calle Principal 45, Tarancón"
+         │
+         ▼
+  maps_module.validar_direccion()
+         │
+         ├─────────────────────────────────────────────────────────┐
+         │                                                         │
+         ▼                                                         ▼
+    NORMALIZE                                      LOOKUP IN STREET CATALOG
+    ──────────                                      ──────────────────────
+    ├─ regex rules from territories.json           ├─ territories.json
+    ├─ "Cll." → "Calle"                            ├─ calles_tarancon.json
+    ├─ lowercase + strip spaces                    ├─ 311 streets indexed
+    └─ prepare for lookup                          └─ Reject if: not found
+                                                       or number missing
+
+         │                                                         │
+         └─────────────────────────┬─────────────────────────────┘
+                                   │
+                                   ▼
+                          GEOCODE (Google Maps API)
+                          ────────────────────────
+                          ├─ lat/lng coordinates
+                          ├─ formatted address
+                          └─ Retry on rate-limit
+
+                                   │
+                                   ▼
+                        POLYGON CHECK (Shapely)
+                        ─────────────────────
+                        ├─ Load delivery zone polygon from config
+                        ├─ point-in-polygon test (vincenty distance)
+                        └─ Reject if: outside zone or API error
+
+                                   │
+                    ┌──────────────┴──────────────┐
+                    │                             │
+                    ▼                             ▼
+                  VALID                        INVALID
+                   ✓                            ✗
+              (True, cleaned)              (False, reason)
+              lat/lng ready                ├─ no_encontrada
+              address to save              ├─ fuera_zona
+              geocoded                     ├─ sin_numero
+                                           ├─ demasiado_generica
+                                           └─ error_api
+`,
+    },
+    {
+      tab: "registro (state machine)",
+      doc: {
+        href: "https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/managers/gestor_redis.md",
+        text: "RedisManager docs",
+      },
+      content: `
+  ╔═══════════════════════════════════════════════════════════════════════════╗
+  ║         REGISTRATION: Redis State Machine + NLP                          ║
+  ║        (stored as: <phone_number> → current_state · TTL per step)        ║
+  ╚═══════════════════════════════════════════════════════════════════════════╝
+
+  WhatsApp message
+         │
+         ▼
+  ┌────────────────────────┐       ┌──────────────────────┐
+  │ SALUDO_INICIAL         │       │ ESPERANDO_           │
+  │ "Hola, ¿cómo estás?"   │       │ CONFIRMACION         │
+  ├────────────────────────┤       │ "¿Deseas             │
+  │ Waiting: sí | no       │       │  registrarte?"       │
+  └──────┬─────────────────┘       ├──────────────────────┤
+         │                         │ Waiting: sí | no     │
+         └──────────┬──────────────┘
+                    │
+            ┌───────┴─────────┐
+            │                 │
+  ┌─────────▼──────────┐  ┌─────▼────────────────────┐
+  │ ESPERANDO_NOMBRE   │  │ ESPERANDO_DIRECCION      │
+  │ "¿Cuál es tu       │  │ "¿Cuál es tu             │
+  │  nombre?"          │  │  dirección?"             │
+  ├────────────────────┤  ├────────────────────────────┤
+  │ Validate:          │  │ Validate:                  │
+  │ • length 2-60      │  │ • maps_module.validar_dir  │
+  │ • regex [A-Zá-úñ]  │  │ • polygon boundary         │
+  │ • spaCy NLP (es)   │  │ • street catalog           │
+  │                    │  │                            │
+  │ ├─ valid ──┐       │  │ ├─ valid ────────┐        │
+  │ └─ invalid─┤       │  │ └─ invalid ──────┤        │
+  └────────────┤───────┘  └──────────────────┤────────┘
+               │                             │
+               └──────────┬──────────────────┘
+                          │
+                          ▼
+             ┌─────────────────────────────────┐
+             │ CONFIRMANDO_DIRECCION           │
+             │ "¿Es correcto? Calle X, 123"    │
+             ├─────────────────────────────────┤
+             │ • sí → save                     │
+             │ • no → back to ESPERANDO_       │
+             │ • new address → re-validate     │
+             └──────────┬──────────────────────┘
+                        │
+                ┌───────┴─────────┐
+                │                 │
+                ▼                 ▼
+           ┌──────────┐      (retry)
+           │CONFIRMADO│
+           ├──────────┤
+           │ Save BD: │
+           │ usuario  │
+           │ estado   │
+           │ Clear    │
+           │ Redis    │
+           │          │
+           │ Send     │
+           │ menu     │
+           │ link     │
+           └──────────┘
+
+  ─────────────────────────────────────────────────────────────────────────────
+  PERSISTENCE LAYER: RedisManager (Singleton)
+  ─────────────────────────────────────────────────────────────────────────────
+
+  Key: <phone_number>          Value: <current_state>    TTL: step-dependent
+       └─ Unique per user           └─ SALUDO_INICIAL           ├─ SALUDO: 120s
+          from WhatsApp             └─ ESPERANDO_NOMBRE         ├─ NOMBRE: 300s
+                                    └─ ESPERANDO_DIRECCION      └─ DIRECCION: 300s
+
+  RedisManager Operations
+  ├─ get(key) ────────────► None on failure (don't block user)
+  ├─ set(key, value, ttl) ─► 3-attempt retry (2s intervals) · critical for state
+  ├─ delete(key) ──────────► cleanup on exit or timeout
+  ├─ esta_bloqueado() ─────► anti-flood: 4s block per user
+  ├─ ya_procesado_wamid() ─► deduplication: atomic SET NX (300s window)
+  └─ adquirir_lock() ──────► fail-open semantics (no indefinite blocking)
+
+  Connection: 3s socket timeout · retry-enabled · mandatory at startup
+  Source: https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/managers/gestor_redis.md
 `,
     },
   ];
@@ -228,11 +438,23 @@
       return pre.outerHTML;
     }).join("");
 
+    // añade links de documentación a los paneles que los tengan
+    const docsLinks = ARCH_PANELS
+      .map((p, i) => {
+        if (!p.doc) return "";
+        return (
+          `<a class="arch__doc mono" data-arch-doc="${i}" href="${p.doc.href}" ` +
+          `target="_blank" rel="noopener noreferrer" style="display:none;">` +
+          `📄 ${p.doc.text} ${ICON_EXT()}</a>`
+        );
+      })
+      .join("");
+
     archContainer.innerHTML =
       `<div class="arch__head mono">` +
         `<div class="arch__tabs" role="tablist">${tabsHTML}</div>` +
         `<span class="arch__file">panchi-bot/diagrams.txt</span>` +
-      `</div>${panelsHTML}`;
+      `</div>${panelsHTML}${docsLinks}`;
   }
 
   /* ── feature cards ─────────────────────────────────────────────── */
@@ -454,50 +676,131 @@
   $$("[data-arch]").forEach((arch) => {
     const tabs   = $$("[data-arch-tab]",   arch);
     const panels = $$("[data-arch-panel]", arch);
+    const docs   = $$("[data-arch-doc]",   arch);
 
     tabs.forEach((tab) => {
       tab.addEventListener("click", () => {
         const target = tab.dataset.archTab;
         tabs.forEach((t)   => { t.classList.remove("is-active"); t.setAttribute("aria-selected", "false"); });
         panels.forEach((p) => p.classList.remove("is-active"));
+        docs.forEach((d)   => d.style.display = "none");
         tab.classList.add("is-active");
         tab.setAttribute("aria-selected", "true");
         const active = panels.find((p) => p.dataset.archPanel === target);
         if (active) active.classList.add("is-active");
+        const activeDoc = docs.find((d) => d.dataset.archDoc === target);
+        if (activeDoc) activeDoc.style.display = "inline-block";
       });
     });
   });
 
-  /* ── 05 · lightbox ──────────────────────────────────────────────── */
+  /* ── 05 · carrusel de paneles ──────────────────────────────────── */
+  const carousels = [];
+
+  $$("[data-carousel]").forEach((carousel) => {
+    const track   = carousel.querySelector(".proj__carousel-track");
+    const imgs    = Array.from(track.querySelectorAll("img"));
+    const dots    = Array.from(carousel.querySelectorAll(".proj__carousel-dot"));
+    const btnPrev = carousel.querySelector(".proj__carousel-btn--prev");
+    const btnNext = carousel.querySelector(".proj__carousel-btn--next");
+    let current = 0;
+
+    const goTo = (idx) => {
+      current = (idx + imgs.length) % imgs.length;
+      track.style.transform = `translateX(-${current * 100}%)`;
+      dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
+    };
+
+    // los dots también son clicables
+    dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
+
+    btnPrev.addEventListener("click", () => goTo(current - 1));
+    btnNext.addEventListener("click", () => goTo(current + 1));
+
+    // swipe táctil
+    let startX = 0;
+    carousel.addEventListener("touchstart", (e) => { startX = e.touches[0].clientX; }, { passive: true });
+    carousel.addEventListener("touchend", (e) => {
+      const dx = e.changedTouches[0].clientX - startX;
+      if (Math.abs(dx) > 40) goTo(current + (dx < 0 ? 1 : -1));
+    });
+
+    // exponemos estado para que el lightbox pueda navegar
+    carousels.push({ imgs, getCurrent: () => current, goTo });
+  });
+
+  /* ── 06 · lightbox ──────────────────────────────────────────────── */
   const lightbox  = $("#lightbox");
   const lbImg     = $("#lightbox-img");
   const lbClose   = $("#lightbox-close");
+  const lbPrev    = $("#lightbox-prev");
+  const lbNext    = $("#lightbox-next");
 
-  const lbOpen = (src, alt) => {
+  // carrusel activo cuando el lightbox está abierto
+  let lbCarousel  = null;
+
+  const lbUpdateNav = () => {
+    const hasNav = lbCarousel !== null;
+    lbPrev.classList.toggle("is-hidden", !hasNav);
+    lbNext.classList.toggle("is-hidden", !hasNav);
+  };
+
+  const lbOpen = (src, alt, carousel = null) => {
     lbImg.src = src;
     lbImg.alt = alt;
+    lbCarousel = carousel;
     lightbox.classList.add("is-open");
     document.body.style.overflow = "hidden";
+    lbUpdateNav();
   };
   const lbShut = () => {
     lightbox.classList.remove("is-open");
     document.body.style.overflow = "";
+    lbCarousel = null;
   };
 
-  $$(".proj__demo-screen img").forEach((img) => {
-    img.addEventListener("click", () => lbOpen(img.src, img.alt));
+  const lbNavigate = (dir) => {
+    if (!lbCarousel) return;
+    const next = lbCarousel.getCurrent() + dir;
+    lbCarousel.goTo(next);
+    const idx = lbCarousel.getCurrent();
+    lbImg.src = lbCarousel.imgs[idx].src;
+    lbImg.alt = lbCarousel.imgs[idx].alt;
+  };
+
+  lbPrev.addEventListener("click", (e) => { e.stopPropagation(); lbNavigate(-1); });
+  lbNext.addEventListener("click", (e) => { e.stopPropagation(); lbNavigate(1); });
+
+  // cada imagen del carrusel abre el lightbox con referencia al carrusel
+  carousels.forEach((c) => {
+    c.imgs.forEach((img) => {
+      img.addEventListener("click", () => lbOpen(img.src, img.alt, c));
+    });
+  });
+
+  // imágenes sueltas (sin carrusel)
+  $$(".proj__demo-screen img:not([data-carousel] img)").forEach((img) => {
+    img.addEventListener("click", () => lbOpen(img.src, img.alt, null));
   });
 
   lbClose.addEventListener("click", lbShut);
-  lightbox.addEventListener("click", (e) => { if (e.target === lightbox) lbShut(); });
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape") lbShut(); });
+  lightbox.addEventListener("click", (e) => {
+    if (e.target === lightbox || e.target === lightbox.querySelector(".lightbox__content")) lbShut();
+  });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") lbShut();
+    if (lightbox.classList.contains("is-open")) {
+      if (e.key === "ArrowLeft")  lbNavigate(-1);
+      if (e.key === "ArrowRight") lbNavigate(1);
+    }
+  });
 
-  /* ── 06 · console easter egg ────────────────────────────────────── */
+  /* ── 07 · console easter egg ────────────────────────────────────── */
   if (typeof console !== "undefined") {
     const style = "color:#ffb627;font:600 12px/1.4 JetBrains Mono,monospace;";
     console.log("%c// jae-portfolio · v1.0.0", style);
     console.log(
-      "%cSi estás leyendo esto por curiosidad, ya nos entenderíamos. → hola@ejemplo.com",
+      "%cSi estás leyendo esto por curiosidad, ya nos entenderíamos. → jorgesiemprearmando@gmail.com",
       "color:#a59d89;font:400 12px/1.5 JetBrains Mono,monospace;"
     );
   }
