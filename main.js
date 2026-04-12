@@ -296,6 +296,19 @@
     setInterval(tickTs, 1000);
   }
 
+  /* ── 00b · dossier HUD clock ───────────────────────────────────── */
+  const dossierTime = $("#dossier-time");
+  if (dossierTime) {
+    const pad = (n) => String(n).padStart(2, "0");
+    const tickHud = () => {
+      const d = new Date();
+      dossierTime.textContent =
+        `${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    };
+    tickHud();
+    setInterval(tickHud, 1000);
+  }
+
   /* ── 01 · session uptime counter ───────────────────────────────── */
   const uptimeEl = $("[data-uptime]");
   if (uptimeEl) {
