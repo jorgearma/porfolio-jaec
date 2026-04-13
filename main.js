@@ -568,9 +568,9 @@
       { plain: `  "name": "Jorge Armando",`,                                                                                html: `  ${k("name")}${p(":")} ${v("Jorge Armando")}${p(",")}` },
       { plain: `  "role": "Junior Cybersecurity Candidate",`,                                                               html: `  ${k("role")}${p(":")} ${v("Junior Cybersecurity Candidate")}${p(",")}` },
       { plain: `  "focus": "Pentesting & Web Security",`,                                                                   html: `  ${k("focus")}${p(":")} ${v("Pentesting &amp; Web Security")}${p(",")}` },
-      { plain: `  "skills": ["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"],`,                                 html: `  ${k("skills")}${p(":")} ${arr(["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"])}${p(",")}`, mobileHide: true },
-      { plain: `  "ad": ["Active Directory", "BloodHound", "Kerberoasting", ],`,                                           html: `  ${k("ad")}${p(":")} ${arr(["Active Directory", "BloodHound", "Kerberoasting", "Pass-the-Hash", "LDAP enum"])}${p(",")}`, mobileHide: true },
-      { plain: `  "tools": ["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",],`,                              html: `  ${k("tools")}${p(":")} ${arr(["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",])}${p(",")}`, mobileHide: true },
+      { plain: `  "skills": ["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"],`,                                 html: `  ${k("skills")}${p(":")} ${arr(["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"])}${p(",")}` },
+      { plain: `  "ad": ["Active Directory", "BloodHound", "Kerberoasting", ],`,                                           html: `  ${k("ad")}${p(":")} ${arr(["Active Directory", "BloodHound", "Kerberoasting", "Pass-the-Hash", "LDAP enum"])}${p(",")}` },
+      { plain: `  "tools": ["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",],`,                              html: `  ${k("tools")}${p(":")} ${arr(["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",])}${p(",")}` },
       { plain: `  "projects": ["Panchi-Bot", "VPS Hardening", "Atalaya"],`,                                                html: `  ${k("projects")}${p(":")} ${arr(["Panchi-Bot", "VPS Hardening", "Atalaya"])}${p(",")}` },
       { plain: `  "goal": "Start as a junior pentester and grow fast"`,                                                    html: `  ${k("goal")}${p(":")} ${v("Start as a junior pentester and grow fast")}` },
       { plain: `}`,                                                                                                          html: p(`}`) },
@@ -597,11 +597,6 @@
     /* escapa HTML básico para el texto plano durante la escritura */
     const escHtml = (s) =>
       s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-
-    /* en móvil omite las líneas marcadas con mobileHide */
-    const isMobile = () => window.innerWidth <= 860;
-    const visibleLines = (lines) =>
-      isMobile() ? lines.filter((l) => !l.mobileHide) : lines;
 
     /* tipea todas las líneas en secuencia */
     const typeAll = (lines, idx = 0) => {
@@ -633,7 +628,7 @@
           setTimeout(() => {
             cursor.classList.remove("blink");
             cursor.style.opacity = "0";
-            typeAll(visibleLines(LINES));
+            typeAll(LINES);
           }, 380);
         }
       }, CMD_SPEED);
