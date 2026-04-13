@@ -926,10 +926,31 @@ em { font-style: italic; }
 .hero__ok { color: var(--ok) !important; }
 
 
+/* avatar miniatura: oculto en desktop */
+.hero__name-wrap { display: contents; }
+.hero__name-avatar { display: none; }
+
 @media (max-width: 860px) {
   .hero { grid-template-columns: 1fr; }
-  .hero__right { grid-column: 1; width: 100%; max-width: 320px; }
+  .hero__right { display: none; }
   .hero__meta { flex-direction: column; gap: 6px; }
+
+  /* avatar pequeño junto al nombre solo en móvil */
+  .hero__name-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .hero__name-avatar {
+    display: block;
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    object-position: center top;
+    flex-shrink: 0;
+    filter: grayscale(1) contrast(1.12) brightness(.9) sepia(.35);
+    border: 1px solid var(--rule);
+  }
 }
 
 /* ═══════════ sections ═══════════ */
@@ -2299,3 +2320,112 @@ em { font-style: italic; }
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+
+/* ════════════════════════════════════════════════════════════════
+   RESPONSIVE MÓVIL
+   — desktop no se toca: estos bloques solo activan en pantallas
+     pequeñas. El diseño de escritorio queda intacto.
+   ════════════════════════════════════════════════════════════════ */
+
+/* ── ≤ 768px: tablets y teléfonos grandes ──
+   Recorte suave: mostrar solo las celdas más relevantes
+   en secciones de rejilla densa.                              */
+@media (max-width: 768px) {
+  /* features de Panchi-Bot: máximo 4 tarjetas */
+  .feat:nth-child(n+5) { display: none; }
+  /* write-ups: máximo 4 tarjetas */
+  .wu:nth-child(n+4)   { display: none; }
+}
+
+/* ── ≤ 540px: teléfonos ──
+   Recorte fuerte: se elimina lo decorativo y lo redundante
+   para no saturar la pantalla estrecha.                       */
+@media (max-width: 540px) {
+
+  /* grain: caro sin GPU dedicada, imperceptible a esta escala */
+  .fx-grain  { display: none; }
+  /* grid-rails: solo ornamental en pantallas anchas */
+  .grid-rails { display: none; }
+
+  /* ── statusbar ── */
+  .statusbar          { padding: 10px var(--pad); }
+  /* uptime: ocupa espacio central sin aportar en móvil */
+  .statusbar__center  { display: none; }
+
+  /* ── hero ── */
+  .hero {
+    min-height: unset;
+    row-gap: 24px;
+    padding-block: 20px;
+  }
+  /* coordenadas y dossier-id: puramente decorativos */
+  .hero__meta { display: none; }
+  /* vitals (STATUS / BUILD / TZ…): el dossier ya muestra el estado */
+  .hero__side { display: none; }
+  /* dossier: usa todo el ancho disponible */
+  .hero__right { max-width: 100%; }
+
+  /* nombre más compacto */
+  .hero__name  { font-size: clamp(28px, 8vw, 40px); }
+  /* roles: menos separación */
+  .hero__role  { gap: 8px; font-size: clamp(14px, 3.5vw, 16px); margin: 16px 0 20px; }
+  /* terminal: más corto — logs siguen siendo legibles */
+  .hero__terminal-body { min-height: 130px; }
+  /* botones: apilados y full-width para fácil tap */
+  .hero__actions { flex-direction: column; gap: 10px; margin-top: 20px; }
+  .btn           { justify-content: center; width: 100%; }
+
+  /* ── whoami header ──
+     La barra superior tiene tres items; en móvil se conserva
+     solo el indicador de estado (ACCESO CONCEDIDO).          */
+  .whoami__head-ts  { display: none; }  /* timestamp */
+  .whoami__head-id  { display: none; }  /* REC://JAE-001 */
+  /* comentarios // clasificación / nivel / estado: metadata interna */
+  .whoami__head-meta { display: none; }
+
+  /* ── whoami card ── */
+  .whoami__card { padding: 20px 18px; }
+
+  /* ── section headers ── */
+  /* badges tipo "CASE STUDY" / "FIELD REPORTS": decorativos */
+  .section__tag { display: none; }
+
+  /* ── Panchi-Bot case study ── */
+  /* stack de tecnologías: 18 items → máx 10 */
+  .stack__list li:nth-child(n+11) { display: none; }
+  /* diagramas ASCII: requieren scroll horizontal y son solo documentación */
+  .arch { display: none; }
+  /* feature cards: máx 3 */
+  .feat:nth-child(n+4) { display: none; }
+
+  /* ── write-ups ── */
+  .wu:nth-child(n+4) { display: none; }
+
+  /* ── contacto ── */
+  .contact__box  { padding: 24px 20px; }
+  .contact__lede { font-size: clamp(18px, 5vw, 22px); }
+
+  /* ── footer ── */
+  /* fila técnica (nginx/tls…): ya visible en desktop */
+  .footer__row--mini { display: none; }
+}
+
+/* ── ≤ 420px: teléfonos pequeños (SE, Mini…) ── */
+@media (max-width: 420px) {
+
+  /* tipografía: reducir en pantallas muy estrechas */
+  .hero__name    { font-size: clamp(24px, 7vw, 30px); }
+  .section__title { font-size: clamp(22px, 6.5vw, 28px); }
+  .whoami__title  { font-size: clamp(22px, 6.5vw, 28px); }
+
+  /* contacto: columna clave más estrecha */
+  .contact__list li { grid-template-columns: 72px 1fr; gap: 10px; }
+
+  /* ── skills / arsenal ──
+     6 columnas → 1 col en pantallas muy estrechas = 6 filas.
+     Se ocultan las menos críticas para el perfil de seguridad:
+       · datos (3ª): redis/rq deducibles del stack de Panchi-Bot
+       · observabilidad (6ª): cubierta por Atalaya en §02      */
+  .skills__col:nth-child(3),
+  .skills__col:nth-child(6) { display: none; }
+}
