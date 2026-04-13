@@ -987,6 +987,10 @@ em { font-style: italic; }
 
 /* ═══════════ whoami ═══════════ */
 
+.whoami {
+  padding-top: clamp(24px, 3vw, 40px) !important;
+}
+
 .whoami__head {
   position: relative;
   border: 1px solid var(--rule);
@@ -1781,14 +1785,14 @@ em { font-style: italic; }
   margin: auto 0 0;
   padding: 20px 0 0;
   display: flex; flex-wrap: wrap; gap: 6px;
-  font-size: 10px;
+  font-size: 11px;
 }
 .proj__stack li {
-  padding: 4px 9px;
+  padding: 5px 10px;
   border: 1px solid var(--rule);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  color: var(--ink-mute);
+  color: var(--ink);
   transition: border-color .2s, color .2s;
 }
 .proj__stack li:hover {

@@ -17,7 +17,7 @@ rsync -avz --delete \
 cd /opt/jae-portfolio
 docker compose up -d --build
 docker compose ps
-curl -I http://127.0.0.1:8088/
+curl -I http://127.0.0.1:8089/
 ```
 
 El contenedor queda escuchando en `127.0.0.1:8088` (no expuesto al
@@ -58,7 +58,7 @@ server {
     # add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
 
     location / {
-        proxy_pass         http://127.0.0.1:8088;
+        proxy_pass         http://127.0.0.1:8089;
         proxy_http_version 1.1;
         proxy_set_header   Host              $host;
         proxy_set_header   X-Real-IP         $remote_addr;
@@ -119,7 +119,7 @@ docker compose up -d --build
 
 ## Notas
 
-- El puerto `8088` es arbitrario; cámbialo si ya lo usas.
+- El puerto `8089` es arbitrario; cámbialo si ya lo usas.
 - Si prefieres saltarte el nginx del host, abre `80:80` / `443:443`
   directamente en `docker-compose.yml` y monta certificados.
 - `HSTS` solo cuando esté 100% vivo por HTTPS — si no, te clavas.
