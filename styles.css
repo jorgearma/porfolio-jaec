@@ -310,6 +310,7 @@ em { font-style: italic; }
 .hero__last  { display: block; color: var(--ink); }
 .hero__last::before { content: none; }
 .hero__stop  { display: none; }
+/* mini dossier junto al nombre: oculto en desktop */
 .hero__name-dossier { display: none; }
 
 .hero__role {
@@ -933,61 +934,38 @@ em { font-style: italic; }
   .hero__meta { flex-direction: column; gap: 6px; }
   .hero__side { display: none; }
   .whoami__card { display: none; }
-  .hero__name {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 14px;
-    max-width: 100%;
-  }
   .hero__last { display: none; }
+  /* nombre + foto en fila */
+  .hero__name { display: flex; align-items: center; gap: 12px; max-width: 100%; }
+  /* mini dossier: visible en móvil con efectos */
   .hero__name-dossier {
     display: block;
     flex-shrink: 0;
-    order: -1;
     position: relative;
-    width: 58px;
-    height: 58px;
+    width: 62px;
+    height: 62px;
     border: 1px solid var(--rule);
     background: #0d0c09;
     overflow: hidden;
     isolation: isolate;
   }
   .hero__name-dossier img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
+    width: 100%; height: 100%;
+    object-fit: cover; object-position: top;
     display: block;
-    filter: grayscale(30%);
   }
-  /* duotone amber */
   .hero__name-dossier::before {
     content: "";
     position: absolute; inset: 0;
-    background: linear-gradient(
-      160deg,
-      rgba(255,182,39,.18) 0%,
-      rgba(255,182,39,.06) 45%,
-      rgba(0,0,0,.35) 100%
-    );
+    background: linear-gradient(160deg, rgba(255,182,39,.22) 0%, rgba(255,182,39,.06) 50%, rgba(0,0,0,.4) 100%);
     mix-blend-mode: color;
-    z-index: 2;
-    pointer-events: none;
+    z-index: 2; pointer-events: none;
   }
-  /* scan lines */
   .hero__name-dossier::after {
     content: "";
     position: absolute; inset: 0;
-    background-image: repeating-linear-gradient(
-      to bottom,
-      transparent 0px,
-      transparent 2px,
-      rgba(0,0,0,.18) 2px,
-      rgba(0,0,0,.18) 3px
-    );
-    z-index: 3;
-    pointer-events: none;
+    background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px);
+    z-index: 3; pointer-events: none;
   }
   .hero__actions { width: 100%; }
   .hero__actions .btn {
