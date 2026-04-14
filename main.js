@@ -468,8 +468,9 @@
         ? `<a class="feat__doc mono" href="${f.doc.href}" target="_blank" rel="noopener noreferrer">` +
           `${f.doc.text} ${ICON_EXT()}</a>`
         : "";
+      const extra = ["f/05","f/06","f/07","f/08"].includes(f.idx) ? " feat--extra" : "";
       return (
-        `<article class="feat">` +
+        `<article class="feat${extra}">` +
           `<span class="feat__idx mono">${f.idx}</span>` +
           `<h3 class="feat__title">${f.title}</h3>` +
           `<p class="feat__body">${f.body}</p>` +
@@ -562,18 +563,32 @@
     const arr = (items) =>
       p("[") + items.map((i) => v(i)).join(p(", ")) + p("]");
 
+    /* en móvil recortamos arrays a 3 elementos para que la consola no desborde */
+    const isMobile = window.innerWidth <= 860;
+    const trim = (list) => isMobile ? list.slice(0, 2) : list;
+
+    /* helper: genera línea plain + html para un campo con array */
+    const arrLine = (key, items, comma) => {
+      const vals = trim(items);
+      const plainArr = `[${vals.map((i) => `"${i}"`).join(", ")}]`;
+      return {
+        plain: `  "${key}": ${plainArr}${comma ? "," : ""}`,
+        html:  `  ${k(key)}${p(":")} ${arr(vals)}${comma ? p(",") : ""}`
+      };
+    };
+
     /* cada entrada tiene el texto plano (para tipear) y el html coloreado */
     const LINES = [
-      { plain: `{`,                                                                                                          html: p(`{`) },
-      { plain: `  "name": "Jorge Armando",`,                                                                                html: `  ${k("name")}${p(":")} ${v("Jorge Armando")}${p(",")}` },
-      { plain: `  "role": "Junior Cybersecurity Candidate",`,                                                               html: `  ${k("role")}${p(":")} ${v("Junior Cybersecurity Candidate")}${p(",")}` },
-      { plain: `  "focus": "Pentesting & Web Security",`,                                                                   html: `  ${k("focus")}${p(":")} ${v("Pentesting &amp; Web Security")}${p(",")}` },
-      { plain: `  "skills": ["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"],`,                                 html: `  ${k("skills")}${p(":")} ${arr(["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"])}${p(",")}` },
-      { plain: `  "ad": ["Active Directory", "BloodHound", "Kerberoasting", ],`,                                           html: `  ${k("ad")}${p(":")} ${arr(["Active Directory", "BloodHound", "Kerberoasting", "Pass-the-Hash", "LDAP enum"])}${p(",")}` },
-      { plain: `  "tools": ["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",],`,                              html: `  ${k("tools")}${p(":")} ${arr(["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf",])}${p(",")}` },
-      { plain: `  "projects": ["Panchi-Bot", "VPS Hardening", "Atalaya"],`,                                                html: `  ${k("projects")}${p(":")} ${arr(["Panchi-Bot", "VPS Hardening", "Atalaya"])}${p(",")}` },
-      { plain: `  "goal": "Start as a junior pentester and grow fast"`,                                                    html: `  ${k("goal")}${p(":")} ${v("Start as a junior pentester and grow fast")}` },
-      { plain: `}`,                                                                                                          html: p(`}`) },
+      { plain: `{`,                                                html: p(`{`) },
+      { plain: `  "name": "Jorge Armando",`,                       html: `  ${k("name")}${p(":")} ${v("Jorge Armando")}${p(",")}` },
+      { plain: `  "role": "Junior Cybersecurity Candidate",`,      html: `  ${k("role")}${p(":")} ${v("Junior Cybersecurity Candidate")}${p(",")}` },
+      { plain: `  "focus": "Pentesting & Web Security",`,          html: `  ${k("focus")}${p(":")} ${v("Pentesting &amp; Web Security")}${p(",")}` },
+      arrLine("skills",   ["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"], true),
+      arrLine("ad",       ["Active Directory", "BloodHound", "Kerberoasting", "Pass-the-Hash", "LDAP enum"], true),
+      arrLine("tools",    ["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf"], true),
+      arrLine("projects", ["Panchi-Bot", "VPS Hardening", "Atalaya"], true),
+      { plain: `  "goal": "Start as a junior pentester and grow fast"`, html: `  ${k("goal")}${p(":")} ${v("Start as a junior pentester and grow fast")}` },
+      { plain: `}`,                                                html: p(`}`) },
     ];
 
     /* tipea una línea carácter a carácter; al terminar llama a cb */
