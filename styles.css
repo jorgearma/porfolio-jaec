@@ -498,6 +498,13 @@ em { font-style: italic; }
 .jl__key   { color: var(--amber); }
 .jl__val   { color: #7fd37f; }
 .jl__pun   { color: var(--ink-mute); }
+.jl__lbl   { color: var(--ink-dim); }
+/* ── prompt estilo Kali (dos líneas) ── */
+.log.kp    { display: block; white-space: pre; }
+.kp__frame { color: var(--ink-mute); }
+.kp__user  { color: var(--ok); font-weight: 600; }
+.kp__path  { color: var(--amber); }
+.kp__cmd   { color: var(--ink); }
 .jl__caret {
   color: var(--amber);
   animation: blink .7s step-start infinite;
@@ -929,21 +936,24 @@ em { font-style: italic; }
 
 
 @media (max-width: 860px) {
-  .hero { grid-template-columns: 1fr; }
+  .hero { grid-template-columns: minmax(0, 1fr); }
+  .hero__body, .hero__terminal, .hero__role, .hero__name { min-width: 0; }
   .hero__right { display: none; }
   .hero__meta { flex-direction: column; gap: 6px; }
   .hero__side { display: none; }
   .whoami__card { display: none; }
   .hero__last { display: none; }
   /* nombre + foto en fila */
-  .hero__name { display: flex; align-items: center; gap: 12px; max-width: 100%; }
+  .hero__name { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; max-width: 100%; min-width: 0;
+                font-size: clamp(24px, 6.6vw, 34px); }
+  .hero__first { min-width: 0; overflow-wrap: anywhere; }
   /* mini dossier: visible en móvil con efectos */
   .hero__name-dossier {
     display: block;
     flex-shrink: 0;
     position: relative;
-    width: 62px;
-    height: 62px;
+    width: 50px;
+    height: 50px;
     border: 1px solid var(--rule);
     background: #0d0c09;
     overflow: hidden;

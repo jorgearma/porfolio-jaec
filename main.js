@@ -546,108 +546,104 @@
     setInterval(tick, 1000);
   }
 
-  /* ── 02 · hero terminal: cat jae_perfil.txt ─────────────────── */
-  const term   = $("[data-logs]");
-  const cursor = $(".hero__terminal-cursor");
-  const foot   = $(".hero__terminal-foot");
+  /* ── 02 · hero terminal: prompt estilo Kali + comandos ─────────── */
+  const term = $("[data-logs]");
+  const foot = $(".hero__terminal-foot");
 
-  if (term && cursor && foot) {
-    const CMD        = "cat jae_perfil.txt";
-    const BOOT_DELAY = 900;  /* ms antes de empezar a escribir */
-    const CMD_SPEED  = 62;   /* ms entre carácter del comando */
+  if (term) {
+    /* el prompt final vive ahora dentro del historial → ocultamos el pie viejo */
+    if (foot) foot.style.display = "none";
 
-    /* helpers de marcado de color */
-    const k   = (s) => `<span class="jl__key">"${s}"</span>`;
-    const v   = (s) => `<span class="jl__val">"${s}"</span>`;
-    const p   = (s) => `<span class="jl__pun">${s}</span>`;
-    const arr = (items) =>
-      p("[") + items.map((i) => v(i)).join(p(", ")) + p("]");
+    const USER       = "siemprearmando㉿elfavo";
+    const PATH       = "~";
+    const BOOT_DELAY = 900;   /* ms antes de empezar */
 
-    /* en móvil recortamos arrays a 3 elementos para que la consola no desborde */
-    const isMobile = window.innerWidth <= 860;
-    const trim = (list) => isMobile ? list.slice(0, 2) : list;
-
-    /* helper: genera línea plain + html para un campo con array */
-    const arrLine = (key, items, comma) => {
-      const vals = trim(items);
-      const plainArr = `[${vals.map((i) => `"${i}"`).join(", ")}]`;
-      return {
-        plain: `  "${key}": ${plainArr}${comma ? "," : ""}`,
-        html:  `  ${k(key)}${p(":")} ${arr(vals)}${comma ? p(",") : ""}`
-      };
-    };
-
-    /* cada entrada tiene el texto plano (para tipear) y el html coloreado */
-    const LINES = [
-      { plain: `{`,                                                html: p(`{`) },
-      { plain: `  "name": "Jorge Armando",`,                       html: `  ${k("name")}${p(":")} ${v("Jorge Armando")}${p(",")}` },
-      { plain: `  "role": "Junior Cybersecurity Candidate",`,      html: `  ${k("role")}${p(":")} ${v("Junior Cybersecurity Candidate")}${p(",")}` },
-      { plain: `  "focus": "Pentesting & Web Security",`,          html: `  ${k("focus")}${p(":")} ${v("Pentesting &amp; Web Security")}${p(",")}` },
-      arrLine("skills",   ["Web Pentesting", "Linux", "Nmap", "Burp Suite", "Python"], true),
-      arrLine("ad",       ["Active Directory", "BloodHound", "Kerberoasting", "Pass-the-Hash", "LDAP enum"], true),
-      arrLine("tools",    ["Metasploit", "Impacket", "CrackMapExec", "Gobuster", "ffuf"], true),
-      arrLine("projects", ["Panchi-Bot", "VPS Hardening", "Atalaya"], true),
-      { plain: `  "goal": "Start as a junior pentester and grow fast"`, html: `  ${k("goal")}${p(":")} ${v("Start as a junior pentester and grow fast")}` },
-      { plain: `}`,                                                html: p(`}`) },
-    ];
-
-    /* tipea una línea carácter a carácter; al terminar llama a cb */
-    const typeLine = (li, plain, html, cb) => {
-      let ci = 0;
-      const next = () => {
-        if (ci < plain.length) {
-          ci++;
-          /* muestra texto plano + cursor de bloque al final */
-          li.innerHTML = escHtml(plain.slice(0, ci)) + `<span class="jl__caret">█</span>`;
-          setTimeout(next, 13 + Math.floor(Math.random() * 14));
-        } else {
-          /* línea completa: aplica colores y elimina caret */
-          li.innerHTML = html;
-          cb();
-        }
-      };
-      next();
-    };
-
-    /* escapa HTML básico para el texto plano durante la escritura */
     const escHtml = (s) =>
       s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-    /* tipea todas las líneas en secuencia */
-    const typeAll = (lines, idx = 0) => {
-      if (idx >= lines.length) return;
-      const { plain, html } = lines[idx];
+    /* ── contenido de salida ── */
+    const COL = 6;
+    const sp  = (n) => " ".repeat(Math.max(1, COL - [...n].length));
+    const PROOF = [
+      ["52",   "HTB machines owned"],
+      ["32k★", "web-check — PR merged (RFC 9116)"],
+      ["3",    "security tools shipped"],
+      ["→",    "CRTP / OSCP · in progress"],
+    ];
+    const proofOut = PROOF.map(([n, t]) =>
+      `  <span class="jl__key">${n}</span>${sp(n)}<span class="jl__lbl">${t}</span>`
+    );
+    const statusOut = [
+      `  <span class="jl__key">▸</span> open to work · <span class="jl__lbl">Madrid / remote</span>`,
+      `  <span class="jl__key">▸</span> focus: <span class="jl__lbl">Active Directory (CRTP) · nordwind-ad-lab</span>`,
+    ];
+
+    /* secuencia de comandos "ejecutados" en la shell */
+    const SCRIPT = [
+      { cmd: "cat proof.txt",  out: proofOut  },
+      { cmd: "cat status.txt", out: statusOut },
+    ];
+
+    /* ── helpers de render ── */
+    const frame = (s) => `<span class="kp__frame">${s}</span>`;
+    const promptTop = () =>
+      frame("┌──(") + `<span class="kp__user">${USER}</span>` +
+      frame(")-[") + `<span class="kp__path">${PATH}</span>` + frame("]");
+    const CARET = `<span class="jl__caret">█</span>`;
+
+    const addLi = (html, cls) => {
       const li = document.createElement("li");
-      li.className = "log jl";
+      li.className = cls || "log jl";
+      li.innerHTML = html;
       term.appendChild(li);
-      typeLine(li, plain, html, () => {
-        /* pausa corta entre líneas (imita al hacker que respira) */
-        setTimeout(() => typeAll(lines, idx + 1), 35 + Math.floor(Math.random() * 55));
-      });
+      return li;
     };
 
-    /* span donde se escribe el comando, insertado antes del cursor */
-    const cmdSpan = document.createElement("span");
-    cmdSpan.className = "hero__terminal-cmd";
-    foot.insertBefore(cmdSpan, cursor);
-
-    /* fase 1 · escribir el comando carácter a carácter */
-    setTimeout(() => {
+    /* tipea el comando carácter a carácter en la 2ª línea del prompt */
+    const typeCmd = (li, cmd, cb) => {
       let ci = 0;
-      const typer = setInterval(() => {
-        cmdSpan.textContent += CMD[ci++];
-        if (ci >= CMD.length) {
-          clearInterval(typer);
-
-          /* fase 2 · "enter" → tipear JSON línea a línea */
-          setTimeout(() => {
-            cursor.classList.remove("blink");
-            cursor.style.opacity = "0";
-            typeAll(LINES);
-          }, 380);
+      const step = () => {
+        if (ci < cmd.length) {
+          ci++;
+          li.innerHTML = frame("└─$") + " " +
+            `<span class="kp__cmd">${escHtml(cmd.slice(0, ci))}</span>` + CARET;
+          setTimeout(step, 40 + Math.floor(Math.random() * 55));
+        } else {
+          li.innerHTML = frame("└─$") + " " +
+            `<span class="kp__cmd">${escHtml(cmd)}</span>`;
+          setTimeout(cb, 320);
         }
-      }, CMD_SPEED);
-    }, BOOT_DELAY);
+      };
+      step();
+    };
+
+    /* revela las líneas de salida con un pequeño escalonado */
+    const showOut = (lines, i, cb) => {
+      if (i >= lines.length) { setTimeout(cb, 300); return; }
+      addLi(lines[i], "log jl");
+      setTimeout(() => showOut(lines, i + 1, cb), 95);
+    };
+
+    /* ejecuta un bloque: prompt → comando tipeado → salida */
+    const runBlock = (block, done) => {
+      addLi(promptTop(), "log kp");
+      const cmdLi = addLi(frame("└─$") + " " + CARET, "log kp");
+      typeCmd(cmdLi, block.cmd, () => showOut(block.out, 0, done));
+    };
+
+    /* prompt final en reposo, con cursor parpadeante (shell lista) */
+    const finish = () => {
+      addLi(promptTop(), "log kp");
+      addLi(frame("└─$") + ' <span class="hero__terminal-cursor blink">█</span>', "log kp");
+    };
+
+    const runAll = (idx) => {
+      if (idx >= SCRIPT.length) { finish(); return; }
+      if (idx > 0) addLi("&nbsp;", "log");          /* línea en blanco entre comandos */
+      runBlock(SCRIPT[idx], () => runAll(idx + 1));
+    };
+
+    setTimeout(() => runAll(0), BOOT_DELAY);
   }
 
   /* ── 03 · scroll reveal (sections + features) ──────────────────── */
