@@ -444,7 +444,7 @@
         if (!p.doc) return "";
         return (
           `<a class="arch__doc mono" data-arch-doc="${i}" href="${p.doc.href}" ` +
-          `target="_blank" rel="noopener noreferrer" style="display:none;">` +
+          `target="_blank" rel="noopener noreferrer">` +
           `📄 ${p.doc.text} ${ICON_EXT()}</a>`
         );
       })

@@ -1986,6 +1986,10 @@ em { font-style: italic; }
   transition: opacity .35s var(--ease);
 }
 .proj:hover .proj__demo-dot { opacity: .85; }
+/* colores de los puntos de ventana (antes style="--c:…" inline → bloqueado por la CSP) */
+.proj__demo-dot--red   { --c: #ff5f56; }
+.proj__demo-dot--amber { --c: #ffbd2e; }
+.proj__demo-dot--green { --c: #27c93f; }
 .proj__demo-title {
   margin-left: 6px;
   flex: 1;
