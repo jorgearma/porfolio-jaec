@@ -1,7 +1,7 @@
 # ─────────────────────────────────────────────────────────────
 # jae-portfolio · static build served by nginx:alpine
 # ─────────────────────────────────────────────────────────────
-FROM nginx:1.27-alpine
+FROM nginx:1.30-alpine
 
 # timezone + minimal tooling
 RUN apk add --no-cache tzdata \
