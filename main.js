@@ -554,7 +554,7 @@
     /* el prompt final vive ahora dentro del historial → ocultamos el pie viejo */
     if (foot) foot.style.display = "none";
 
-    const USER       = "jae@vps";
+    const USER       = "jorgearmando@vps";
     let   PATH       = "~";     /* lo actualiza `cd` */
     const BOOT_DELAY = 900;   /* ms antes de empezar */
 
@@ -647,7 +647,7 @@
        Mensajes: coreutils en español (locale es_ES) y zsh en inglés,
        igual que en un Kali real.
        ══════════════════════════════════════════════════════════════ */
-    const ME    = "jae";
+    const ME    = "jorgearmando";
     const HOME  = ["home", ME];
     const home  = () => (state.user === "root" ? ["root"] : HOME);   /* ~ depende de quién seas */
     const state = { cwd: HOME.slice(), user: ME, code: 0, denied: 0, mode: null };   /* code = $? */
@@ -931,7 +931,7 @@
           } else rows = [[p, n, base]];
           if (long) {
             rows.forEach(([k, c, at]) => out.push(
-              `${c.mode} ${c.t === "d" ? 2 : 1} ${c.own.padEnd(4)} ${String(size(c)).padStart(4)} ${paint(k, c, at)}`
+              `${c.mode} ${c.t === "d" ? 2 : 1} ${c.own.padEnd(12)} ${String(size(c)).padStart(4)} ${paint(k, c, at)}`
             ));
           } else if (rows.length) out.push(rows.map(([k, c, at]) => paint(k, c, at)).join("  "));
         });
@@ -1026,10 +1026,10 @@
         "root         1  0.0 /sbin/init",
         "root       412  0.1 nginx: master process",
         "www-data   413  0.3 nginx: worker (sirviéndote esto)",
-        "jae       1337 42.0 python3 estudiar_crtp.py",
-        "jae       2024 12.5 ./buscar_trabajo --rol pentester",
-        "jae       3001  0.7 atalaya --watch /var/log",
-        "jae       4242  0.0 -zsh (tú, ahora mismo)",
+        "jorgear+  1337 42.0 python3 estudiar_crtp.py",
+        "jorgear+  2024 12.5 ./buscar_trabajo --rol pentester",
+        "jorgear+  3001  0.7 atalaya --watch /var/log",
+        "jorgear+  4242  0.0 -zsh (tú, ahora mismo)",
       ],
 
       /* find [ruta…] [-name glob] [-exec <shell> \;] — lo justo para el reto */

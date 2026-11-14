@@ -25,7 +25,7 @@ El terminal del hero es una shell simulada: al terminar la animación inicial se
 
 ```
 /
-├── home/jae/                   (~)
+├── home/jorgearmando/          (~)
 │   ├── proof.txt               logros
 │   ├── status.txt              disponibilidad y foco
 │   ├── contacto.txt            email, github, linkedin (enlaces)
