@@ -555,7 +555,7 @@
     if (foot) foot.style.display = "none";
 
     const USER       = "siemprearmando㉿elfavo";
-    const PATH       = "~";
+    let   PATH       = "~";     /* lo actualiza `cd` */
     const BOOT_DELAY = 900;   /* ms antes de empezar */
 
     const escHtml = (s) =>
@@ -586,9 +586,17 @@
 
     /* ── helpers de render ── */
     const frame = (s) => `<span class="kp__frame">${s}</span>`;
-    const promptTop = () =>
-      frame("┌──(") + `<span class="kp__user">${USER}</span>` +
-      frame(")-[") + `<span class="kp__path">${PATH}</span>` + frame("]");
+    const promptTop = () => {
+      const root = state.user === "root";
+      return frame("┌──(") +
+        `<span class="kp__user${root ? " kp__user--root" : ""}">${root ? "root㉿elfavo" : USER}</span>` +
+        frame(")-[") + `<span class="kp__path">${PATH}</span>` + frame("]");
+    };
+    /* 2ª línea del prompt: └─$ (usuario) o └─# en rojo (root) */
+    const promptSym = () => state.mode === "vim" ? frame("~")     /* dentro de vim no hay prompt */
+      : state.user === "root"
+      ? frame("└─") + `<span class="kp__root">#</span>`
+      : frame("└─$");
     const CARET = `<span class="jl__caret">█</span>`;
 
     const addLi = (html, cls) => {
@@ -596,6 +604,7 @@
       li.className = cls || "log jl";
       li.innerHTML = html;
       term.appendChild(li);
+      term.scrollTop = term.scrollHeight;   /* siempre pegado al final */
       return li;
     };
 
@@ -631,11 +640,796 @@
       typeCmd(cmdLi, block.cmd, () => showOut(block.out, 0, done));
     };
 
-    /* prompt final en reposo, con cursor parpadeante (shell lista) */
-    const finish = () => {
-      addLi(promptTop(), "log kp");
-      addLi(frame("└─$") + ' <span class="hero__terminal-cursor blink">█</span>', "log kp");
+    /* ══ 02b · shell interactiva (fase 1) ═════════════════════════════
+       FS falso + parser + comandos básicos. Nada se ejecuta de verdad:
+       cada fichero es un array de líneas HTML (contenido propio, de
+       confianza); todo lo que teclea el visitante pasa por escHtml().
+       Mensajes: coreutils en español (locale es_ES) y zsh en inglés,
+       igual que en un Kali real.
+       ══════════════════════════════════════════════════════════════ */
+    const ME    = "siemprearmando";
+    const HOME  = ["home", ME];
+    const home  = () => (state.user === "root" ? ["root"] : HOME);   /* ~ depende de quién seas */
+    const state = { cwd: HOME.slice(), user: ME, code: 0, denied: 0, mode: null };   /* code = $? */
+    const has   = (o, k) => Object.prototype.hasOwnProperty.call(o, k);
+    const plain = (s) => s.replace(/<[^>]*>/g, "");
+    /* marca el exit code y devuelve las líneas de error */
+    const fail  = (code, lines) => { state.code = code; return lines; };
+    /* historial vivo, precargado como si la sesión viniera de antes:
+       lo usan ↑/↓, `history` y `cat .zsh_history` */
+    const hist = [
+      "nmap -sC -sV -p- 10.10.10.3",
+      "smbclient -L //10.10.10.3 -N",
+      "ssh vps",
+      "docker compose up -d --build",
+      "cat proof.txt",
+      "sudo -l",
+      "ls -la",
+    ];
+
+    /* nodos del FS: D = directorio, F = fichero */
+    const D = (ch, o) => Object.assign({ t: "d", ch, own: ME, mode: "drwxr-xr-x" }, o);
+    const F = (out, o) => Object.assign({ t: "f", out, own: ME, mode: "-rw-r--r--" }, o);
+    const link = (href, label) =>
+      `<a class="sh__a" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    const key = (s) => `<span class="jl__key">${s}</span>`;
+    const dim = (s) => `<span class="jl__lbl">${s}</span>`;
+
+    /* writeups/ se genera del array WRITEUPS (una sola fuente de verdad) */
+    const wuFiles = {};
+    WRITEUPS.forEach((w) => {
+      wuFiles[w.name.toLowerCase() + ".md"] = F([
+        `  ${key("# " + w.name)}`,
+        `  ${dim(`${w.platform} · ${w.diff} · ${w.os}`)}`,
+        `  tags: ${w.tags.join(", ")}`,
+        w.href !== "#" ? `  ${link(w.href, "leer write-up →")}` : `  ${dim("write-up aún sin publicar")}`,
+      ]);
+    });
+
+    /* ── scripts ejecutables: `cat` enseña el fuente, `./x` lanza run() ── */
+    const ok = (s) => `<span class="jl__val">${s}</span>`;
+    const MAIL = "jorgesiemprearmando@gmail.com";
+    const dots = (label) => `${label} ${".".repeat(Math.max(3, 30 - [...label].length))} `;
+    const hireRun = () => anim([
+      `${key("[*]")} comprobando candidato…`,
+      `${ok("[+]")} ${dots("python · bash · sql")}${ok("OK")}`,
+      `${ok("[+]")} ${dots("linux · docker · nginx")}${ok("OK")}`,
+      `${ok("[+]")} ${dots("metodología de pentesting")}${ok("OK")}`,
+      `${ok("[+]")} ${dots("52 máquinas HTB")}${ok("OK")}`,
+      `${ok("[+]")} ${dots("ganas de aprender")}${ok("OK")} ${dim("(sobran)")}`,
+      `${key("[!]")} ${dots("experiencia laboral")}${key("404")} ${dim("— ahí entras tú")}`,
+      `&nbsp;`,
+      `${key("[*]")} veredicto: ${ok("contratable")}`,
+      `    → ${link("mailto:" + MAIL, MAIL)}`,
+      `    → ${dim("o escribe:")} open contacto`,
+    ], 230);
+    const scanRun = () => anim([
+      `Starting Nmap 7.95 ( https://nmap.org )`,
+      `Nmap scan report for jorge.local (127.0.0.1)`,
+      `Host is up (0.00042s latency).`,
+      dim(`Not shown: 65530 closed tcp ports (cosas que aún no sé)`),
+      `&nbsp;`,
+      key(`PORT     STATE    SERVICE`),
+      `22/tcp   ${ok("open")}     linux · docker · nginx`,
+      `80/tcp   ${ok("open")}     panchi-bot (flask, en prod)`,
+      `443/tcp  ${ok("open")}     atalaya (detección en VPS)`,
+      `1337/tcp ${ok("open")}     dogscan (nmap + módulos)`,
+      `3389/tcp ${key("filtered")} crtp (en progreso)`,
+      `&nbsp;`,
+      `Service detection performed. 1 candidato listo para contratar.`,
+      `Nmap done: 1 IP address (1 host up) scanned in 2.04 seconds`,
+      dim(`# para ver un servicio de cerca: open atalaya`),
+    ], 110);
+    const X = { mode: "-rwxr-xr-x" };
+
+    /* .zsh_history refleja `hist` en vivo (escapado: contiene texto del visitante) */
+    const ZH = F([]);
+    Object.defineProperty(ZH, "out", { get: () => hist.map(escHtml) });
+
+    const ROOT = D({
+      home: D({
+        [ME]: D({
+          "proof.txt":  F(proofOut),
+          "status.txt": F(statusOut),
+          "contacto.txt": F([
+            `  ${key("email")}     ${link("mailto:jorgesiemprearmando@gmail.com", "jorgesiemprearmando@gmail.com")}`,
+            `  ${key("github")}    ${link("https://github.com/jorgearma", "github.com/jorgearma")}`,
+            `  ${key("linkedin")}  ${link("https://www.linkedin.com/in/jorge-arma/", "linkedin.com/in/jorge-arma")}`,
+          ]),
+          "notas.txt": F([
+            `  ${key("TODO")}`,
+            `  [x] desplegar el portfolio en mi VPS`,
+            `  [x] endurecer nginx (CSP sin inline)`,
+            `  [ ] revisar sudoers: creo que dejé algo demasiado abierto`,
+            `  [ ] terminar el CRTP`,
+            `  [ ] que quien esté leyendo esto me contrate`,
+          ]),
+          "hire_me.sh": F([
+            "#!/usr/bin/env zsh",
+            "# hire_me.sh — comprueba si el candidato es contratable",
+            "# spoiler: sí. Ejecútalo con ./hire_me.sh",
+          ], Object.assign({ run: hireRun }, X)),
+          "scan.sh": F([
+            "#!/usr/bin/env zsh",
+            "# scan.sh — enumera los servicios del candidato",
+            "nmap -sV -p- jorge.local",
+          ], Object.assign({ run: scanRun }, X)),
+          projects: D({
+            "panchi-bot.md": F([
+              `  ${key("# Panchi-Bot")}`,
+              `  Bot de pedidos por WhatsApp para un restaurante o almacén.`,
+              `  Gestiona el ciclo completo: del primer mensaje al cobro y la entrega.`,
+              `  ${link("https://www.panchibot.es", "panchibot.es →")}`,
+            ]),
+            "atalaya.md": F([
+              `  ${key("# Atalaya")}`,
+              `  Observabilidad y seguridad de host en tiempo real.`,
+              `  Dashboard para un VPS en producción.`,
+              `  ${link("https://github.com/jorgearma/atalaya", "github.com/jorgearma/atalaya →")}`,
+            ]),
+            "dogscan.md": F([
+              `  ${key("# Dogscan")}`,
+              `  Enumeración ofensiva de servicios de red.`,
+              `  Wrapper de Nmap orientado a pentesting y preparación OSCP.`,
+              `  ${link("https://github.com/jorgearma/tools", "github.com/jorgearma/tools →")}`,
+            ]),
+          }),
+          writeups: D(wuFiles),
+          ".zsh_history": ZH,
+          /* sí: si has llegado aquí leyendo main.js, también cuenta como método válido */
+          ".flag.txt": F([
+            `  ${key("flag{pr1v3sc_3n_m1_p0rtf0l10}")}`,
+            `  Acabas de escalar privilegios en mi portfolio.`,
+            `  Imagina lo que hago en un lab. ¿Hablamos?`,
+            `  ${link("mailto:jorgesiemprearmando@gmail.com", "jorgesiemprearmando@gmail.com")}`,
+          ], { own: "root", mode: "-rw-------" }),
+        }),
+      }, { own: "root" }),
+      etc: D({
+        hostname: F(["elfavo"], { own: "root" }),
+        passwd: F([
+          "root:x:0:0:root:/root:/usr/bin/zsh",
+          "www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin",
+          `${ME}:x:1000:1000:Jorge Armando,,,:/home/${ME}:/usr/bin/zsh`,
+          "recruiter:x:1001:1001:tú, probablemente:/home/recruiter:/usr/bin/zsh",
+        ], { own: "root" }),
+        shadow: F([
+          "root:$y$j9T$n1_lo_1nt3nt3s$...:19999:0:99999:7:::",
+          `${ME}:$y$j9T$3st0_n0_3s_un_h4sh$...:19999:0:99999:7:::`,
+        ], { own: "root", mode: "-rw-r-----" }),
+      }, { own: "root" }),
+      root: D({
+        "nota.txt": F([
+          "  Si lees esto, ya eres root. Bien jugado.",
+          `  Lo que buscas está en /home/${ME}/.flag.txt`,
+        ], { own: "root", mode: "-rw-------" }),
+      }, { own: "root", mode: "drwx------" }),
+    }, { own: "root" });
+
+    /* ── permisos y rutas ── */
+    const isOwner = (n) => n.own === state.user;
+    const canR = (n) => state.user === "root" || n.mode[isOwner(n) ? 1 : 7] === "r";
+    const canX = (n) => state.user === "root" || n.mode[isOwner(n) ? 3 : 9] === "x";
+    const size = (n) => (n.t === "d" ? 4096 : n.out.map(plain).join("\n").length + 1);
+
+    /* "~/x", "../x", "/etc" → array de segmentos absolutos */
+    const resolve = (p) => {
+      let parts = state.cwd.slice();
+      if (p === "~" || p.startsWith("~/")) { parts = home().slice(); p = p.slice(1); }
+      else if (p.startsWith("/")) parts = [];
+      p.split("/").forEach((s) => {
+        if (!s || s === ".") return;
+        if (s === "..") parts.pop(); else parts.push(s);
+      });
+      return parts;
     };
+    /* → { node } | { err: "noent" | "notdir" | "perm" } */
+    const lookup = (parts) => {
+      let n = ROOT;
+      for (const s of parts) {
+        if (n.t !== "d") return { err: "notdir" };
+        if (!canX(n))    return { err: "perm" };
+        if (!has(n.ch, s)) return { err: "noent" };
+        n = n.ch[s];
+      }
+      return { node: n };
+    };
+    const pathStr = () => {
+      const c = state.cwd, h = home();
+      return h.every((s, i) => c[i] === s)
+        ? "~" + c.slice(h.length).map((s) => "/" + s).join("")
+        : "/" + c.join("/");
+    };
+
+    const ERR_ES = {
+      noent:  "No existe el fichero o el directorio",
+      notdir: "No es un directorio",
+      perm:   "Permiso denegado",
+    };
+    const CLEAR = Symbol("clear");
+    const SHELL_RE = /^(\/(usr\/)?bin\/)?(sh|bash|zsh|dash)$/;
+    /* salida animada: las líneas se revelan cada `ms` (ver play() en startShell) */
+    const anim = (lines, ms) => { lines.delay = ms; return lines; };
+    const REDUCE = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    /* `open <algo>` → sección de la página a la que hace scroll */
+    const SECTIONS = {
+      "panchi-bot": "panchibot", panchibot: "panchibot",
+      atalaya: "vps", dogscan: "cyber",
+      writeups: "writeups", arsenal: "stack", stack: "stack",
+      contacto: "contact", contact: "contact", whoami: "whoami",
+    };
+    const openCmd = (args) => {
+      const raw = args[0] || "";
+      const name = raw.replace(/\/+$/, "").split("/").pop().replace(/\.(md|txt)$/, "").toLowerCase();
+      const el = has(SECTIONS, name) && document.getElementById(SECTIONS[name]);
+      if (!el) return fail(1, [
+        raw ? escHtml(`open: no sé abrir '${raw}'`) : "uso: open &lt;sección&gt;",
+        dim("prueba: panchi-bot · atalaya · dogscan · writeups · arsenal · contacto"),
+      ]);
+      setTimeout(() => el.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth", block: "start" }), 350);
+      return [`abriendo ${escHtml(name)}…`];
+    };
+
+    const pretty = (parts) => {
+      const h = home();
+      return h.every((s, i) => parts[i] === s)
+        ? "~" + parts.slice(h.length).map((s) => "/" + s).join("")
+        : "/" + parts.join("/");
+    };
+    /* nombre coloreado según tipo, como `ls --color`. Con `at` (ruta absoluta)
+       además es clicable: lanza cd/cat/ejecución — pensado para móvil */
+    const paint = (name, n, at) => {
+      const exe = n.t === "f" && n.mode.includes("x");
+      const cls = n.t === "d" ? "sh__dir" : exe ? "sh__exe" : "";
+      const p   = at && pretty(at);
+      const run = !at ? "" : n.t === "d" ? `cd ${p} && ls` : exe ? p : `cat ${p}`;
+      return `<span class="${cls}${run ? " sh__click" : ""}"` +
+        (run ? ` data-run="${escHtml(run)}"` : "") + `>${escHtml(name)}</span>`;
+    };
+    const byName = (a, b) => a.replace(/^\./, "").localeCompare(b.replace(/^\./, ""));
+
+    /* ── comandos: reciben args y devuelven líneas HTML ── */
+    const CMDS = {
+      help: () => [
+        `  ${key("comandos disponibles")}`,
+        `  ls [-la] [ruta]    lista ficheros`,
+        `  cat &lt;fichero&gt;      muestra un fichero`,
+        `  cd [dir]           cambia de directorio`,
+        `  pwd · whoami · id · echo · history · clear`,
+        `  ./&lt;fichero&gt;        ejecuta (si tienes permisos)`,
+        `  neofetch           ficha del sistema (y mía)`,
+        `  git log            trayectoria, en commits`,
+        `  ps aux             en qué ando ahora`,
+        `  open &lt;sección&gt;     salta a esa parte de la página`,
+        `  ${dim("Tab autocompleta · ↑↓ historial · Ctrl+C · Ctrl+L")}`,
+        `  man jorge          el manual del candidato`,
+        `  ${dim("los nombres que saca ls se pueden pulsar")}`,
+        `  ${dim("pista: no todo aparece con un simple ls")}`,
+        `  ${dim("reto: consigue leer .flag.txt (empieza por notas.txt)")}`,
+      ],
+
+      ls: (args) => {
+        const flags = args.filter((a) => a.startsWith("-")).join("");
+        const all = flags.includes("a"), long = flags.includes("l");
+        const targets = args.filter((a) => !a.startsWith("-"));
+        if (!targets.length) targets.push(".");
+        const out = [];
+        targets.forEach((p) => {
+          const base = resolve(p);
+          const r = lookup(base);
+          if (r.err) { state.code = 2; out.push(escHtml(`ls: no se puede acceder a '${p}': ${ERR_ES[r.err]}`)); return; }
+          const n = r.node;
+          let rows;
+          if (n.t === "d") {
+            if (!canR(n)) { state.code = 2; out.push(escHtml(`ls: no se puede abrir el directorio '${p}': ${ERR_ES.perm}`)); return; }
+            rows = Object.keys(n.ch).filter((k) => all || !k.startsWith(".")).sort(byName)
+              .map((k) => [k, n.ch[k], base.concat(k)]);
+            if (all) rows.unshift([".", n, null], ["..", n, null]);
+            if (targets.length > 1) out.push(escHtml(p) + ":");
+            if (long) out.push(`total ${rows.length * 4}`);
+          } else rows = [[p, n, base]];
+          if (long) {
+            rows.forEach(([k, c, at]) => out.push(
+              `${c.mode} ${c.t === "d" ? 2 : 1} ${c.own.padEnd(14)} ${String(size(c)).padStart(4)} ${paint(k, c, at)}`
+            ));
+          } else if (rows.length) out.push(rows.map(([k, c, at]) => paint(k, c, at)).join("  "));
+        });
+        return out;
+      },
+
+      cat: (args) => {
+        if (!args.length) return fail(1, ["uso: cat &lt;fichero&gt;"]);
+        const out = [];
+        args.forEach((p) => {
+          const r = lookup(resolve(p));
+          const e = r.err ? ERR_ES[r.err]
+            : r.node.t === "d" ? "Es un directorio"
+            : !canR(r.node)    ? ERR_ES.perm : null;
+          if (e) {
+            state.code = 1;
+            out.push(escHtml(`cat: ${p}: ${e}`));
+            if (e === ERR_ES.perm && /(^|\/)\.flag\.txt$/.test(p) && ++state.denied >= 3)
+              out.push(dim("# pista: mira qué te deja `sudo -l` y busca ese binario en GTFOBins"));
+          }
+          else out.push(...r.node.out);
+        });
+        return out;
+      },
+
+      cd: (args) => {
+        if (args.length > 1) return fail(1, ["cd: too many arguments"]);
+        const p = args[0] || "~";
+        const parts = resolve(p);
+        const r = lookup(parts);
+        const e = r.err === "noent" ? "no such file or directory"
+          : r.err === "notdir" || (r.node && r.node.t !== "d") ? "not a directory"
+          : r.err === "perm" || !canX(r.node) ? "permission denied" : null;
+        if (e) return fail(1, [escHtml(`cd: ${e}: ${p}`)]);
+        state.cwd = parts;
+        PATH = pathStr();
+        return [];
+      },
+
+      pwd:    () => ["/" + state.cwd.join("/")],
+      whoami: () => [state.user],
+      id:     () => [state.user === "root"
+        ? "uid=0(root) gid=0(root) grupos=0(root)"
+        : `uid=1000(${ME}) gid=1000(${ME}) grupos=1000(${ME}),27(sudo),988(docker)`],
+      echo:   (args) => [escHtml(args.join(" "))],
+      neofetch: () => {
+        const info = [
+          `${ok(ME)}@${ok("elfavo")}`,
+          dim("─".repeat(ME.length + 7)),
+          `${key("OS")}: Kali GNU/Linux Rolling`,
+          `${key("Host")}: portfolio (nginx en Docker)`,
+          `${key("Uptime")}: ${Math.max(1, Math.round(performance.now() / 60000))} min (tu visita)`,
+          `${key("Shell")}: zsh simulada · 0 dependencias`,
+          `${key("Rol")}: pentester junior · backend`,
+          `${key("Lenguajes")}: python bash sql javascript`,
+          `${key("Frameworks")}: flask sqlalchemy pydantic pytest`,
+          `${key("Infra")}: linux docker nginx systemd`,
+          `${key("Seguridad")}: nmap burp owasp-top-10 hardening`,
+          `${key("Foco")}: Active Directory (CRTP)`,
+          `${key("Estado")}: ${ok("open to work")} · Madrid / remote`,
+        ];
+        if (term.clientWidth < 460) return info;            /* móvil: sin logo, no cabe */
+        const logo = ["┌────────┐", "│ >_     │", "│        │", "└────────┘"];
+        return info.map((l, i) => key(logo[i] || " ".repeat(10)) + "   " + l);
+      },
+
+      /* siempre formato --oneline: sin fechas que inventar */
+      git: (args) => {
+        const sub = args[0];
+        const h = (s) => key(s);
+        if (sub === "log") return [
+          `${h("a3f9c1e")} ${dim("(")}${ok("HEAD -> main")}${dim(")")} wip: CRTP — Active Directory en nordwind-ad-lab`,
+          `${h("7d2e4b0")} feat: 52 máquinas HTB comprometidas (con permiso)`,
+          `${h("c41a9f3")} merge: PR aceptado en web-check (32k★) — RFC 9116`,
+          `${h("9e0b7d2")} feat: dogscan — enumeración post-nmap sin ruido`,
+          `${h("5b8c2a6")} feat: atalaya — detección de amenazas en mi VPS`,
+          `${h("e17f3d9")} fix: CSP sin inline en este portfolio (auto-auditoría)`,
+          `${h("2c6d8f1")} feat: panchi-bot en producción (pedidos por WhatsApp)`,
+          `${h("0000001")} init: curiosidad por cómo se rompen las cosas`,
+        ];
+        if (sub === "status") return [
+          "En la rama main",
+          "nada para hacer commit, el árbol de trabajo está limpio",
+          dim("# (falta un commit: 'feat: primer trabajo como pentester')"),
+        ];
+        if (!sub) return fail(1, ["uso: git log | git status"]);
+        return fail(1, [escHtml(`git: '${sub}' no es un comando de git. Prueba: git log`)]);
+      },
+
+      ps: () => [
+        key("USER       PID %CPU COMMAND"),
+        "root         1  0.0 /sbin/init",
+        "root       412  0.1 nginx: master process",
+        "www-data   413  0.3 nginx: worker (sirviéndote esto)",
+        "siempre+  1337 42.0 python3 estudiar_crtp.py",
+        "siempre+  2024 12.5 ./buscar_trabajo --rol pentester",
+        "siempre+  3001  0.7 atalaya --watch /var/log",
+        "siempre+  4242  0.0 -zsh (tú, ahora mismo)",
+      ],
+
+      /* find [ruta…] [-name glob] [-exec <shell> \;] — lo justo para el reto */
+      find: (args) => {
+        const i = args.findIndex((a) => a.startsWith("-"));
+        const paths = i < 0 ? args.slice() : args.slice(0, i);
+        const opts  = i < 0 ? [] : args.slice(i);
+        if (!paths.length) paths.push(".");
+        const ei = opts.indexOf("-exec");
+        if (ei >= 0) {
+          if (!SHELL_RE.test(opts[ei + 1] || ""))
+            return fail(1, ["find: -exec: aquí solo se pueden lanzar shells (p. ej. /bin/sh)"]);
+          if (state.user !== "root")
+            return [dim("# shell nueva, mismos permisos de antes. Te falta algo delante.")];
+          const won = [dim("# uid=0(root). Ya sabes qué fichero te quedaba por leer.")];
+          won.spawn = true;
+          return won;
+        }
+        const ni = opts.indexOf("-name");
+        const re = ni >= 0 && opts[ni + 1]
+          ? new RegExp("^" + opts[ni + 1].replace(/[.+^${}()|[\]\\]/g, "\\$&").replace(/\*/g, ".*").replace(/\?/g, ".") + "$")
+          : null;
+        const out = [];
+        const walk = (n, label, name) => {
+          if (!re || re.test(name)) out.push(n.t === "d" ? `<span class="sh__dir">${escHtml(label)}</span>` : escHtml(label));
+          if (n.t !== "d") return;
+          if (!canR(n) || !canX(n)) { state.code = 1; out.push(escHtml(`find: ‘${label}’: ${ERR_ES.perm}`)); return; }
+          Object.keys(n.ch).sort(byName).forEach((k) => walk(n.ch[k], label.replace(/\/$/, "") + "/" + k, k));
+        };
+        paths.forEach((p) => {
+          const r = lookup(resolve(p));
+          if (r.err) { state.code = 1; out.push(escHtml(`find: ‘${p}’: ${ERR_ES[r.err]}`)); return; }
+          walk(r.node, p, p.split("/").filter(Boolean).pop() || p);
+        });
+        return out;
+      },
+
+      sudo: (args) => {
+        if (!args.length) return fail(1, ["uso: sudo -l | sudo &lt;comando&gt;"]);
+        if (state.user === "root") return exec(args.join(" "));       /* root no necesita sudo */
+        if (args[0] === "-l") return [
+          `El usuario ${ME} puede ejecutar los siguientes comandos en elfavo:`,
+          `    (root) ${key("NOPASSWD")}: /usr/bin/find`,
+        ];
+        if (args[0] === "find" || args[0] === "/usr/bin/find") {
+          state.user = "root";                                        /* find corre como root… */
+          const r = CMDS.find(args.slice(1));
+          if (r.spawn) PATH = pathStr();                              /* …y si lanzó una shell, te la quedas */
+          else state.user = ME;
+          return r;
+        }
+        const bin = args[0].includes("/") ? args[0] : "/usr/bin/" + args[0];
+        return fail(1, [escHtml(
+          `Lo sentimos, el usuario ${ME} no está autorizado para ejecutar «${[bin, ...args.slice(1)].join(" ")}» como root en elfavo.`
+        )]);
+      },
+
+      su: () => (state.user === "root" ? [] : fail(1, [
+        "su: Fallo de autenticación",
+        dim("# la contraseña no la vas a adivinar. Mira qué te deja hacer sudo."),
+      ])),
+
+      exit: () => {
+        if (state.user !== "root") return ["no hay escapatoria: esto es un portfolio. Sigue haciendo scroll."];
+        state.user = ME;                                              /* sales de la shell de root */
+        PATH = pathStr();
+        return [];
+      },
+
+      /* ── huevos de pascua ── */
+      rm: (args) => {
+        const flags = args.filter((a) => a.startsWith("-")).join("");
+        const targets = args.filter((a) => !a.startsWith("-"));
+        if (!targets.length) return fail(1, ["rm: falta un operando"]);
+        if (/r/i.test(flags) && targets.some((t) => ["/", "/*", "~", "~/", "*", "."].includes(t))) {
+          state.code = 1;
+          return anim([
+            "rm: borrando /etc …",
+            `rm: borrando /home/${ME}/projects …`,
+            "rm: borrando write-ups de 52 máquinas …",
+            "rm: borrando tu confianza en mí …",
+            "&nbsp;",
+            `${key("es broma.")} Sistema de ficheros de solo lectura. Buen intento.`,
+          ], 320);
+        }
+        return fail(1, targets.map((t) =>
+          escHtml(`rm: no se puede borrar '${t}': Sistema de ficheros de solo lectura`)));
+      },
+
+      vim: (args) => {
+        state.mode = "vim";                       /* de aquí solo se sale con :q! (ver submit) */
+        return [
+          frame("~"), frame("~"),
+          `${escHtml(args[0] ? `"${args[0]}"` : "[Sin nombre]")} ${dim("— has entrado en vim. Suerte saliendo.")}`,
+        ];
+      },
+      vi:    (args) => CMDS.vim(args),
+      nano:  () => fail(127, ["zsh: command not found: nano", dim("# en esta casa se usa vim")]),
+      emacs: () => fail(127, ["zsh: command not found: emacs", dim("# un sistema operativo dentro de un portfolio era demasiado")]),
+
+      man: (args) => {
+        if (!args.length) return fail(1, ["¿Qué página de manual desea?", dim("por ejemplo: man jorge")]);
+        if (!["jorge", "jae", ME].includes(args[0].toLowerCase()))
+          return fail(16, [escHtml(`No hay ninguna página sobre ${args[0]}`), dim("prueba: man jorge")]);
+        const h = (s) => key(s);
+        return [
+          `JORGE(1)   ${dim("Manual del candidato")}   JORGE(1)`,
+          "&nbsp;",
+          h("NOMBRE"),
+          "    jorge — pentester junior con base de backend",
+          h("SINOPSIS"),
+          "    jorge [--madrid | --remoto] [--aprender]",
+          h("DESCRIPCIÓN"),
+          "    Enumera, explota y documenta. Monta sus propios",
+          "    labs, ataca sus propios VPS y luego los endurece.",
+          h("OPCIONES"),
+          "    --aprender  activa por defecto; no se puede quitar",
+          h("ERRORES"),
+          "    Se emociona demasiado cuando consigue una shell.",
+          h("VÉASE TAMBIÉN"),
+          "    ./hire_me.sh, git log, open contacto",
+        ];
+      },
+
+      nmap: () => fail(1, ["nmap: aquí no hay red que escanear.", dim("# pero hay algo parecido: ./scan.sh")]),
+      uname: (args) => [args.join("").includes("a")
+        ? "Linux elfavo 6.12.0-kali-amd64 #1 SMP x86_64 GNU/Linux" : "Linux"],
+      hostname: () => ["elfavo"],
+      date: () => [escHtml(new Date().toLocaleString("es-ES", { dateStyle: "full", timeStyle: "medium" }))],
+      reboot:   () => fail(1, ["reboot: este portfolio no se reinicia. Lleva arriba desde que lo desplegué."]),
+      shutdown: () => fail(1, ["shutdown: ni lo sueñes."]),
+
+      open: openCmd,
+      "xdg-open": openCmd,
+
+      history: () => hist.map((h, i) => `${String(i + 1).padStart(5)}  ${escHtml(h)}`),
+      clear:  () => CLEAR,
+    };
+
+    ["ping", "ssh", "nc", "curl", "wget", "telnet", "ftp"].forEach((c) => {
+      CMDS[c] = () => fail(1, [`${c}: La red es inaccesible`, dim("# esto es un portfolio, no un pivote")]);
+    });
+
+    /* ./algo o /ruta/algo → intento de ejecución */
+    const runPath = (cmd, args) => {
+      const r = lookup(resolve(cmd));
+      if (r.err === "noent" || r.err === "notdir")
+        return fail(127, [escHtml(`zsh: no such file or directory: ${cmd}`)]);
+      if (r.err || r.node.t === "d" || !r.node.mode.includes("x") || !canX(r.node))
+        return fail(126, [escHtml(`zsh: permission denied: ${cmd}`)]);
+      return r.node.run ? r.node.run(args) : [];
+    };
+
+    /* $? y unas pocas variables de entorno (las comillas simples no expanden) */
+    const expand = (t) => {
+      const v = {
+        "?": String(state.code), USER: state.user, HOME: "/" + home().join("/"),
+        PWD: "/" + state.cwd.join("/"), SHELL: "/usr/bin/zsh", HOSTNAME: "elfavo",
+      };
+      return t.replace(/\$(\?|[A-Za-z_]\w*)/g, (m, k) => (has(v, k) ? v[k] : ""));
+    };
+
+    /* un comando simple → líneas HTML (o CLEAR); deja el exit code en state.code */
+    const exec = (line) => {
+      const tok = (line.match(/"[^"]*"|'[^']*'|\S+/g) || []).map((t) =>
+        t[0] === "'" ? t.replace(/^'(.*)'$/, "$1") : expand(t.replace(/^"(.*)"$/, "$1")));
+      if (!tok.length || !tok[0]) return [];
+      const [cmd, ...args] = tok;
+      state.code = 0;
+      if (cmd.includes("/")) return runPath(cmd, args);
+      if (has(CMDS, cmd))    return CMDS[cmd](args);
+      return fail(127, [escHtml(`zsh: command not found: ${cmd}`)]);
+    };
+
+    /* línea completa: encadena con ; && || según el exit code */
+    const execLine = (line) => {
+      /* el `\;` (o ';') que cierra un -exec no es un separador: se protege antes de partir */
+      const parts = line.replace(/\\;|';'|";"/g, "\u0001")
+        .split(/\s*(&&|\|\||;)\s*/)                    /* [cmd, op, cmd, op, …] */
+        .map((s) => s.replace(/\u0001/g, "\\;"));
+      let lines = [], clear = false, delay = 0;
+      for (let i = 0; i < parts.length; i += 2) {
+        const op = parts[i - 1];
+        if ((op === "&&" && state.code !== 0) || (op === "||" && state.code === 0)) continue;
+        const r = exec(parts[i]);
+        if (r === CLEAR) { clear = true; lines = []; delay = 0; }
+        else if (r) { lines.push(...r); delay = Math.max(delay, r.delay || 0); }
+      }
+      return { clear, lines, delay };
+    };
+
+    /* ── entrada: <input> invisible (necesario para el teclado en móvil);
+          lo tecleado se refleja en la 2ª línea del prompt ── */
+    const startShell = () => {
+      const box = term.closest(".hero__terminal");
+      const input = document.createElement("input");
+      input.type = "text";
+      input.className = "sh__input";
+      input.setAttribute("aria-label", "shell interactiva: escribe un comando");
+      input.setAttribute("autocomplete", "off");
+      input.setAttribute("autocapitalize", "off");
+      input.setAttribute("autocorrect", "off");
+      input.setAttribute("enterkeyhint", "send");
+      input.spellcheck = false;
+      box.appendChild(input);
+      box.classList.add("is-shell");
+
+      let lineLi = null;
+      let busy = false, abort = false;   /* busy = hay una salida animada en curso */
+      const cmdSpan = (s) => `<span class="kp__cmd">${escHtml(s)}</span>`;
+
+      /* pinta la línea activa con el cursor de bloque en su posición */
+      const render = () => {
+        if (busy) return;
+        const v = input.value;
+        const pos = input.selectionStart == null ? v.length : input.selectionStart;
+        lineLi.innerHTML = promptSym() + " " + cmdSpan(v.slice(0, pos)) +
+          `<span class="sh__cur">${pos < v.length ? escHtml(v[pos]) : " "}</span>` +
+          cmdSpan(v.slice(pos + 1));
+      };
+      const newPrompt = () => {
+        if (!state.mode) addLi(promptTop(), "log kp");
+        lineLi = addLi("", "log kp sh__line");
+        lineLi.setAttribute("aria-hidden", "true");   /* el lector ya lee el <input> */
+        render();
+      };
+
+      /* congela la línea activa tal cual (sin cursor) en el historial visible */
+      const freeze = (suffix) => {
+        lineLi.innerHTML = promptSym() + " " + cmdSpan(input.value + (suffix || ""));
+        lineLi.removeAttribute("aria-hidden");
+      };
+      const cls = () => { term.innerHTML = ""; term.classList.add("is-cleared"); };
+      const toEnd = () => input.setSelectionRange(input.value.length, input.value.length);
+
+      /* ── historial ↑/↓ (guarda lo que estabas tecleando) ── */
+      let hi = hist.length, draft = "";
+      const recall = (d) => {
+        const n = hi + d;
+        if (n < 0 || n > hist.length) return;
+        if (hi === hist.length) draft = input.value;
+        hi = n;
+        input.value = hi === hist.length ? draft : hist[hi];
+        toEnd();
+        render();
+      };
+
+      const submit = () => {
+        const line = input.value.trim();
+        freeze();
+        input.value = "";
+        if (state.mode === "vim") {               /* atrapado en vim hasta :q! */
+          if (/^(:?(q|wq|x|qa)!?|ZZ)$/.test(line)) {
+            state.mode = null;
+            addLi(dim("# has salido de vim. Eso también cuenta como habilidad."), "log jl sh");
+            addLi("&nbsp;", "log");
+          } else {
+            addLi(line
+              ? escHtml(`E492: No es una orden del editor: ${line.replace(/^:/, "")}`)
+              : dim("-- INSERTAR --"), "log jl sh");
+          }
+          newPrompt();
+          return;
+        }
+        if (line && hist[hist.length - 1] !== line) hist.push(line);
+        hi = hist.length; draft = "";
+        const r = execLine(line);
+        if (r.clear) cls();
+        play(r.lines, r.delay, () => {
+          if (!r.clear || r.lines.length) addLi("&nbsp;", "log");
+          newPrompt();
+        });
+      };
+
+      /* imprime la salida; si lleva delay, línea a línea y cancelable con Ctrl+C */
+      const play = (lines, delay, done) => {
+        if (!delay || REDUCE) { lines.forEach((l) => addLi(l, "log jl sh")); done(); return; }
+        busy = true; abort = false;
+        let i = 0;
+        const step = () => {
+          if (abort) { addLi("^C", "log jl sh"); state.code = 130; }
+          else if (i < lines.length) { addLi(lines[i++], "log jl sh"); setTimeout(step, delay); return; }
+          busy = false;
+          input.value = "";
+          done();
+        };
+        step();
+      };
+
+      /* Ctrl+C: descarta la línea, como una shell real ($? = 130) */
+      const interrupt = () => {
+        freeze("^C");
+        input.value = "";
+        hi = hist.length; draft = "";
+        if (state.mode === "vim") {               /* el mensaje real de vim ante Ctrl+C */
+          addLi(escHtml("Escriba  :qa!  y pulse <Intro> para salir de Vim"), "log jl sh");
+          newPrompt();
+          return;
+        }
+        state.code = 130;
+        addLi("&nbsp;", "log");
+        newPrompt();
+      };
+
+      /* ── Tab: completa comandos (1ª palabra) o rutas del FS ── */
+      const lcp = (a) => a.reduce((p, s) => {
+        let i = 0;
+        while (i < p.length && p[i] === s[i]) i++;
+        return p.slice(0, i);
+      });
+      const complete = () => {
+        const v = input.value;
+        if (state.mode) return;
+        if (input.selectionStart !== v.length) return;          /* solo al final de línea */
+        const seg   = v.split(/&&|\|\||;/).pop().replace(/^\s+/, "");
+        const words = seg.split(/\s+/);
+        const isCmd = words.length === 1 || (words.length === 2 && words[0] === "sudo");
+        const word  = words[words.length - 1];
+        let base, cands;                                        /* cands: [nombre, sufijo, html] */
+        if (isCmd && !word.includes("/")) {
+          if (!word) return;
+          base  = word;
+          cands = Object.keys(CMDS).filter((k) => k.startsWith(word)).sort()
+            .map((k) => [k, " ", escHtml(k)]);
+        } else {
+          const cut = word.lastIndexOf("/") + 1;
+          base = word.slice(cut);
+          const r = lookup(resolve(word.slice(0, cut) || "."));
+          if (r.err || r.node.t !== "d" || !canR(r.node)) return;
+          const ch = r.node.ch;
+          const onlyDirs = words[0] === "cd";
+          cands = Object.keys(ch)
+            .filter((k) => k.startsWith(base)
+              && (base.startsWith(".") || !k.startsWith("."))
+              && (!onlyDirs || ch[k].t === "d"))
+            .sort(byName)
+            .map((k) => [k, ch[k].t === "d" ? "/" : " ", paint(k, ch[k])]);
+        }
+        if (!cands.length) return;
+        const stem = v.slice(0, v.length - base.length);
+        if (cands.length === 1) { input.value = stem + cands[0][0] + cands[0][1]; render(); return; }
+        const common = lcp(cands.map((c) => c[0]));
+        if (common.length > base.length) { input.value = stem + common; render(); return; }
+        /* ambiguo y sin avance → lista las opciones y repite el prompt */
+        freeze();
+        addLi(cands.map((c) => c[2]).join("  "), "log jl sh");
+        newPrompt();
+      };
+
+      input.addEventListener("input", () => { if (busy) input.value = ""; render(); });
+      input.addEventListener("keydown", (e) => {
+        const k = e.key;
+        if (busy) {                                             /* solo se atiende Ctrl+C */
+          if (e.ctrlKey && k.toLowerCase() === "c" && !String(window.getSelection())) abort = true;
+          if (!e.ctrlKey && !e.metaKey) e.preventDefault();
+          return;
+        }
+        if (k === "Tab")   { e.preventDefault(); complete(); return; }
+        if (k === "Enter") { e.preventDefault(); submit();   return; }
+        if (k === "ArrowUp" || k === "ArrowDown") {
+          e.preventDefault();
+          recall(k === "ArrowUp" ? -1 : 1);
+          return;
+        }
+        if (e.ctrlKey && !e.altKey && !e.metaKey) {
+          const c = k.toLowerCase();
+          if (c === "c") {
+            if (String(window.getSelection())) return;          /* hay texto seleccionado → copiar */
+            e.preventDefault(); interrupt(); return;
+          }
+          if (c === "l") { e.preventDefault(); cls(); newPrompt(); return; }
+          if (c === "u") { e.preventDefault(); input.value = ""; render(); return; }
+          if (c === "a") { e.preventDefault(); input.setSelectionRange(0, 0); render(); return; }
+          if (c === "e") { e.preventDefault(); toEnd(); render(); return; }
+        }
+        requestAnimationFrame(render);                          /* ←/→, inicio, fin… */
+      });
+      input.addEventListener("focus", () => box.classList.add("is-focus"));
+      input.addEventListener("blur",  () => box.classList.remove("is-focus"));
+
+      /* clic en el terminal → foco (salvo enlaces o selección de texto) */
+      box.addEventListener("click", (e) => {
+        const t = e.target.closest("[data-run]");               /* nombre de ls pulsado → lo lanza */
+        if (t) {
+          if (!busy && !state.mode) { input.value = t.dataset.run; submit(); }
+          return;                                               /* sin foco: no abre el teclado en móvil */
+        }
+        if (e.target.closest("a")) return;
+        if (String(window.getSelection())) return;
+        input.focus({ preventScroll: true });
+      });
+
+      addLi("&nbsp;", "log");
+      addLi(`<span class="sh__hint"># esta shell es de verdad (casi): haz clic y escribe 'help'</span>`, "log jl sh");
+      addLi("&nbsp;", "log");
+      newPrompt();
+    };
+
+    /* fin de la animación → la shell pasa a ser interactiva */
+    const finish = () => startShell();
 
     const runAll = (idx) => {
       if (idx >= SCRIPT.length) { finish(); return; }
