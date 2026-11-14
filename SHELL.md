@@ -25,7 +25,7 @@ El terminal del hero es una shell simulada: al terminar la animación inicial se
 
 ```
 /
-├── home/siemprearmando/        (~)
+├── home/jae/                   (~)
 │   ├── proof.txt               logros
 │   ├── status.txt              disponibilidad y foco
 │   ├── contacto.txt            email, github, linkedin (enlaces)
@@ -138,7 +138,7 @@ El terminal del hero es una shell simulada: al terminar la animación inicial se
 ls -la                              # aparece .flag.txt, propiedad de root (-rw-------)
 cat .flag.txt                       # cat: .flag.txt: Permiso denegado
 sudo -l                             # (root) NOPASSWD: /usr/bin/find
-sudo find . -exec /bin/sh \; -quit  # el prompt pasa a root㉿elfavo, en rojo y con #
+sudo find . -exec /bin/sh \; -quit  # el prompt pasa a root@vps, en rojo y con #
 cat .flag.txt                       # flag{pr1v3sc_3n_m1_p0rtf0l10} + mensaje + email
 ```
 

@@ -554,7 +554,7 @@
     /* el prompt final vive ahora dentro del historial → ocultamos el pie viejo */
     if (foot) foot.style.display = "none";
 
-    const USER       = "siemprearmando㉿elfavo";
+    const USER       = "jae@vps";
     let   PATH       = "~";     /* lo actualiza `cd` */
     const BOOT_DELAY = 900;   /* ms antes de empezar */
 
@@ -589,7 +589,7 @@
     const promptTop = () => {
       const root = state.user === "root";
       return frame("┌──(") +
-        `<span class="kp__user${root ? " kp__user--root" : ""}">${root ? "root㉿elfavo" : USER}</span>` +
+        `<span class="kp__user${root ? " kp__user--root" : ""}">${root ? "root@vps" : USER}</span>` +
         frame(")-[") + `<span class="kp__path">${PATH}</span>` + frame("]");
     };
     /* 2ª línea del prompt: └─$ (usuario) o └─# en rojo (root) */
@@ -647,7 +647,7 @@
        Mensajes: coreutils en español (locale es_ES) y zsh en inglés,
        igual que en un Kali real.
        ══════════════════════════════════════════════════════════════ */
-    const ME    = "siemprearmando";
+    const ME    = "jae";
     const HOME  = ["home", ME];
     const home  = () => (state.user === "root" ? ["root"] : HOME);   /* ~ depende de quién seas */
     const state = { cwd: HOME.slice(), user: ME, code: 0, denied: 0, mode: null };   /* code = $? */
@@ -786,7 +786,7 @@
         }),
       }, { own: "root" }),
       etc: D({
-        hostname: F(["elfavo"], { own: "root" }),
+        hostname: F(["vps"], { own: "root" }),
         passwd: F([
           "root:x:0:0:root:/root:/usr/bin/zsh",
           "www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin",
@@ -931,7 +931,7 @@
           } else rows = [[p, n, base]];
           if (long) {
             rows.forEach(([k, c, at]) => out.push(
-              `${c.mode} ${c.t === "d" ? 2 : 1} ${c.own.padEnd(14)} ${String(size(c)).padStart(4)} ${paint(k, c, at)}`
+              `${c.mode} ${c.t === "d" ? 2 : 1} ${c.own.padEnd(4)} ${String(size(c)).padStart(4)} ${paint(k, c, at)}`
             ));
           } else if (rows.length) out.push(rows.map(([k, c, at]) => paint(k, c, at)).join("  "));
         });
@@ -979,8 +979,8 @@
       echo:   (args) => [escHtml(args.join(" "))],
       neofetch: () => {
         const info = [
-          `${ok(ME)}@${ok("elfavo")}`,
-          dim("─".repeat(ME.length + 7)),
+          `${ok(ME)}@${ok("vps")}`,
+          dim("─".repeat(ME.length + 4)),
           `${key("OS")}: Kali GNU/Linux Rolling`,
           `${key("Host")}: portfolio (nginx en Docker)`,
           `${key("Uptime")}: ${Math.max(1, Math.round(performance.now() / 60000))} min (tu visita)`,
@@ -1026,10 +1026,10 @@
         "root         1  0.0 /sbin/init",
         "root       412  0.1 nginx: master process",
         "www-data   413  0.3 nginx: worker (sirviéndote esto)",
-        "siempre+  1337 42.0 python3 estudiar_crtp.py",
-        "siempre+  2024 12.5 ./buscar_trabajo --rol pentester",
-        "siempre+  3001  0.7 atalaya --watch /var/log",
-        "siempre+  4242  0.0 -zsh (tú, ahora mismo)",
+        "jae       1337 42.0 python3 estudiar_crtp.py",
+        "jae       2024 12.5 ./buscar_trabajo --rol pentester",
+        "jae       3001  0.7 atalaya --watch /var/log",
+        "jae       4242  0.0 -zsh (tú, ahora mismo)",
       ],
 
       /* find [ruta…] [-name glob] [-exec <shell> \;] — lo justo para el reto */
@@ -1071,7 +1071,7 @@
         if (!args.length) return fail(1, ["uso: sudo -l | sudo &lt;comando&gt;"]);
         if (state.user === "root") return exec(args.join(" "));       /* root no necesita sudo */
         if (args[0] === "-l") return [
-          `El usuario ${ME} puede ejecutar los siguientes comandos en elfavo:`,
+          `El usuario ${ME} puede ejecutar los siguientes comandos en vps:`,
           `    (root) ${key("NOPASSWD")}: /usr/bin/find`,
         ];
         if (args[0] === "find" || args[0] === "/usr/bin/find") {
@@ -1083,7 +1083,7 @@
         }
         const bin = args[0].includes("/") ? args[0] : "/usr/bin/" + args[0];
         return fail(1, [escHtml(
-          `Lo sentimos, el usuario ${ME} no está autorizado para ejecutar «${[bin, ...args.slice(1)].join(" ")}» como root en elfavo.`
+          `Lo sentimos, el usuario ${ME} no está autorizado para ejecutar «${[bin, ...args.slice(1)].join(" ")}» como root en vps.`
         )]);
       },
 
@@ -1156,8 +1156,8 @@
 
       nmap: () => fail(1, ["nmap: aquí no hay red que escanear.", dim("# pero hay algo parecido: ./scan.sh")]),
       uname: (args) => [args.join("").includes("a")
-        ? "Linux elfavo 6.12.0-kali-amd64 #1 SMP x86_64 GNU/Linux" : "Linux"],
-      hostname: () => ["elfavo"],
+        ? "Linux vps 6.12.0-kali-amd64 #1 SMP x86_64 GNU/Linux" : "Linux"],
+      hostname: () => ["vps"],
       date: () => [escHtml(new Date().toLocaleString("es-ES", { dateStyle: "full", timeStyle: "medium" }))],
       reboot:   () => fail(1, ["reboot: este portfolio no se reinicia. Lleva arriba desde que lo desplegué."]),
       shutdown: () => fail(1, ["shutdown: ni lo sueñes."]),
@@ -1187,7 +1187,7 @@
     const expand = (t) => {
       const v = {
         "?": String(state.code), USER: state.user, HOME: "/" + home().join("/"),
-        PWD: "/" + state.cwd.join("/"), SHELL: "/usr/bin/zsh", HOSTNAME: "elfavo",
+        PWD: "/" + state.cwd.join("/"), SHELL: "/usr/bin/zsh", HOSTNAME: "vps",
       };
       return t.replace(/\$(\?|[A-Za-z_]\w*)/g, (m, k) => (has(v, k) ? v[k] : ""));
     };
@@ -1423,7 +1423,8 @@
       });
 
       addLi("&nbsp;", "log");
-      addLi(`<span class="sh__hint"># esta shell es de verdad (casi): haz clic y escribe 'help'</span>`, "log jl sh");
+      addLi(`<span class="sh__hint"># shell interactiva: haz clic y escribe 'help'</span>`, "log jl sh");
+      addLi(`<span class="sh__hint"># hay un reto: captura la bandera (.flag.txt)</span>`, "log jl sh");
       addLi("&nbsp;", "log");
       newPrompt();
     };
