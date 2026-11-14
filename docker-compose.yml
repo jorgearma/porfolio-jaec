@@ -8,6 +8,12 @@ services:
       # host_port:container_port
       # Si usas nginx del VPS como reverse-proxy, expón solo a localhost:
       - "127.0.0.1:8089:80"
+    volumes:
+      # access.log en el host para que siege-map (radar) lo lea.
+      # Montar encima de /var/log/nginx tapa los symlinks de la imagen
+      # (access.log → /dev/stdout) y nginx escribe un archivo real.
+      # Rotación: logrotate del host con copytruncate (nginx está en el contenedor).
+      - /var/log/web/portfolio:/var/log/nginx
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost/"]
       interval: 30s
