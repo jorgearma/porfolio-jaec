@@ -1129,7 +1129,7 @@ em { font-style: italic; }
   gap: 0 2ch;
   margin: 0;
   font-family: var(--f-label);
-  font-size: clamp(13px, 0.5vw + 9px, 16px);
+  font-size: 13px;
   line-height: 1.6;
   letter-spacing: 0.04em;
   color: var(--ink-mute);
