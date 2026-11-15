@@ -65,7 +65,7 @@ ssh usuario@tu-vps "cd /opt/jae-portfolio && docker compose up -d --build"
   provider-agnóstico (Twilio ⟷ Meta), arquitectura en capas,
   máquina de estados en Redis, triple verificación HMAC, NLP en
   español con SpaCy + OpenAI, workers RQ, paneles por rol.
-- **02/tcp · Otros proyectos** — Atalaya, Dogscan.
+- **02/tcp · Herramientas de seguridad** — Dogscan, Atalaya.
 - **03/tcp · Write-ups** — field reports de CTF.
 - **04/tcp · Arsenal** — stack técnico por capas.
 - **05/tcp · Contacto** — canal directo.

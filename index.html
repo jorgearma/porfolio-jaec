@@ -5,13 +5,13 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="dark" />
   <title>Jorge Armando Escobar · Backend / Sistemas / Seguridad</title>
-  <meta name="description" content="Especialista en seguridad ofensiva con base técnica en backend, Linux e infraestructura. Panchi-Bot · Atalaya · Dogscan. OSCP en curso." />
+  <meta name="description" content="Especialista en seguridad ofensiva con base técnica en backend, Linux e infraestructura. Panchi-Bot · Dogscan · Atalaya. OSCP en curso." />
 
   <!-- Open Graph — preview en LinkedIn, WhatsApp, Twitter -->
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content="https://jorgearmandoescobar.com/" />
   <meta property="og:title"       content="Jorge Armando Escobar · Backend / Pentesting" />
-  <meta property="og:description" content="Especialista en seguridad ofensiva con base técnica en backend, Linux e infraestructura. Panchi-Bot · Atalaya · Dogscan. OSCP en curso." />
+  <meta property="og:description" content="Especialista en seguridad ofensiva con base técnica en backend, Linux e infraestructura. Panchi-Bot · Dogscan · Atalaya. OSCP en curso." />
   <meta property="og:image"       content="https://jorgearmandoescobar.com/assets/og-cover-v2.png" />
   <meta property="og:image:width"  content="1200" />
   <meta property="og:image:height" content="630" />
@@ -40,7 +40,7 @@
     </div>
     <div class="statusbar__right mono">
       <a href="#panchibot" class="statusbar__link"><b>01</b><i>/tcp</i> panchi-bot</a>
-      <a href="#otros" class="statusbar__link"><b>02</b><i>/tcp</i> proyectos</a>
+      <a href="#herramientas" class="statusbar__link"><b>02</b><i>/tcp</i> herramientas</a>
       <a href="#writeups" class="statusbar__link"><b>03</b><i>/tcp</i> write-ups</a>
       <a href="#stack" class="statusbar__link"><b>04</b><i>/tcp</i> arsenal</a>
       <a href="#contact" class="statusbar__link"><b>05</b><i>/tcp</i> contacto</a>
@@ -339,47 +339,110 @@
     <div class="features" data-features></div>
   </section>
 
-  <!-- ──────────────── OTROS PROYECTOS ──────────────── -->
-  <section class="section projects" id="otros">
+  <!-- ──────────────── HERRAMIENTAS DE SEGURIDAD ──────────────── -->
+  <section class="section projects" id="herramientas">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">proyectos</span><span class="port__info">atalaya · dogscan</span></p>
-      <h2 class="section__title">Otros proyectos</h2>
+      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">dogscan · atalaya</span></p>
+      <h2 class="section__title">Herramientas de seguridad</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
 
     <div class="projects__list">
 
-      <!-- ── Atalaya ── -->
-      <article class="proj proj--wide" id="vps">
-        <div class="proj__content" data-idx="a">
+      <!-- ── Dogscan ── -->
+      <article class="proj proj--wide" id="dogscan">
+        <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">02/a</span>
-            <span class="proj__status">● activo</span>
+            <span class="proj__idx">02/a · ofensiva</span>
+            <span class="proj__status">v1.5.0</span>
           </header>
-          <h3 class="proj__title">Atalaya</h3>
-          <p class="proj__tag mono"># observabilidad y seguridad de host en tiempo real</p>
+          <div class="proj__titlebar">
+            <h3 class="proj__title">Dogscan</h3>
+            <div class="proj__btns mono">
+              <a class="proj__repo-btn" href="https://github.com/jorgearma/tools" target="_blank" rel="noopener noreferrer">github</a>
+              <a class="proj__repo-btn" href="https://www.linkedin.com/feed/update/urn:li:ugcPost:7407039861741731840" target="_blank" rel="noopener noreferrer">vídeo</a>
+            </div>
+          </div>
+          <p class="proj__tag mono"># enumeración ofensiva de servicios de red</p>
           <p class="proj__lede">
-            Dashboard de observabilidad para un VPS en producción. Lee
-            logs de nginx y del bot de forma incremental (inode + offset),
-            agrega métricas de sistema vía psutil y detecta amenazas reales:
-            enumeración de rutas, logins SSH, cambios en ficheros críticos,
-            nuevos listeners TCP y conexiones a puertos C2 conocidos.
-            Sin tocar el código de ninguna aplicación observada.
+            Wrapper de Nmap para pentesting y preparación OSCP. Descubre los
+            puertos, lanza el escaneo dirigido y enumera cada servicio con su
+            propio módulo.
           </p>
           <ul class="proj__feats mono">
-            <li><span class="proj__arr">→</span> seis detectores independientes con sistema de puntuación y alerta Telegram en tiempo real</li>
-            <li><span class="proj__arr">→</span> file integrity monitor con baseline persistido — detecta cambios en /etc/ssh, sudoers y cron</li>
-            <li><span class="proj__arr">→</span> caché TTL por recurso — reduce llamadas a docker stats en ~90% sin dependencias externas</li>
+            <li><span class="proj__arr">→</span> tres modos: fast (puertos + SO), medium (+ versiones), deep (+ vulnerabilidades y módulos)</li>
+            <li><span class="proj__arr">→</span> módulos FTP, SSH y SMB: login anónimo, null session, usuarios, backdoors y CVE conocidos</li>
+            <li><span class="proj__arr">→</span> resultados por servicio en nmap_output/ (permisos 0700), con SearchSploit opcional</li>
+          </ul>
+          <ul class="proj__stack mono">
+            <li>python 3.9+</li><li>nmap</li><li>smbclient</li><li>searchsploit</li><li>rpcclient</li>
+          </ul>
+        </div>
+
+        <!-- salida real transcrita de assets/dogscan_picture.png del repo (v1.0.2), abreviada.
+             Para actualizarla, pega una ejecución de la versión actual dentro del <pre>. -->
+        <figure class="proj__demo" aria-label="ejecución de dogscan">
+          <div class="proj__demo-frame">
+            <div class="proj__demo-bar">
+              <span class="proj__demo-dot proj__demo-dot--red"></span>
+              <span class="proj__demo-dot proj__demo-dot--amber"></span>
+              <span class="proj__demo-dot proj__demo-dot--green"></span>
+              <span class="proj__demo-title mono">kali@kali: ~/Desktop/dogscan</span>
+            </div>
+            <div class="proj__demo-screen proj__demo-screen--term">
+<pre class="proj__term mono"><span class="t-mute">$</span> <b>python3 dogscan.py 10.10.11.221</b>
+<span class="t-mute">[*]</span> version: <span class="t-cy">dogscan 1.0.2</span>
+<span class="t-mute">[*]</span> Running full port scan on 10.10.11.221...
+<span class="t-dim">Nmap scan report for 2million.htb (10.10.11.221)
+Not shown: 65533 closed tcp ports (reset)</span>
+PORT   STATE SERVICE
+22/tcp <span class="t-ok">open</span>  ssh
+80/tcp <span class="t-ok">open</span>  http
+<span class="t-ok">[+]</span> Scan complete. Output saved to nmap_output/all_ports.txt
+<span class="t-mute">[*]</span> Running targeted scan on ports: <span class="t-am">22,80</span>
+PORT   STATE SERVICE VERSION
+22/tcp <span class="t-ok">open</span>  ssh     OpenSSH 8.9p1 Ubuntu 3ubuntu0.1
+80/tcp <span class="t-ok">open</span>  http    nginx
+<span class="t-dim">|_http-title: Hack The Box :: Penetration Testing Labs
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
+<span class="t-ok">[+]</span> Targeted scan complete. Output saved to nmap_output/targeted.txt
+<span class="t-cy">[-] dogs are coming home.</span></pre>
+            </div>
+            <figcaption class="proj__demo-cap">fig. 02a — ejecución real · 2million.htb (hack the box) · v1.0.2, salida abreviada</figcaption>
+          </div>
+        </figure>
+      </article>
+
+      <!-- ── Atalaya ── -->
+      <article class="proj proj--wide" id="atalaya">
+        <div class="proj__content">
+          <header class="proj__head mono">
+            <span class="proj__idx">02/b · defensiva</span>
+            <span class="proj__status">en producción</span>
+          </header>
+          <div class="proj__titlebar">
+            <h3 class="proj__title">Atalaya</h3>
+            <div class="proj__btns mono">
+              <a class="proj__repo-btn" href="https://github.com/jorgearma/atalaya" target="_blank" rel="noopener noreferrer">github</a>
+            </div>
+          </div>
+          <p class="proj__tag mono"># observabilidad y seguridad de host en tiempo real</p>
+          <p class="proj__lede">
+            Dashboard para un VPS en producción. Lee los logs de nginx y del bot
+            de forma incremental y vigila el host sin tocar el código de las
+            aplicaciones observadas.
+          </p>
+          <ul class="proj__feats mono">
+            <li><span class="proj__arr">→</span> seis detectores (rutas, logins SSH, listeners TCP, puertos C2…) con puntuación y alerta por Telegram</li>
+            <li><span class="proj__arr">→</span> integridad de ficheros con baseline: /etc/ssh, sudoers y cron</li>
+            <li><span class="proj__arr">→</span> caché TTL por recurso: ~90% menos llamadas a docker stats</li>
           </ul>
           <ul class="proj__stack mono">
             <li>python</li><li>fastapi</li><li>psutil</li><li>watchdog</li><li>docker</li><li>systemd</li>
           </ul>
         </div>
 
-                <figure class="proj__demo" aria-label="demo del dashboard">
-          <div class="proj__btns mono">
-            <a class="proj__repo-btn" href="https://github.com/jorgearma/atalaya" target="_blank" rel="noopener noreferrer">github</a>
-          </div>
+        <figure class="proj__demo" aria-label="capturas del dashboard">
           <div class="proj__demo-frame">
             <div class="proj__demo-bar">
               <span class="proj__demo-dot proj__demo-dot--red"></span>
@@ -405,58 +468,7 @@
                 </div>
               </div>
             </div>
-            <figcaption class="proj__demo-cap">fig. 02a — atalaya · 4 paneles</figcaption>
-          </div>
-        </figure>
-      </article>
-
-      <!-- ── Cyber Toolkit ── -->
-      <article class="proj proj--wide" id="cyber">
-        <div class="proj__content" data-idx="b">
-          <header class="proj__head mono">
-            <span class="proj__idx">02/b</span>
-            <span class="proj__status">● activo</span>
-          </header>
-          <h3 class="proj__title">Dogscan</h3>
-          <p class="proj__tag mono"># enumeración ofensiva de servicios de red</p>
-          <p class="proj__lede">
-            Wrapper inteligente de Nmap orientado a pentesting y preparación OSCP.
-            Automatiza el flujo completo de enumeración post-scan: descubrimiento
-            de puertos, escaneo dirigido con detección de versiones y módulos
-            especializados por servicio que extraen información accionable sin ruido.
-          </p>
-          <ul class="proj__feats mono">
-            <li><span class="proj__arr">→</span> tres modos (fast / medium / deep) que escalan desde descubrimiento hasta análisis de vulnerabilidades con integración de SearchSploit</li>
-            <li><span class="proj__arr">→</span> módulos para FTP (anonymous login, backdoors, descarga automática), SSH (enumeración de usuarios, algoritmos) y SMB (null session, shares, EternalBlue / CVE-2007-2447)</li>
-            <li><span class="proj__arr">→</span> salida estructurada en directorios con permisos 0700 — resultados listos para el siguiente paso de explotación, no para impresionar en un readme</li>
-          </ul>
-          <ul class="proj__stack mono">
-            <li>python 3.9+</li><li>nmap</li><li>smbclient</li><li>searchsploit</li><li>rpcclient</li>
-          </ul>
-        </div>
-
-        <!-- reemplaza el span por <img src="assets/cyber-demo.gif" alt="Cyber Toolkit en acción" loading="lazy"> -->
-        <figure class="proj__demo" aria-label="demo de la herramienta">
-          <div class="proj__btns mono">
-            <a class="proj__repo-btn" href="https://github.com/jorgearma/tools" target="_blank" rel="noopener noreferrer">github</a>
-          </div>
-          <div class="proj__demo-frame">
-            <div class="proj__demo-bar">
-              <span class="proj__demo-dot proj__demo-dot--red"></span>
-              <span class="proj__demo-dot proj__demo-dot--amber"></span>
-              <span class="proj__demo-dot proj__demo-dot--green"></span>
-              <span class="proj__demo-title mono">dogscan — demo</span>
-            </div>
-            <div class="proj__demo-screen proj__demo-screen--video">
-              <iframe
-                src="https://www.linkedin.com/embed/feed/update/urn:li:ugcPost:7407039861741731840?compact=1"
-                frameborder="0"
-                allowfullscreen
-                title="Demo Cyber Toolkit en LinkedIn"
-                loading="lazy"
-              ></iframe>
-            </div>
-            <figcaption class="proj__demo-cap">fig. 02b — dogscan · vídeo en linkedin</figcaption>
+            <figcaption class="proj__demo-cap">fig. 02b — atalaya · 4 paneles · clic para ampliar</figcaption>
           </div>
         </figure>
       </article>

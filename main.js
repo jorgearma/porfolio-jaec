@@ -825,7 +825,8 @@
     /* `open <algo>` → sección de la página a la que hace scroll */
     const SECTIONS = {
       "panchi-bot": "panchibot", panchibot: "panchibot",
-      atalaya: "vps", dogscan: "cyber",
+      atalaya: "atalaya", dogscan: "dogscan",
+      herramientas: "herramientas",
       writeups: "writeups", arsenal: "stack", stack: "stack",
       contacto: "contact", contact: "contact", whoami: "whoami",
     };

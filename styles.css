@@ -1770,7 +1770,7 @@ em { font-style: italic; }
 }
 .wu__link:hover { color: var(--amber); }
 
-/* ═══════════ projects (otros) ═══════════ */
+/* ═══════════ projects (herramientas) ═══════════ */
 
 .projects__list {
   display: flex;
@@ -1812,7 +1812,7 @@ em { font-style: italic; }
 /* ── layout dos columnas: brief | evidencia ── */
 .proj--wide {
   display: grid;
-  grid-template-columns: 1fr clamp(320px, 46%, 560px);
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);   /* la evidencia manda */
   min-height: 260px;
 }
 
@@ -1824,26 +1824,6 @@ em { font-style: italic; }
   display: flex;
   flex-direction: column;
   overflow: hidden;
-}
-
-/* número fantasma de fondo — data-idx="a" / "b" */
-.proj__content::before {
-  content: attr(data-idx);
-  position: absolute;
-  right: -0.1em;
-  bottom: -0.15em;
-  font-family: var(--f-display);
-  font-style: italic;
-  font-weight: 700;
-  font-size: clamp(120px, 18vw, 220px);
-  line-height: 1;
-  color: var(--rule-soft);
-  pointer-events: none;
-  user-select: none;
-  transition: color .5s var(--ease);
-}
-.proj:hover .proj__content::before {
-  color: rgba(255, 182, 39, 0.045);
 }
 
 .proj__head {
@@ -1865,11 +1845,17 @@ em { font-style: italic; }
 }
 .proj__status { color: var(--ok); }
 
+/* título + enlaces en la misma línea */
+.proj__titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  margin: 22px 0 6px;
+}
+.proj__titlebar .proj__title { margin: 0; }
 .proj__btns {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 4;
   display: flex;
   gap: 6px;
 }
@@ -1978,7 +1964,7 @@ em { font-style: italic; }
 /* ── columna derecha (evidencia / demo) ── */
 .proj__demo {
   margin: 0;
-  padding: 24px 28px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -2289,7 +2275,7 @@ em { font-style: italic; }
 /* ── responsive ── */
 @media (max-width: 860px) {
   .proj--wide {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);   /* minmax(0): el <pre> no ensancha la tarjeta */
     min-height: auto;
   }
   .proj__content {
@@ -2297,12 +2283,10 @@ em { font-style: italic; }
     border-bottom: 1px solid var(--rule);
     padding: 20px 16px;
   }
-  .proj__content::before { display: none; }
   .proj__title { font-size: clamp(22px, 6vw, 30px); margin: 10px 0 4px; }
   .proj__tag { font-size: 11px; margin-bottom: 10px; }
   .proj__lede { font-size: 12px; line-height: 1.6; max-width: 100%; margin-bottom: 12px; }
   .proj__feats li { font-size: 11px; padding: 6px 0; }
-  .proj__btns { top: 16px; right: 12px; }
   .proj__repo-btn { font-size: 10px; padding: 4px 8px; }
   .proj__demo { padding: 16px; }
   .proj__demo-screen { min-height: unset; aspect-ratio: 16 / 10; }
@@ -2526,3 +2510,23 @@ em { font-style: italic; }
 }
 
 .contact__cursor { color: var(--amber); }
+
+/* ═══════════ salida de terminal dentro de una demo (dogscan) ═══════════ */
+.proj__demo-screen--term { aspect-ratio: auto !important; }
+.proj__demo, .proj__demo-frame { min-width: 0; }
+.proj__term {
+  margin: 0;
+  padding: 16px 18px;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink-dim);
+  white-space: pre;
+  overflow-x: auto;
+}
+.proj__term b { color: var(--ink); font-weight: 700; }
+.t-mute { color: var(--ink-mute); }
+.t-dim  { color: var(--ink-mute); }
+.t-ok   { color: var(--ok); }
+.t-am   { color: var(--amber); }
+.t-cy   { color: #6ea8ff; }
+@media (max-width: 860px) { .proj__term { font-size: 10.5px; padding: 12px; } }
