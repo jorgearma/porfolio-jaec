@@ -1441,6 +1441,23 @@
     setTimeout(() => runAll(0), BOOT_DELAY);
   }
 
+  /* ── 02b · nombre del hero: se "desclasifica" al cargar ─────────
+     Redaction 70 → 35 → 0 (de pixelado a limpio). Los tres grados
+     comparten métricas, así que no hay salto de layout. Sin JS o con
+     reduced-motion el nombre se queda directamente en el grado 0.   */
+  const heroName = $(".hero__name");
+  const calm = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (heroName && !calm && document.fonts && document.fonts.load) {
+    Promise.all([
+      document.fonts.load('400 1em "Redaction 70"'),
+      document.fonts.load('400 1em "Redaction 35"'),
+    ]).then(() => {
+      heroName.classList.add("is-g70");
+      setTimeout(() => heroName.classList.replace("is-g70", "is-g35"), 520);
+      setTimeout(() => heroName.classList.remove("is-g35"), 900);
+    }).catch(() => {});
+  }
+
   /* ── 03 · scroll reveal (sections + features) ──────────────────── */
   /* nota: .feat y .wu se renderizan antes de llegar aquí          */
   const targets = [
@@ -1603,11 +1620,11 @@
 
   /* ── 07 · console easter egg ────────────────────────────────────── */
   if (typeof console !== "undefined") {
-    const style = "color:#ffb627;font:600 12px/1.4 JetBrains Mono,monospace;";
+    const style = "color:#ffb627;font:600 12px/1.4 Commit Mono,monospace;";
     console.log("%c// jae-portfolio · v1.0.0", style);
     console.log(
       "%cSi estás leyendo esto por curiosidad, ya nos entenderíamos. → jorgesiemprearmando@gmail.com",
-      "color:#a59d89;font:400 12px/1.5 JetBrains Mono,monospace;"
+      "color:#a59d89;font:400 12px/1.5 Commit Mono,monospace;"
     );
   }
 })();
