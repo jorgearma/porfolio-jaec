@@ -63,35 +63,6 @@
         text: "ver docs",
       },
     },
-    {
-      idx:   "f/05",
-      title: "Validación geoespacial",
-      body:  "Las direcciones pasan por Google Maps → Shapely → polígono de " +
-             "zona de reparto. Si un cliente cae fuera del polígono, la " +
-             "conversación lo explica antes de que la cocina se entere.",
-    },
-    {
-      idx:   "f/06",
-      title: "NLP en español",
-      body:  'SpaCy con <span class="mono">es_core_news_sm</span> más un ' +
-             "pase por OpenAI para intenciones ambiguas. Rapidfuzz para " +
-             "tolerar erratas en nombres de productos. El cliente escribe " +
-             "como habla; el bot entiende.",
-    },
-    {
-      idx:   "f/07",
-      title: "Workers y colas",
-      body:  "Tareas largas (notificaciones, métricas, integraciones pesadas) " +
-             "salen del request cycle vía RQ. El webhook responde en " +
-             "milisegundos; el trabajo real ocurre detrás.",
-    },
-    {
-      idx:   "f/08",
-      title: "Paneles por rol",
-      body:  "Cliente, empleado, cocina, repartidor, picker. Cada uno con " +
-             "su vista, sus permisos JWT, sus métricas. No es un bot: es " +
-             "el sistema operativo del restaurante.",
-    },
   ];
 
   /* ── diagramas de arquitectura (ASCII) ────────────────────────── */
@@ -468,9 +439,8 @@
         ? `<a class="feat__doc mono" href="${f.doc.href}" target="_blank" rel="noopener noreferrer">` +
           `${f.doc.text} ${ICON_EXT()}</a>`
         : "";
-      const extra = ["f/05","f/06","f/07","f/08"].includes(f.idx) ? " feat--extra" : "";
       return (
-        `<article class="feat${extra}">` +
+        `<article class="feat">` +
           `<span class="feat__idx mono">${f.idx}</span>` +
           `<h3 class="feat__title">${f.title}</h3>` +
           `<p class="feat__body">${f.body}</p>` +

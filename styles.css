@@ -1082,7 +1082,6 @@ em { font-style: italic; }
   }
 
   /* feature cards: ocultar extras y scroll horizontal */
-  .feat--extra { display: none; }
   .features {
     display: flex !important;
     flex-direction: row !important;
