@@ -11,7 +11,7 @@ ciberseguridad. Construido a mano, sin frameworks, servido con
 | Contenido   | HTML5 semántico                       |
 | Estilos     | CSS moderno (grid, variables, clamp)  |
 | Interacción | Vanilla JS (IntersectionObserver)     |
-| Tipografía  | Fraunces + JetBrains Mono (Google)    |
+| Tipografía  | Redaction + Commit Mono + Departure Mono (auto-alojadas) |
 | Runtime     | `nginx:1.27-alpine`                   |
 | Contenedor  | Docker + Docker Compose               |
 | Proxy       | Nginx del VPS + Let's Encrypt         |
@@ -59,15 +59,16 @@ ssh usuario@tu-vps "cd /opt/jae-portfolio && docker compose up -d --build"
 
 ## Secciones
 
-- **§ 00 · whoami** — perfil técnico como archivo de dossier.
-- **§ 01 · Panchi-Bot** — case study detallado del proyecto insignia:
+- **00/tcp · whoami** — perfil técnico como archivo de dossier.
+- **01/tcp · Panchi-Bot** — case study detallado del proyecto insignia:
   plataforma completa de operaciones para restaurante, WhatsApp
   provider-agnóstico (Twilio ⟷ Meta), arquitectura en capas,
   máquina de estados en Redis, triple verificación HMAC, NLP en
   español con SpaCy + OpenAI, workers RQ, paneles por rol.
-- **§ 02 · Otros sistemas** — VPS Control, Cyber Toolkit.
-- **§ 03 · Arsenal** — stack técnico por capas.
-- **§ 04 · Contacto** — canal directo.
+- **02/tcp · Otros proyectos** — Atalaya, Dogscan.
+- **03/tcp · Write-ups** — field reports de CTF.
+- **04/tcp · Arsenal** — stack técnico por capas.
+- **05/tcp · Contacto** — canal directo.
 
 ## Cosas a personalizar antes de publicar
 

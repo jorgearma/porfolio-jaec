@@ -31,8 +31,8 @@ No hay tests, ni linter, ni typecheck. La verificación es visual en el navegado
 
 ## Arquitectura
 
-- **`index.html`** — single-page, secciones numeradas estilo dossier (§ 00 whoami, § 01 Panchi-Bot case study, § 02 otros sistemas, § 03 arsenal, § 04 contacto). Toda la estructura está aquí; el resto solo le da estilo y vida.
-- **`styles.css`** (~900 líneas) — "terminal editorial": CSS moderno con variables, grid, `clamp()`. Tipografías Fraunces + JetBrains Mono desde Google Fonts. No hay preprocesador.
+- **`index.html`** — single-page, secciones numeradas como puertos de un escaneo nmap (`00/tcp` whoami, `01/tcp` Panchi-Bot case study, `02/tcp` otros proyectos, `03/tcp` write-ups, `04/tcp` arsenal, `05/tcp` contacto). Cada cabecera lleva un `<p class="port">`; si añades una sección, renumera también la navegación de `.statusbar__right`. Toda la estructura está aquí; el resto solo le da estilo y vida.
+- **`styles.css`** (~900 líneas) — "terminal editorial": CSS moderno con variables, grid, `clamp()`. Tipografías auto-alojadas en `assets/fonts/` (OFL): Redaction (titulares y texto, grados 0/35/70), Commit Mono (`--f-mono`) y Departure Mono (`--f-label`, rótulos pequeños a 11px). No hay preprocesador.
 - **`main.js`** — vanilla JS, IIFE, sin dependencias. Cuatro bloques: (1) contador de uptime de sesión, (2) streamer de logs del hero con array `LOGS` hardcodeado, (3) scroll-reveal vía `IntersectionObserver` con selectores acoplados a clases de `index.html` (ver `targets` en `main.js:85`), (4) easter egg en `console.log`. Si renombras una clase revelable (`.feat`, `.proj`, `.whoami__card`, etc.), actualiza también `targets`.
 
 ### Docker / deploy
@@ -44,4 +44,4 @@ No hay tests, ni linter, ni typecheck. La verificación es visual en el navegado
 
 ## Placeholders pendientes
 
-Hay datos de contacto provisionales en `index.html` y `main.js` que deben reemplazarse antes de publicar: `hola@ejemplo.com`, `github.com/tu-usuario`, `linkedin.com/in/tu-usuario`, `jae-cv.pdf`. Las descripciones de VPS Control y Cyber Toolkit son provisionales a la espera de detalles reales — no inventes copy técnico sobre esos proyectos.
+El enlace del CV en contacto (`jae-cv.pdf`) apunta a `#`: falta subir el PDF a `assets/`. No inventes copy técnico sobre los proyectos: usa solo lo que Jorge confirme.
