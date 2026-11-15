@@ -1462,6 +1462,7 @@
   /* nota: .feat y .wu se renderizan antes de llegar aquí          */
   const targets = [
     ...$$(".section__head"),
+    ...$$(".whoami__head"),
     ...$$(".whoami__card"),
     ...$$(".whoami__copy"),
     ...$$(".case__lede"),
