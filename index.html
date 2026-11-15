@@ -40,10 +40,11 @@
     </div>
     <div class="statusbar__right mono">
       <a href="#panchibot" class="statusbar__link"><b>01</b><i>/tcp</i> panchi-bot</a>
-      <a href="#herramientas" class="statusbar__link"><b>02</b><i>/tcp</i> herramientas</a>
-      <a href="#writeups" class="statusbar__link"><b>03</b><i>/tcp</i> write-ups</a>
-      <a href="#stack" class="statusbar__link"><b>04</b><i>/tcp</i> arsenal</a>
-      <a href="#contact" class="statusbar__link"><b>05</b><i>/tcp</i> contacto</a>
+      <a href="#adlab" class="statusbar__link"><b>02</b><i>/tcp</i> ad-lab</a>
+      <a href="#herramientas" class="statusbar__link"><b>03</b><i>/tcp</i> herramientas</a>
+      <a href="#writeups" class="statusbar__link"><b>04</b><i>/tcp</i> write-ups</a>
+      <a href="#stack" class="statusbar__link"><b>05</b><i>/tcp</i> arsenal</a>
+      <a href="#contact" class="statusbar__link"><b>06</b><i>/tcp</i> contacto</a>
     </div>
   </header>
 
@@ -339,10 +340,123 @@
     <div class="features" data-features></div>
   </section>
 
+  <!-- ──────────────── NORDWIND AD LAB ──────────────── -->
+  <!-- datos de la cadena: docs/phase3-attack.md del repo nordwind-ad-lab -->
+  <section class="section adlab" id="adlab">
+    <header class="section__head">
+      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">ad-lab</span><span class="port__info">nordwind.local</span></p>
+      <h2 class="section__title">Nordwind AD Lab</h2>
+      <span class="section__line" aria-hidden="true"></span>
+      <div class="case__links mono">
+        <a class="case__link" href="https://github.com/jorgearma/nordwind-ad-lab" target="_blank" rel="noopener noreferrer">
+          <span class="case__link-dot">●</span> github
+        </a>
+        <a class="case__link case__link--demo" href="https://ad.jorgearmandoescobar.com" target="_blank" rel="noopener noreferrer">
+          <span class="case__link-dot">▶</span> ver replay
+        </a>
+      </div>
+    </header>
+
+    <div class="adlab__top">
+      <div class="adlab__brief">
+        <p class="case__lede">
+          Un dominio Active Directory montado, saboteado y atacado por mí.
+          De cero credenciales a Domain Admin y DCSync completo.
+        </p>
+        <p class="case__lede case__lede--body">
+          Tres fases: construir un dominio limpio (DC + cliente), plantar
+          misconfiguraciones a propósito y explotarlas desde Kali. Todo con
+          herramientas manuales — impacket, netexec y hashcat, sin Metasploit.
+        </p>
+        <p class="case__lede case__lede--body">
+          El replay reproduce la cadena paso a paso sobre el grafo del dominio
+          y explica en cada uno por qué funciona, cómo se arregla y cómo se
+          detecta.
+        </p>
+        <div class="case__footer mono">
+          <span class="case__footer-label">leer</span>
+          <a class="case__footer-link" href="https://github.com/jorgearma/nordwind-ad-lab/blob/main/docs/phase3-attack.md" target="_blank" rel="noopener noreferrer">
+            writeup del ataque
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          </a>
+          <a class="case__footer-link" href="https://ad.jorgearmandoescobar.com/fundamentos.html" target="_blank" rel="noopener noreferrer">
+            cómo funciona AD por dentro
+            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <figure class="proj__demo adlab__shot" aria-label="replay del ataque">
+        <div class="proj__demo-frame">
+          <div class="proj__demo-bar">
+            <span class="proj__demo-dot proj__demo-dot--red"></span>
+            <span class="proj__demo-dot proj__demo-dot--amber"></span>
+            <span class="proj__demo-dot proj__demo-dot--green"></span>
+            <span class="proj__demo-title">nordwind ad lab — replay · paso 7 de 8</span>
+          </div>
+          <div class="proj__demo-screen">
+            <img src="assets/nordwind-replay.webp" alt="Replay del ataque en el paso de DCSync: grafo del dominio comprometido y salida de secretsdump" width="1360" height="772" loading="lazy">
+          </div>
+          <figcaption class="proj__demo-cap">fig. 02 — replay del ataque · dcsync · clic para ampliar</figcaption>
+        </div>
+      </figure>
+    </div>
+
+    <!-- cadena de ataque -->
+    <ol class="chain mono" aria-label="cadena de ataque">
+      <li class="chain__step">
+        <span class="chain__n">01</span>
+        <span class="chain__name">AS-REP Roasting</span>
+        <span class="chain__res">sin credenciales → piotr.wisniewski</span>
+      </li>
+      <li class="chain__step">
+        <span class="chain__n">02</span>
+        <span class="chain__name">Kerberoasting</span>
+        <span class="chain__res">cuenta de servicio svc_sql</span>
+      </li>
+      <li class="chain__step">
+        <span class="chain__n">03</span>
+        <span class="chain__name">Cadena de ACL</span>
+        <span class="chain__res">ForceChangePassword → GenericAll → Domain Admins</span>
+      </li>
+      <li class="chain__step chain__step--end">
+        <span class="chain__n">04</span>
+        <span class="chain__name">DCSync</span>
+        <span class="chain__res">hashes de krbtgt y Administrator</span>
+      </li>
+      <li class="chain__step">
+        <span class="chain__n">05</span>
+        <span class="chain__name">BloodHound</span>
+        <span class="chain__res">post-mortem: análisis de rutas</span>
+      </li>
+    </ol>
+
+    <div class="stack" aria-label="entorno del laboratorio">
+      <span class="stack__label mono">entorno</span>
+      <ul class="stack__list mono">
+        <li>Windows Server 2022</li>
+        <li>Windows 11</li>
+        <li>VirtualBox 7</li>
+        <li>PowerShell 5.1</li>
+        <li>Kali</li>
+        <li>impacket</li>
+        <li>netexec</li>
+        <li>hashcat</li>
+        <li>BloodHound</li>
+      </ul>
+    </div>
+
+    <p class="adlab__credit mono">
+      Laboratorio propio en red aislada. La base de infraestructura (empresa ficticia, AGDLP y scripts de aprovisionamiento) es de
+      <a href="https://github.com/maciej-stawowy/active-directory-lab" target="_blank" rel="noopener noreferrer">Maciej Stawowy</a> (MIT);
+      el sabotaje, la cadena de ataque, el replay y la documentación son míos.
+    </p>
+  </section>
+
   <!-- ──────────────── HERRAMIENTAS DE SEGURIDAD ──────────────── -->
   <section class="section projects" id="herramientas">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">dogscan · atalaya · siege map</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">03/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">dogscan · atalaya · siege map</span></p>
       <h2 class="section__title">Herramientas de seguridad</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
@@ -353,7 +467,7 @@
       <article class="proj proj--wide" id="dogscan">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">02/a · ofensiva</span>
+            <span class="proj__idx">03/a · ofensiva</span>
             <span class="proj__status">v1.5.0</span>
           </header>
           <div class="proj__titlebar">
@@ -417,7 +531,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
       <article class="proj proj--wide" id="atalaya">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">02/b · defensiva</span>
+            <span class="proj__idx">03/b · defensiva</span>
             <span class="proj__status">en producción</span>
           </header>
           <div class="proj__titlebar">
@@ -468,7 +582,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
                 </div>
               </div>
             </div>
-            <figcaption class="proj__demo-cap">fig. 02b — atalaya · 4 paneles · clic para ampliar</figcaption>
+            <figcaption class="proj__demo-cap">fig. 03b — atalaya · 4 paneles · clic para ampliar</figcaption>
           </div>
         </figure>
       </article>
@@ -477,7 +591,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
       <article class="proj proj--wide" id="siege-map">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">02/c · threat intel</span>
+            <span class="proj__idx">03/c · threat intel</span>
             <span class="proj__status">en producción</span>
           </header>
           <div class="proj__titlebar">
@@ -524,7 +638,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
                 </div>
               </div>
             </div>
-            <figcaption class="proj__demo-cap">fig. 02c — siege map · 2 capturas · clic para ampliar</figcaption>
+            <figcaption class="proj__demo-cap">fig. 03c — siege map · 2 capturas · clic para ampliar</figcaption>
           </div>
         </figure>
       </article>
@@ -536,7 +650,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
   <!-- tarjetas generadas por main.js (WRITEUPS) · edita el array para añadir/quitar -->
   <section class="section writeups" id="writeups">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">03/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">write-ups</span><span class="port__info">field reports</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">04/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">write-ups</span><span class="port__info">field reports</span></p>
       <h2 class="section__title">Write-ups</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
@@ -547,7 +661,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
   <!-- ──────────────── STACK GENERAL ──────────────── -->
   <section class="section skills" id="stack">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">04/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">arsenal</span><span class="port__info">stack técnico</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">05/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">arsenal</span><span class="port__info">stack técnico</span></p>
       <h2 class="section__title">Arsenal</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
@@ -583,7 +697,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
   <!-- ──────────────── CONTACTO ──────────────── -->
   <section class="section contact" id="contact">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">05/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">contacto</span><span class="port__info">canal directo</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">06/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">contacto</span><span class="port__info">canal directo</span></p>
       <h2 class="section__title">Abrir canal</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
