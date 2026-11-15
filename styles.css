@@ -994,7 +994,7 @@ em { font-style: italic; }
   position: relative;
 }
 .hero__side::before {
-  content: "// vitals";
+  content: "vitals";
   position: absolute; top: -8px; left: 14px;
   background: var(--bg);
   padding: 0 8px;
@@ -2516,3 +2516,34 @@ em { font-style: italic; }
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover { background: var(--amber-dim); }
+
+/* ═══════════ etiquetas · Departure Mono ═══════════
+   Textos pequeños de sistema (rótulos, pies, barras). Sin prefijo "//":
+   la tipografía pixel ya los distingue del texto corrido. Va al final
+   para ganar a las reglas base de cada bloque.                        */
+.hero__kicker,
+.dossier__header,
+.hero__side::before,
+.whoami__head-bar,
+.whoami__head-meta,
+.stack__label,
+.case__footer-label,
+.proj__demo-cap {
+  font-family: var(--f-label);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+}
+.proj__demo-cap { text-transform: lowercase; }
+.whoami__head-cmd { color: var(--amber); }
+
+/* regla corta ámbar delante de los rótulos sueltos */
+.stack__label::before,
+.case__footer-label::before {
+  content: "";
+  display: inline-block;
+  width: 14px; height: 1px;
+  margin-right: 8px;
+  vertical-align: middle;
+  background: var(--amber);
+}
