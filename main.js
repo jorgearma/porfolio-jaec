@@ -827,6 +827,7 @@
       "panchi-bot": "panchibot", panchibot: "panchibot",
       atalaya: "atalaya", dogscan: "dogscan",
       herramientas: "herramientas",
+      "siege-map": "siege-map", siegemap: "siege-map",
       writeups: "writeups", arsenal: "stack", stack: "stack",
       contacto: "contact", contact: "contact", whoami: "whoami",
     };

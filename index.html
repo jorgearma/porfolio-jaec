@@ -342,7 +342,7 @@
   <!-- ──────────────── HERRAMIENTAS DE SEGURIDAD ──────────────── -->
   <section class="section projects" id="herramientas">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">dogscan · atalaya</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">dogscan · atalaya · siege map</span></p>
       <h2 class="section__title">Herramientas de seguridad</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
@@ -469,6 +469,61 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
               </div>
             </div>
             <figcaption class="proj__demo-cap">fig. 02b — atalaya · 4 paneles · clic para ampliar</figcaption>
+          </div>
+        </figure>
+      </article>
+
+      <!-- ── Siege Map ── -->
+      <article class="proj proj--wide" id="siege-map">
+        <div class="proj__content">
+          <header class="proj__head mono">
+            <span class="proj__idx">02/c · threat intel</span>
+            <span class="proj__status">mapa en vivo</span>
+          </header>
+          <div class="proj__titlebar">
+            <h3 class="proj__title">Siege Map</h3>
+            <div class="proj__btns mono">
+              <a class="proj__repo-btn" href="https://github.com/jorgearma/siege-map" target="_blank" rel="noopener noreferrer">github</a>
+            </div>
+          </div>
+          <p class="proj__tag mono"># mapa en tiempo real de ataques SSH y HTTP</p>
+          <p class="proj__lede">
+            Lee los logs de SSH y Nginx de un VPS, geolocaliza cada IP y la
+            pinta en un mapa mundial con arcos animados hacia el servidor.
+          </p>
+          <ul class="proj__feats mono">
+            <li><span class="proj__arr">→</span> clasifica cada atacante (diccionario, credential stuffing, password spraying, sondeo) con TTPs de MITRE ATT&amp;CK</li>
+            <li><span class="proj__arr">→</span> ficha por IP con ASN, reputación de AbuseIPDB y puntuación de amenaza</li>
+            <li><span class="proj__arr">→</span> exporta a STIX 2.1 y CSV; las IPs de visitantes HTTP se guardan truncadas a /24</li>
+          </ul>
+          <ul class="proj__stack mono">
+            <li>python</li><li>fastapi</li><li>websocket</li><li>react</li><li>leaflet</li><li>docker</li>
+          </ul>
+        </div>
+
+        <figure class="proj__demo" aria-label="capturas del mapa">
+          <div class="proj__demo-frame">
+            <div class="proj__demo-bar">
+              <span class="proj__demo-dot proj__demo-dot--red"></span>
+              <span class="proj__demo-dot proj__demo-dot--amber"></span>
+              <span class="proj__demo-dot proj__demo-dot--green"></span>
+              <span class="proj__demo-title">siege map — live stream</span>
+            </div>
+            <div class="proj__demo-screen">
+              <div class="proj__carousel" data-carousel>
+                <div class="proj__carousel-track">
+                  <img src="assets/siege-map-dashboard.webp" alt="Siege Map — mapa, patrones de ataque y feed en vivo" width="1600" height="770" loading="lazy">
+                  <img src="assets/siege-map-arcs.webp" alt="Siege Map — arcos animados desde el origen de cada ataque" width="1600" height="770" loading="lazy">
+                </div>
+                <button class="proj__carousel-btn proj__carousel-btn--prev" aria-label="captura anterior">‹</button>
+                <button class="proj__carousel-btn proj__carousel-btn--next" aria-label="captura siguiente">›</button>
+                <div class="proj__carousel-dots" aria-hidden="true">
+                  <span class="proj__carousel-dot is-active"></span>
+                  <span class="proj__carousel-dot"></span>
+                </div>
+              </div>
+            </div>
+            <figcaption class="proj__demo-cap">fig. 02c — siege map · 2 capturas · clic para ampliar</figcaption>
           </div>
         </figure>
       </article>
