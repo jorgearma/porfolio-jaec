@@ -24,10 +24,8 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <!-- grain + scanlines overlays -->
+  <!-- grano de fondo · las scanlines viven solo dentro de la foto del dossier -->
   <div class="fx-grain" aria-hidden="true"></div>
-  <div class="fx-scanlines" aria-hidden="true"></div>
-  <div class="fx-vignette" aria-hidden="true"></div>
 
   <!-- engineering grid lines -->
   <div class="grid-rails" aria-hidden="true">
@@ -39,7 +37,6 @@
     <div class="statusbar__left">
       <span class="statusbar__dot" aria-hidden="true"></span>
       <span class="mono statusbar__tag">JAE-PORTFOLIO</span>
-      <span class="mono statusbar__ver">v1.0.0</span>
     </div>
     <div class="statusbar__center mono">
       <span class="statusbar__label">SESSION</span>
@@ -58,7 +55,7 @@
   <section class="hero" id="top">
     <div class="hero__body">
       <p class="hero__kicker mono">
-        <span class="blink">█</span>&nbsp; informe técnico del candidato
+        informe técnico del candidato
       </p>
 
       <h1 class="hero__name">
@@ -201,11 +198,11 @@
       </figure>
 
       <div class="hero__side mono" aria-hidden="true">
-        <div class="hero__side-row"><span>STATUS</span><span class="hero__ok">● OPERATIONAL</span></div>
-        <div class="hero__side-row"><span>BUILD</span><span>stable / main</span></div>
+        <div class="hero__side-row"><span>ESTADO</span><span class="hero__ok">abierto a ofertas</span></div>
+        <div class="hero__side-row"><span>BASE</span><span>Madrid · ES</span></div>
         <div class="hero__side-row"><span>TZ</span><span>Europe/Madrid</span></div>
         <div class="hero__side-row"><span>LANG</span><span>es · en</span></div>
-        <div class="hero__side-row"><span>UPTIME</span><span>7+ años</span></div>
+        <div class="hero__side-row"><span>CERT</span><span>OSCP · en curso</span></div>
       </div>
     </div>
 
@@ -247,10 +244,6 @@
 
     <div class="whoami__grid">
       <aside class="whoami__card" aria-label="perfil">
-        <div class="card__corner card__corner--tl"></div>
-        <div class="card__corner card__corner--tr"></div>
-        <div class="card__corner card__corner--bl"></div>
-        <div class="card__corner card__corner--br"></div>
 
         <dl class="mono whoami__dl">
           <dt>nombre</dt><dd>jorge armando escobar</dd>
@@ -273,7 +266,6 @@
         </p>
         <p class="mono whoami__sign">
           — <span>./jae</span>
-          <span class="blink">█</span>
         </p>
       </div>
     </div>
@@ -570,7 +562,7 @@
       </ul>
 
       <p class="mono contact__prompt">
-        jorgearmando@vps:~$ <span class="blink">█</span>
+        jorgearmando@vps:~$ <span class="contact__cursor">█</span>
       </p>
     </div>
   </section>
