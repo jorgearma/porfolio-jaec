@@ -298,8 +298,8 @@ em { font-style: italic; }
   display: flex; align-items: center;
 }
 .hero__kicker .blink { color: var(--amber); font-size: 10px; }
-/* contador de sesión · a la derecha del kicker */
-.hero__session { margin-left: auto; display: flex; gap: 10px; white-space: nowrap; }
+/* contador de sesión · pegado a la derecha del kicker */
+.hero__session { margin-left: 28px; display: flex; gap: 10px; white-space: nowrap; }
 
 .hero__name {
   font-family: var(--f-display);
