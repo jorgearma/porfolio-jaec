@@ -185,7 +185,7 @@ em { font-style: italic; }
 .statusbar {
   position: sticky; top: 0; z-index: 100;
   display: grid;
-  grid-template-columns: 1fr auto auto;   /* la nav de puertos ocupa lo que necesite */
+  grid-template-columns: 1fr auto;   /* marca · nav de puertos */
   column-gap: 28px;
   align-items: center;
   padding: 14px var(--pad);
@@ -198,7 +198,6 @@ em { font-style: italic; }
   /* sin backdrop-filter: blur — demasiado caro en scroll (repaint por frame) */
 }
 .statusbar__left  { display: flex; align-items: center; gap: 10px; }
-.statusbar__center { justify-self: center; display: flex; gap: 10px; align-items: center; }
 .statusbar__right { display: flex; gap: 22px; justify-content: flex-end; }
 
 .statusbar__dot {
@@ -299,6 +298,8 @@ em { font-style: italic; }
   display: flex; align-items: center;
 }
 .hero__kicker .blink { color: var(--amber); font-size: 10px; }
+/* contador de sesión · a la derecha del kicker */
+.hero__session { margin-left: auto; display: flex; gap: 10px; white-space: nowrap; }
 
 .hero__name {
   font-family: var(--f-display);
