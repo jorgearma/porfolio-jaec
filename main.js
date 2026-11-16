@@ -1222,6 +1222,7 @@
         lineLi.innerHTML = promptSym() + " " + cmdSpan(v.slice(0, pos)) +
           `<span class="sh__cur">${pos < v.length ? escHtml(v[pos]) : " "}</span>` +
           cmdSpan(v.slice(pos + 1));
+        term.scrollTop = term.scrollHeight;   /* la línea ya tiene alto: ahora sí, al fondo */
       };
       const newPrompt = () => {
         if (!state.mode) addLi(promptTop(), "log kp");
@@ -1234,6 +1235,7 @@
       const freeze = (suffix) => {
         lineLi.innerHTML = promptSym() + " " + cmdSpan(input.value + (suffix || ""));
         lineLi.removeAttribute("aria-hidden");
+        term.scrollTop = term.scrollHeight;
       };
       const cls = () => { term.innerHTML = ""; term.classList.add("is-cleared"); };
       const toEnd = () => input.setSelectionRange(input.value.length, input.value.length);
@@ -1396,7 +1398,6 @@
       });
 
       addLi("&nbsp;", "log");
-      addLi(`<span class="sh__hint"># shell interactiva: haz clic y escribe 'help'</span>`, "log jl sh");
       addLi(`<span class="sh__hint"># hay un reto: captura la bandera (.flag.txt)</span>`, "log jl sh");
       addLi("&nbsp;", "log");
       newPrompt();

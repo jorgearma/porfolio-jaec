@@ -251,7 +251,7 @@ em { font-style: italic; }
   min-height: 88svh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: 1fr;   /* una sola fila: las 2 vacías sumaban 2×row-gap de hueco */
   column-gap: var(--gap);
   row-gap: clamp(30px, 5vw, 60px);
   isolation: isolate;
@@ -415,8 +415,8 @@ em { font-style: italic; }
   list-style: none;
   margin: 0;
   padding: 14px 16px;
-  min-height: clamp(220px, 30vh, 300px);
-  max-height: clamp(300px, 52vh, 420px);
+  /* alto fijo: no crece al escribir; lo que sobra hace scroll dentro */
+  height: clamp(220px, 30vh, 300px);
   overflow-x: hidden;
   overflow-y: auto;
   scrollbar-width: thin;
