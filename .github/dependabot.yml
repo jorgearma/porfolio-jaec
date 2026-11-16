@@ -1,0 +1,13 @@
+# OWASP Docker #0/#9/#13: la imagen base está fijada por digest en el Dockerfile.
+# Dependabot abre un PR cuando hay digest/versión nueva → actualizas sin perder el pin.
+version: 2
+updates:
+  - package-ecosystem: docker
+    directory: "/"
+    schedule:
+      interval: weekly
+
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly

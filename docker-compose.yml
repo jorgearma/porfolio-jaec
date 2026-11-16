@@ -1,24 +1,84 @@
+# Endurecido según OWASP Docker Security Cheat Sheet → ver DOCKER_SECURITY.md
 services:
   portfolio:
     build: .
     image: jae-portfolio:latest
     container_name: jae-portfolio
+    # OWASP #7 sugiere on-failure:N. Se mantiene unless-stopped a propósito:
+    # web pública → prioriza volver a levantarse tras reiniciar el VPS.
     restart: unless-stopped
     ports:
-      # host_port:container_port
-      # Si usas nginx del VPS como reverse-proxy, expón solo a localhost:
-      - "127.0.0.1:8089:80"
+      # OWASP #5a: solo localhost. Docker se salta UFW, así que publicar en
+      # 0.0.0.0 dejaría el puerto abierto a Internet aunque UFW diga deny.
+      - "127.0.0.1:8089:8080"
     volumes:
       # access.log en el host para que siege-map (radar) lo lea.
       # Montar encima de /var/log/nginx tapa los symlinks de la imagen
       # (access.log → /dev/stdout) y nginx escribe un archivo real.
       # Rotación: logrotate del host con copytruncate (nginx está en el contenedor).
+      # Único punto escribible del contenedor (aparte de /tmp) → no puede ser :ro.
+      # En el host debe ser del uid 101:  sudo chown -R 101:101 /var/log/web/portfolio
+      # (si no: "open() error.log failed (13: Permission denied)" y no arranca)
       - /var/log/web/portfolio:/var/log/nginx
+
+    # ── OWASP #8: raíz de solo lectura ──────────────────────
+    # Un atacante con ejecución no puede dejar webshells ni tocar la config.
+    # nginx-unprivileged solo necesita /tmp (PID + client/proxy temp).
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+
+    # ── OWASP #3: sin capabilities ──────────────────────────
+    # uid 101 escuchando en 8080 no necesita ninguna (ni NET_BIND_SERVICE).
+    cap_drop:
+      - ALL
+
+    # ── OWASP #4 / #6 ───────────────────────────────────────
+    # no-new-privileges: ningún binario SUID/SGID puede subir privilegios.
+    # seccomp/AppArmor: se dejan los perfiles por defecto (NO poner unconfined).
+    security_opt:
+      - no-new-privileges:true
+
+    # ── OWASP #7: límites de recursos ───────────────────────
+    # Que un DoS o un proceso desbocado no tumbe el resto del VPS.
+    mem_limit: 128m
+    memswap_limit: 128m      # = mem_limit → sin swap extra
+    cpus: 0.5
+    pids_limit: 100          # corta fork bombs
+    ulimits:
+      nofile:
+        soft: 1024
+        hard: 2048
+
+    # Logs de Docker (stdout/stderr del contenedor) con tope: sin esto el
+    # json-file crece sin límite y puede llenar el disco del VPS.
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+    # ── OWASP #5: red propia y aislada ──────────────────────
+    networks:
+      - portfolio_net
+
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost/"]
+      # 127.0.0.1 y no localhost: localhost → ::1 y nginx solo escucha IPv4
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/"]
       interval: 30s
       timeout: 3s
       retries: 3
     labels:
       project: "jae-portfolio"
       owner:   "jorge.armando.escobar"
+
+networks:
+  portfolio_net:
+    name: portfolio_net
+    driver: bridge
+    # Subred fija → nginx.conf solo se fía de CF-Connecting-IP si la conexión
+    # viene de esta red (antes: todo 172.16.0.0/12 = cualquier red Docker).
+    # Si choca con otra red del VPS: cambiarla aquí Y en nginx.conf.
+    ipam:
+      config:
+        - subnet: 172.30.89.0/24
