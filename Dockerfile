@@ -6,7 +6,7 @@
 # (>1024, no necesita privilegios). OWASP Docker #2 "Set a user".
 # Fijada por DIGEST (OWASP #9/#13): el tag 1.30-alpine puede moverse, el digest no.
 # Dependabot (.github/dependabot.yml) abre PR cuando sale una versión nueva.
-FROM nginxinc/nginx-unprivileged:1.30-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+FROM nginxinc/nginx-unprivileged:1.31-alpine@sha256:b5047b9b76845eac124358373c6852377c52e4b05834a47647e955dd91cb8f1e
 
 # Metadatos OCI: trazabilidad (de qué repo sale la imagen). Van en la imagen,
 # no solo en el compose → se ven con docker inspect aunque se arranque a mano.
