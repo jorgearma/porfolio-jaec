@@ -15,7 +15,7 @@ El idioma del contenido y de los comentarios es **español**. Mantén ese regist
 python3 -m http.server 8088      # → http://127.0.0.1:8088
 
 # Dev local igual que producción:
-docker compose up --build        # → http://127.0.0.1:8088
+docker compose up --build        # → http://127.0.0.1:8089
 
 # Logs y salud del contenedor:
 docker compose logs -f --tail=100 portfolio
@@ -37,8 +37,8 @@ No hay tests, ni linter, ni typecheck. La verificación es visual en el navegado
 
 ### Docker / deploy
 
-- `Dockerfile` copia **solo** `index.html styles.css main.js` a `/usr/share/nginx/html`. El directorio `assets/` está comentado — si añades imágenes/favicon, descomenta la línea `COPY assets ./assets` (`Dockerfile:19`).
-- `docker-compose.yml` expone `127.0.0.1:8088:80` (solo loopback). La exposición pública la hace el nginx del host del VPS como reverse-proxy + Let's Encrypt. Detalles completos en `DEPLOY.md`.
+- `Dockerfile` (base `nginxinc/nginx-unprivileged`, uid 101) copia **solo** `index.html styles.css main.js` y `assets/` a `/usr/share/nginx/html`. Si añades un fichero en la raíz, añádelo al `COPY`.
+- `docker-compose.yml` expone `127.0.0.1:8089:8080` (solo loopback). La exposición pública la hace Cloudflare Tunnel (cloudflared en el host); no hay nginx en el host. Detalles en `DEPLOY.md`.
 - `nginx.conf` es la config **dentro del contenedor**, no la del host.
 - Timezone del contenedor: `Europe/Madrid`.
 

@@ -27,11 +27,11 @@ porfolio/
 ├── index.html          # una sola página, todas las secciones
 ├── styles.css          # terminal editorial · ≈ 900 líneas
 ├── main.js             # uptime, typed prompt, scroll reveal
-├── Dockerfile          # nginx:alpine
-├── docker-compose.yml  # expone 127.0.0.1:8088
+├── Dockerfile          # nginx-unprivileged, sin root, fijado por digest
+├── docker-compose.yml  # expone 127.0.0.1:8089, endurecido (OWASP)
 ├── nginx.conf          # config dentro del contenedor
 ├── .dockerignore
-├── DEPLOY.md           # pasos completos para VPS
+├── DEPLOY.md           # deploy en el VPS (Cloudflare Tunnel)
 └── README.md
 ```
 
@@ -44,18 +44,13 @@ python3 -m http.server 8088
 
 # opción 2 — igual que en producción:
 docker compose up --build
-# → http://127.0.0.1:8088
+# → http://127.0.0.1:8089
 ```
 
 ## Deploy en el VPS
 
-Instrucciones completas en [`DEPLOY.md`](./DEPLOY.md).
-Resumen:
-
-```bash
-rsync -avz --delete ./ usuario@tu-vps:/opt/jae-portfolio/
-ssh usuario@tu-vps "cd /opt/jae-portfolio && docker compose up -d --build"
-```
+Cloudflare (HTTPS) → túnel → cloudflared → `127.0.0.1:8089` → contenedor.
+Sin nginx en el host ni puertos web abiertos. Instrucciones en [`DEPLOY.md`](./DEPLOY.md).
 
 ## Secciones
 
