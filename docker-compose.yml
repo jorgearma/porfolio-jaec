@@ -7,10 +7,8 @@ services:
     # OWASP #7 sugiere on-failure:N. Se mantiene unless-stopped a propósito:
     # web pública → prioriza volver a levantarse tras reiniciar el VPS.
     restart: unless-stopped
-    ports:
-      # OWASP #5a: solo localhost. Docker se salta UFW, así que publicar en
-      # 0.0.0.0 dejaría el puerto abierto a Internet aunque UFW diga deny.
-      - "127.0.0.1:8089:8080"
+    # Sin ports: el contenedor no publica nada en el host. Solo lo alcanza el
+    # servicio cloudflared por la red interna (portfolio_internal).
     volumes:
       # access.log en el host para que siege-map (radar) lo lea.
       # Montar encima de /var/log/nginx tapa los symlinks de la imagen
@@ -58,9 +56,12 @@ services:
         max-size: "10m"
         max-file: "3"
 
-    # ── OWASP #5: red propia y aislada ──────────────────────
+    # ── OWASP #5: red propia, interna, sin salida a Internet ─
+    # Una web estática no necesita iniciar conexiones: si alguien consigue
+    # ejecutar código dentro, no puede descargar herramientas ni abrir una
+    # reverse shell.
     networks:
-      - portfolio_net
+      - portfolio_internal
 
     healthcheck:
       # 127.0.0.1 y no localhost: localhost → ::1 y nginx solo escucha IPv4
@@ -72,13 +73,71 @@ services:
       project: "jae-portfolio"
       owner:   "jorge.armando.escobar"
 
+  # ── Túnel de Cloudflare propio del portfolio ─────────────
+  # Sustituye al cloudflared del host (systemd, root) para este proyecto.
+  # Es el único servicio con salida: está en las dos redes.
+  cloudflared:
+    # OWASP #13: versión + digest
+    image: cloudflare/cloudflared:2026.11.0@sha256:b94b96edf2c9c4360f8879c8580cfaa99077f19c849ec595ca2f711b27d4f344
+    container_name: jae-portfolio-tunnel
+    restart: unless-stopped
+    # Token como Docker secret (OWASP #12), nunca en environment (TUNNEL_TOKEN).
+    # Métricas solo en 127.0.0.1 del contenedor: por defecto escucha en
+    # 0.0.0.0 y el portfolio podría consultarlas por la red interna.
+    command: >-
+      tunnel --no-autoupdate --metrics 127.0.0.1:20241
+      run --token-file /run/secrets/tunnel_token
+    secrets:
+      - tunnel_token
+    # La imagen ya corre como 65532:65532 (nonroot, distroless).
+    read_only: true
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    mem_limit: 128m
+    memswap_limit: 128m
+    cpus: 0.5
+    pids_limit: 100
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+    networks:
+      - portfolio_internal   # llegar a http://portfolio:8080
+      - tunnel_egress        # salir hacia Cloudflare
+    healthcheck:
+      # Imagen distroless (sin shell ni wget): usa el propio binario.
+      test: ["CMD", "cloudflared", "tunnel", "--metrics", "127.0.0.1:20241", "ready"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+    depends_on:
+      portfolio:
+        condition: service_healthy
+    labels:
+      project: "jae-portfolio"
+      owner:   "jorge.armando.escobar"
+
 networks:
-  portfolio_net:
-    name: portfolio_net
-    driver: bridge
+  portfolio_internal:
+    name: portfolio_internal
+    # Sin salida a Internet. Por eso el portfolio ya no puede publicar puertos
+    # (Docker no publica en redes internal) y le llega el tráfico por cloudflared.
+    internal: true
     # Subred fija → nginx.conf solo se fía de CF-Connecting-IP si la conexión
-    # viene de esta red (antes: todo 172.16.0.0/12 = cualquier red Docker).
+    # viene de esta red (ahora: desde el contenedor cloudflared).
     # Si choca con otra red del VPS: cambiarla aquí Y en nginx.conf.
     ipam:
       config:
         - subnet: 172.30.89.0/24
+  tunnel_egress:
+    name: portfolio_tunnel_egress
+    driver: bridge
+
+secrets:
+  tunnel_token:
+    # Carpeta 700, fichero 444 (el contenedor corre como 65532 y lo tiene
+    # que poder leer). secrets/ está en .gitignore y .dockerignore.
+    file: ./secrets/tunnel_token
