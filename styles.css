@@ -1437,6 +1437,13 @@ em { font-style: italic; }
 .case__lede--body:last-of-type {
   margin-bottom: 16px;
 }
+.case__lede-link {
+  color: var(--amber);
+  text-decoration: none;
+  border-bottom: 1px dashed currentColor;
+  transition: opacity .2s;
+}
+.case__lede-link:hover { opacity: .7; }
 .case__footer {
   display: flex;
   align-items: center;
@@ -2088,9 +2095,11 @@ em { font-style: italic; }
   position: relative;
   overflow: hidden;
   width: 100%;
+  transition: height .42s cubic-bezier(.4, 0, .2, 1);
 }
 .proj__carousel-track {
   display: flex;
+  align-items: flex-start;
   transition: transform .42s cubic-bezier(.4, 0, .2, 1);
   will-change: transform;
 }
@@ -2271,6 +2280,15 @@ em { font-style: italic; }
   flex-shrink: 0;
   text-align: right;
 }
+.proj__demo-sell {
+  margin: 10px 2px 0;
+  font-family: var(--f-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-dim);
+  letter-spacing: 0.01em;
+}
+.proj__demo-sell b { color: var(--amber); font-weight: 600; }
 
 /* ── responsive ── */
 @media (max-width: 860px) {
@@ -2539,6 +2557,8 @@ em { font-style: italic; }
   align-items: start;
   margin-bottom: clamp(32px, 4vw, 56px);
 }
+/* panchi-bot: mismo layout que nordwind; ajustar aquí el ancho de la captura */
+.case__top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .adlab__shot { padding: 0; }
 .adlab .stack:last-child { margin-bottom: 0; }
 

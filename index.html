@@ -283,29 +283,45 @@
       </div>
     </header>
 
-    <p class="case__lede">
-      Bot de pedidos por WhatsApp para un restaurante o almacén.
-      Gestiona el ciclo completo del pedido: desde el primer mensaje
-      del cliente hasta el cobro y la entrega.
-    </p>
-    <p class="case__lede case__lede--body">
-      Arquitectura Flask en capas estrictas con procesamiento asíncrono
-      de mensajes via Redis Queue, máquina de estados para el registro
-      de usuarios, integración con Monei (pagos online) y validación
-      de direcciones mediante geofencing + catálogo de calles.
-    </p>
-    <p class="case__lede case__lede--body">
-      Panel de operaciones con roles diferenciados: dashboard de
-      administración, PWA de cocina, app de picking para almacén
-      y app de reparto para repartidores.
-    </p>
+    <div class="adlab__top case__top">
+      <div class="adlab__brief">
+      <p class="case__lede">
+        Bot de pedidos por WhatsApp con cobro online, diseñado,
+        construido y asegurado por mí. Cubre todo el ciclo del pedido:
+        del primer mensaje del cliente al cobro y la entrega.
+      </p>
+      <p class="case__lede case__lede--body">
+        Lo diseñé pensando en cómo lo atacaría: pagos con Monei, webhooks
+        públicos, WebSockets en tiempo real y cuatro roles con privilegios
+        distintos (admin, cocina, picking y reparto). El pago solo lo
+        confirma el servidor, la autorización se comprueba por rol en cada
+        endpoint y las direcciones se validan con geofencing y un catálogo
+        cerrado de calles, nunca con texto libre.
+      </p>
+      <p class="case__lede case__lede--body">
+        Backend Flask en capas estrictas, mensajes procesados en segundo
+        plano con Redis Queue y registro de usuarios con máquina de estados
+        para que no se puedan saltar pasos. En producción en
+        <a class="case__lede-link" href="https://www.panchibot.es" target="_blank" rel="noopener noreferrer">www.panchibot.es</a>
+        sobre mi propio VPS, detrás de Cloudflare Tunnel.
+      </p>
+      </div>
 
-    <div class="case__footer mono">
-      <span class="case__footer-label">en producción</span>
-      <a class="case__footer-link" href="https://www.panchibot.es" target="_blank" rel="noopener noreferrer">
-        www.panchibot.es
-        <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-      </a>
+      <!-- captura de la demo operativa -->
+      <figure class="proj__demo adlab__shot" aria-label="captura de la demo operativa">
+        <div class="proj__demo-frame">
+          <div class="proj__demo-bar">
+            <span class="proj__demo-dot proj__demo-dot--red"></span>
+            <span class="proj__demo-dot proj__demo-dot--amber"></span>
+            <span class="proj__demo-dot proj__demo-dot--green"></span>
+            <span class="proj__demo-title">panchi-bot — demo operativa</span>
+          </div>
+          <div class="proj__demo-screen">
+            <img src="assets/panchi-demo-apps.webp" width="1273" height="812" alt="Demo operativa: apps internas de picking y reparto en móvil, con pedidos activos, cola y cobros en efectivo u online" loading="lazy">
+          </div>
+          <figcaption class="proj__demo-cap">fig. 01 — demo operativa · picking y reparto · clic para ampliar</figcaption>
+        </div>
+      </figure>
     </div>
 
     <!-- stack badges -->
@@ -659,6 +675,11 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
             </div>
             <figcaption class="proj__demo-cap">fig. 03c — siege map · 5 vistas · clic para ampliar</figcaption>
           </div>
+          <p class="proj__demo-sell">
+            En producción sobre un VPS propio: cada IP de estas capturas es un
+            atacante <b>real</b>, geolocalizado, clasificado con MITRE ATT&amp;CK
+            y puntuado en vivo. Nada de datos de juguete.
+          </p>
         </figure>
       </article>
 

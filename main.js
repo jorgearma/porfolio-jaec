@@ -1506,11 +1506,23 @@
     const btnNext = carousel.querySelector(".proj__carousel-btn--next");
     let current = 0;
 
+    // la altura del marco sigue a la imagen activa (evita huecos si varían de proporción)
+    const fitHeight = () => {
+      const h = imgs[current].getBoundingClientRect().height;
+      if (h) carousel.style.height = `${h}px`;
+    };
+
     const goTo = (idx) => {
       current = (idx + imgs.length) % imgs.length;
       track.style.transform = `translateX(-${current * 100}%)`;
       dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
+      fitHeight();
     };
+
+    // reajusta cuando cada imagen (lazy) termina de cargar y al redimensionar
+    imgs.forEach((im) => { if (!im.complete) im.addEventListener("load", fitHeight); });
+    window.addEventListener("resize", fitHeight);
+    fitHeight();
 
     // los dots también son clicables
     dots.forEach((dot, i) => dot.addEventListener("click", () => goTo(i)));
