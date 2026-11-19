@@ -109,10 +109,12 @@
 
       <div class="hero__actions">
         <a class="btn btn--primary mono" href="#panchibot">
+          <span class="btn__tab" aria-hidden="true">exp · 01/tcp</span>
           <span>leer caso de estudio</span>
           <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
         </a>
         <a class="btn btn--ghost mono" href="#contact">
+          <i class="btn__c btn__c--tl" aria-hidden="true"></i><i class="btn__c btn__c--tr" aria-hidden="true"></i><i class="btn__c btn__c--bl" aria-hidden="true"></i><i class="btn__c btn__c--br" aria-hidden="true"></i>
           <span>contactar</span>
         </a>
       </div>
@@ -186,19 +188,19 @@
 
 
         <dl class="dossier__meta mono">
-          <div><dt>nombre</dt><dd>escobar, j.a.</dd></div>
-          <div><dt>rol</dt><dd>pentester · sec</dd></div>
-          <div><dt>acceso</dt><dd><span class="ok">● concedido</span></dd></div>
-          <div><dt>github</dt><dd><a href="https://github.com/jorgearma" target="_blank" rel="noopener">jorgearma</a></dd></div>
+          <div><dt>nombre</dt><dd><span class="metal">escobar, j.a.</span></dd></div>
+          <div><dt>rol</dt><dd><span class="metal">pentester · sec</span></dd></div>
+          <div><dt>acceso</dt><dd><span class="metal metal--ok">● concedido</span></dd></div>
+          <div><dt>github</dt><dd><a class="metal" href="https://github.com/jorgearma" target="_blank" rel="noopener">jorgearma</a></dd></div>
         </dl>
       </figure>
 
       <div class="hero__side mono" aria-hidden="true">
-        <div class="hero__side-row"><span>ESTADO</span><span class="hero__ok">disponible</span></div>
-        <div class="hero__side-row"><span>BASE</span><span>Madrid · ES</span></div>
-        <div class="hero__side-row"><span>TZ</span><span>Europe/Madrid</span></div>
-        <div class="hero__side-row"><span>LANG</span><span>es · en</span></div>
-        <div class="hero__side-row"><span>CERT</span><span>OSCP · en curso</span></div>
+        <div class="hero__side-row"><span>ESTADO</span><span class="metal metal--ok">disponible</span></div>
+        <div class="hero__side-row"><span>BASE</span><span class="metal">Madrid · ES</span></div>
+        <div class="hero__side-row"><span>TZ</span><span class="metal">Europe/Madrid</span></div>
+        <div class="hero__side-row"><span>LANG</span><span class="metal">es · en</span></div>
+        <div class="hero__side-row"><span>CERT</span><span class="metal">OSCP · en curso</span></div>
       </div>
     </div>
 
@@ -221,11 +223,15 @@
         <span class="section__line" aria-hidden="true"></span>
         <div class="case__links mono">
           <a class="case__link" href="https://www.linkedin.com/in/jorge-arma/" target="_blank" rel="noopener noreferrer">
-            <span class="case__link-dot">●</span> linkedin
+            <span class="case__link-tab" aria-hidden="true">anexo 00-A</span>
+            <span>linkedin</span><span class="case__link-arr" aria-hidden="true">↗</span>
           </a>
-          <a class="case__link case__link--demo" href="https://github.com/jorgearma" target="_blank" rel="noopener noreferrer">
-            <span class="case__link-dot">▶</span> github
+          <a class="case__link case__link--live" href="https://github.com/jorgearma" target="_blank" rel="noopener noreferrer">
+            <span class="case__link-tab" aria-hidden="true">anexo 00-B</span>
+            <span>github</span><span class="case__link-arr" aria-hidden="true">↗</span>
           </a>
+          <span class="case__link-dest" aria-hidden="true">linkedin.com/in/jorge-arma</span>
+          <span class="case__link-dest" aria-hidden="true">github.com/jorgearma</span>
         </div>
       </div>
 
@@ -246,7 +252,9 @@
           <dt>rol</dt><dd>backend engineer · red team</dd>
           <dt>base</dt><dd>madrid · es</dd>
           <dt>foco</dt><dd>pentesting · análisis de vulns</dd>
-          <dt>cert</dt><dd>oscp <span class="whoami__badge mono">← en preparación</span></dd>
+          <dt>cert</dt><dd>crtp · oscp <span class="whoami__badge mono">← en preparación</span></dd>
+          <dt>htb</dt><dd>52 máquinas comprometidas</dd>
+          <dt>open source</dt><dd><a href="https://github.com/Lissy93/web-check/pull/292" target="_blank" rel="noopener noreferrer">PR #292 en web-check (35k★)</a> · RFC 9116</dd>
           <dt>disponibilidad</dt><dd><span class="ok">● abierto a ofertas</span></dd>
         </dl>
       </aside>
@@ -255,10 +263,20 @@
 
 
         <p class="lede">
-          Especialista en seguridad ofensiva con base técnica en backend, Linux e infraestructura.
-          Experiencia en pentesting de aplicaciones web y sistemas, análisis de vulnerabilidades
-          y elaboración de reportes técnicos. Certificación OSCP en curso. Busco incorporarme
-          a un equipo donde la seguridad sea parte del trabajo real, no un trámite.
+          Pentester junior que viene del backend: sé cómo se construye una aplicación,
+          y por eso sé dónde suele romperse. 52 máquinas comprometidas en Hack The Box,
+          un laboratorio de Active Directory montado y atacado de cero a Domain Admin,
+          y un
+          <a class="case__lede-link" href="https://github.com/Lissy93/web-check/pull/292" target="_blank" rel="noopener noreferrer">PR mergeado en web-check</a>
+          (35k★) que corrige la detección de security.txt según la RFC 9116.
+          Preparando CRTP y OSCP.
+        </p>
+        <p class="lede">
+          No me quedo en el laboratorio: tengo sistemas en producción en mi propio VPS
+          y los defiendo yo. Cada exploit que hago lo acompaño de cómo se
+          corrige y cómo se detecta, porque un informe que solo dice «vulnerable» no
+          sirve a nadie. Busco un equipo donde la seguridad sea parte del trabajo
+          real, no un trámite.
         </p>
         <p class="mono whoami__sign">
           — <span>./jae</span>
@@ -275,11 +293,15 @@
       <span class="section__line" aria-hidden="true"></span>
       <div class="case__links mono">
         <a class="case__link" href="https://www.panchibot.es" target="_blank" rel="noopener noreferrer">
-          <span class="case__link-dot">●</span> landing
+          <span class="case__link-tab" aria-hidden="true">anexo 01-A</span>
+          <span>landing</span><span class="case__link-arr" aria-hidden="true">↗</span>
         </a>
-        <a class="case__link case__link--demo" href="https://www.panchibot.es/demo" target="_blank" rel="noopener noreferrer">
-          <span class="case__link-dot">▶</span> demo en vivo
+        <a class="case__link case__link--live" href="https://www.panchibot.es/demo" target="_blank" rel="noopener noreferrer">
+          <span class="case__link-tab" aria-hidden="true">anexo 01-B</span>
+          <span class="case__link-rec" aria-hidden="true">rec</span><span>demo en vivo</span><span class="case__link-arr" aria-hidden="true">↗</span>
         </a>
+        <span class="case__link-dest" aria-hidden="true">panchibot.es</span>
+        <span class="case__link-dest" aria-hidden="true">panchibot.es/demo</span>
       </div>
     </header>
 
@@ -317,7 +339,7 @@
             <span class="proj__demo-title">panchi-bot — demo operativa</span>
           </div>
           <div class="proj__demo-screen">
-            <img src="assets/panchi-demo-apps.webp" width="1273" height="812" alt="Demo operativa: apps internas de picking y reparto en móvil, con pedidos activos, cola y cobros en efectivo u online" loading="lazy">
+            <img src="assets/panchi-demo-apps-v2.webp" width="1194" height="760" alt="Demo operativa: apps internas de picking y reparto en móvil, con pedidos activos, cola y cobros en efectivo u online" loading="lazy">
           </div>
           <figcaption class="proj__demo-cap">fig. 01 — demo operativa · picking y reparto · clic para ampliar</figcaption>
         </div>
@@ -332,28 +354,16 @@
         <li>Flask 3</li>
         <li>SQLAlchemy 2</li>
         <li>SQL Server</li>
-        <li>Redis</li>
-        <li>RQ</li>
-        <li>Twilio</li>
+        <li>Redis&nbsp;·&nbsp;RQ</li>
         <li>Meta Cloud API</li>
         <li>Monei</li>
-        <li>Google Maps</li>
-        <li>Shapely</li>
-        <li>SpaCy&nbsp;·&nbsp;es</li>
-        <li>OpenAI</li>
-        <li>Gunicorn</li>
         <li>Docker</li>
-        <li>Nginx</li>
-        <li>Sentry</li>
-        <li>Pytest</li>
       </ul>
     </div>
 
     <!-- diagramas de arquitectura · contenido generado por main.js (ARCH_PANELS) -->
     <div class="arch" aria-label="diagramas de arquitectura" data-arch></div>
 
-    <!-- feature cards · contenido generado por main.js (FEATURES) -->
-    <div class="features" data-features></div>
   </section>
 
   <!-- ──────────────── NORDWIND AD LAB ──────────────── -->
@@ -365,11 +375,15 @@
       <span class="section__line" aria-hidden="true"></span>
       <div class="case__links mono">
         <a class="case__link" href="https://github.com/jorgearma/nordwind-ad-lab" target="_blank" rel="noopener noreferrer">
-          <span class="case__link-dot">●</span> github
+          <span class="case__link-tab" aria-hidden="true">anexo 02-A</span>
+          <span>github</span><span class="case__link-arr" aria-hidden="true">↗</span>
         </a>
-        <a class="case__link case__link--demo" href="https://ad-lab.jorgearmandoescobar.com" target="_blank" rel="noopener noreferrer">
-          <span class="case__link-dot">▶</span> ver replay
+        <a class="case__link case__link--live" href="https://ad-lab.jorgearmandoescobar.com" target="_blank" rel="noopener noreferrer">
+          <span class="case__link-tab" aria-hidden="true">anexo 02-B</span>
+          <span class="case__link-play" aria-hidden="true">▶ play</span><span>ver replay</span><span class="case__link-arr" aria-hidden="true">↗</span>
         </a>
+        <span class="case__link-dest" aria-hidden="true">github.com/jorgearma/nordwind-ad-lab</span>
+        <span class="case__link-dest" aria-hidden="true">ad-lab.jorgearmandoescobar.com</span>
       </div>
     </header>
 
@@ -391,17 +405,6 @@
           se corrige y cómo se detecta (con sus Event IDs). También la mirada del
           que defiende.
         </p>
-        <div class="case__footer mono">
-          <span class="case__footer-label">leer</span>
-          <a class="case__footer-link" href="https://github.com/jorgearma/nordwind-ad-lab/blob/main/docs/phase3-attack.md" target="_blank" rel="noopener noreferrer">
-            writeup del ataque
-            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          </a>
-          <a class="case__footer-link" href="https://ad-lab.jorgearmandoescobar.com/fundamentos.html" target="_blank" rel="noopener noreferrer">
-            cómo funciona AD por dentro
-            <svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M7 17L17 7M17 7H7M17 7v10" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
-          </a>
-        </div>
       </div>
 
       <figure class="proj__demo adlab__shot" aria-label="capturas del laboratorio">
@@ -485,18 +488,613 @@
   <!-- ──────────────── HERRAMIENTAS DE SEGURIDAD ──────────────── -->
   <section class="section projects" id="herramientas">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">03/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">dogscan · atalaya · siege map</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">03/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">hardening · siege map · dogscan · atalaya</span></p>
       <h2 class="section__title">Herramientas de seguridad</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
 
     <div class="projects__list">
 
+      <!-- ── Docker Deploy ── -->
+      <article class="proj proj--wide" id="hardened-docker">
+        <div class="proj__content">
+          <header class="proj__head mono">
+            <span class="proj__idx">03/a · hardening</span>
+            <span class="proj__status">owasp</span>
+          </header>
+          <div class="proj__titlebar">
+            <h3 class="proj__title">Docker Deploy</h3>
+            <div class="proj__btns mono">
+              <a class="proj__repo-btn" href="https://github.com/jorgearma/hardened-docker-deploy" target="_blank" rel="noopener noreferrer">github</a>
+            </div>
+          </div>
+          <p class="proj__tag mono"># despliegue seguro con docker + nginx</p>
+          <p class="proj__lede">
+            Guía y configs de referencia para escribir un Dockerfile, un
+            docker-compose y un nginx.conf endurecidos, basadas en la OWASP
+            Docker Security Cheat Sheet y probadas atacándolas desde dentro.
+          </p>
+          <ul class="proj__feats mono">
+            <li><span class="proj__arr">→</span> plantillas sin root, read-only, cap_drop ALL, no-new-privileges y puertos solo en 127.0.0.1</li>
+            <li><span class="proj__arr">→</span> scripts de verificación: contenedor, nginx desde fuera y host; cada línea sale como OK, FALLO, AVISO o MANUAL con su regla OWASP</li>
+            <li><span class="proj__arr">→</span> pruebas activas de post-explotación: escritura en /, noexec, binarios SUID y secretos en docker history</li>
+          </ul>
+          <ul class="proj__stack mono">
+            <li>bash</li><li>docker</li><li>nginx</li><li>trivy</li><li>hadolint</li><li>dockle</li><li>gixy</li>
+          </ul>
+        </div>
+
+        <!-- salidas reales de verificacion/contenedor.sh (contra jae-portfolio, este portafolio) y host.sh.
+             main.js teclea el comando y vuelca las líneas; las pestañas/flechas cambian de shell. -->
+        <figure class="proj__demo" aria-label="ejecución de contenedor.sh y host.sh, y plantillas de Dockerfile, compose y nginx">
+          <div class="proj__demo-frame">
+            <div class="proj__demo-bar">
+              <span class="proj__demo-dot proj__demo-dot--red"></span>
+              <span class="proj__demo-dot proj__demo-dot--amber"></span>
+              <span class="proj__demo-dot proj__demo-dot--green"></span>
+              <span class="proj__demo-title mono">jorge@vps: ~/hardened-docker-deploy/verificacion</span>
+            </div>
+            <div class="proj__demo-screen proj__demo-screen--term proj__shells" data-shells>
+              <div class="proj__shells-nav mono" role="tablist" aria-label="scripts de verificación y plantillas">
+                <button class="proj__shells-btn" data-shell-prev aria-label="shell anterior">‹</button>
+                <button class="proj__shells-tab is-active" role="tab" aria-selected="true" aria-controls="shell-contenedor" data-shell-tab>contenedor.sh</button>
+                <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="shell-host" data-shell-tab>host.sh</button>
+                <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="shell-dockerfile" data-shell-tab>Dockerfile</button>
+                <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="shell-compose" data-shell-tab>compose.yml</button>
+                <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="shell-nginx" data-shell-tab>nginx.conf</button>
+                <span class="proj__shells-count" data-shell-count>1/5</span>
+                <button class="proj__shells-btn" data-shell-next aria-label="shell siguiente">›</button>
+              </div>
+<pre class="proj__term proj__term--audit mono" data-typer id="shell-contenedor" role="tabpanel" aria-label="contenedor.sh"><span class="t-cy">┌──(</span><b class="t-cy">jorge㉿vps</b><span class="t-cy">)-[</span><b>~/hardened-docker-deploy/verificacion</b><span class="t-cy">]</span> <span class="t-am">➟ main</span>
+<span class="t-cy">└─$</span> <b data-cmd>sudo ./contenedor.sh jae-portfolio</b>
+
+<span class="t-am">   █████╗  ██╗   ██╗ ██████╗  ██╗ ████████╗</span>
+<span class="t-am">  ██╔══██╗ ██║   ██║ ██╔══██╗ ██║ ╚══██╔══╝</span><span class="t-mute">   DOCKER · NGINX · HOST HARDENING</span>
+<span class="t-am">  ███████║ ██║   ██║ ██║  ██║ ██║    ██║</span><span class="t-mute">      OWASP Docker Security Cheat Sheet</span>
+<span class="t-am">  ██╔══██║ ██║   ██║ ██║  ██║ ██║    ██║</span><span class="t-mute">      módulo   contenedor</span>
+<span class="t-am">  ██║  ██║ ╚██████╔╝ ██████╔╝ ██║    ██║</span><span class="t-mute">      objetivo ubuntu como root</span>
+<span class="t-am">  ╚═╝  ╚═╝  ╚═════╝  ╚═════╝  ╚═╝    ╚═╝</span><span class="t-mute">      fecha    2026-11-19 15:29:00 UTC</span>
+
+ ┌──<b>[ CONTENEDOR ]</b>── jae-portfolio ────────────────────────────────────────────────────────────────
+ │
+ │ <span class="t-ok">✔    OK</span>    #1   no monta el socket de Docker
+ │ <span class="t-ok">✔    OK</span>    #2   proceso principal sin root (uid 101, User='101')
+ │ <span class="t-ok">✔    OK</span>    #2   no es --privileged
+ │ <span class="t-ok">✔    OK</span>    #3   cap_drop: ALL
+ │ <span class="t-ok">✔    OK</span>    #3   CapBnd = 0 (ninguna capability alcanzable dentro del contenedor)
+ │ <span class="t-ok">✔    OK</span>    #3   CapEff = 0 (el proceso principal no tiene ninguna capability activa)
+ │ <span class="t-ok">✔    OK</span>    #4   no-new-privileges activo
+ │ <span class="t-ok">✔    OK</span>    #5   red propia
+<span class="t-mute"> │ ·   INFO   #5   redes: portfolio_internal(internal)</span>
+ │ <span class="t-ok">✔    OK</span>    #5a  no publica puertos en el host
+ │ <span class="t-ok">✔    OK</span>    #6   seccomp en modo filtro
+ │ <span class="t-ok">✔    OK</span>    #6   AppArmor: docker-default
+ │ <span class="t-ok">✔    OK</span>    #7   límite de memoria: 128 MB
+ │ <span class="t-ok">✔    OK</span>    #7   pids_limit: 100
+ │ <span class="t-ok">✔    OK</span>    #7   límite de CPU
+ │ <span class="t-ok">✔    OK</span>    #8   sistema de ficheros read-only
+ │ <span class="t-am">▲   AVISO</span>  #8   bind mounts con escritura: /var/log/web/portfolio-&gt;/var/log/nginx 
+ │ <span class="t-ok">✔    OK</span>    #12  ninguna variable de entorno con pinta de secreto
+ │ <span class="t-ok">✔    OK</span>    #12  ningún secreto a la vista en las capas de la imagen (docker history)
+ │ <span class="t-cy">?  MANUAL</span>  #13  imagen construida en local (jae-portfolio:latest): comprobar que el FROM lleva @sha256
+ │ <span class="t-am">▲   AVISO</span>  #13  jae-portfolio:latest sin versión en la etiqueta: no se sabe qué build está en marcha ni se puede volver atrás (etiquetar p. ej. con el commit de git)
+ │ <span class="t-ok">✔    OK</span>         healthcheck: healthy
+ │ <span class="t-ok">✔    OK</span>    #8   activa: no se puede escribir en /, /etc, código ni librerías
+ │ <span class="t-ok">✔    OK</span>    #8   activa: escribible pero sin ejecución (noexec): /dev/shm /tmp
+ │ <span class="t-am">▲   AVISO</span>  #8   activa: se puede ejecutar desde volúmenes escribibles: /var/log/nginx (ahí dejaría su binario un atacante)
+ │ <span class="t-ok">✔    OK</span>    #4   activa: sin binarios SUID
+<span class="t-mute"> │ ·   INFO        herramientas presentes sin uso práctico: wget nc (red internal) apk (sin root + read-only)</span>
+ └─ <span class="t-ok">✔ 21</span> · <span class="t-bad">✘ 0</span> · <span class="t-am">▲ 3</span> · <span class="t-cy">? 1</span></pre>
+<pre class="proj__term proj__term--audit mono" data-typer id="shell-host" role="tabpanel" aria-label="host.sh"><span class="t-cy">┌──(</span><b class="t-cy">jorge㉿vps</b><span class="t-cy">)-[</span><b>~/hardened-docker-deploy/verificacion</b><span class="t-cy">]</span> <span class="t-am">➟ main</span>
+<span class="t-cy">└─$</span> <b data-cmd>sudo ./host.sh</b>
+
+<span class="t-am">   █████╗  ██╗   ██╗ ██████╗  ██╗ ████████╗</span>
+<span class="t-am">  ██╔══██╗ ██║   ██║ ██╔══██╗ ██║ ╚══██╔══╝</span><span class="t-mute">   DOCKER · NGINX · HOST HARDENING</span>
+<span class="t-am">  ███████║ ██║   ██║ ██║  ██║ ██║    ██║</span><span class="t-mute">      OWASP Docker Security Cheat Sheet</span>
+<span class="t-am">  ██╔══██║ ██║   ██║ ██║  ██║ ██║    ██║</span><span class="t-mute">      módulo   host</span>
+<span class="t-am">  ██║  ██║ ╚██████╔╝ ██████╔╝ ██║    ██║</span><span class="t-mute">      objetivo ubuntu como root</span>
+<span class="t-am">  ╚═╝  ╚═╝  ╚═════╝  ╚═════╝  ╚═╝    ╚═╝</span><span class="t-mute">      fecha    2026-11-19 15:32:44 UTC</span>
+
+ ┌──<b>[ HOST ]</b>── ubuntu ─────────────────────────────────────────────────────────────────────────────
+ │
+ │ <span class="t-cy">?  MANUAL</span>  #0   Docker 29.9.3 · kernel 6.8.0-149-generic: comprobar que están al día (apt list --upgradable)
+ │ <span class="t-ok">✔    OK</span>    #1   el daemon no escucha por TCP
+ │ <span class="t-ok">✔    OK</span>    #1   permisos de docker.sock: 660 root:docker
+ │ <span class="t-ok">✔    OK</span>    #1   ningún contenedor monta docker.sock
+ │ <span class="t-ok">✔    OK</span>    #5a  ningún contenedor publica puertos fuera de localhost
+<span class="t-mute"> │ ·   INFO   #5a  puertos TCP escuchando en interfaces públicas: 22 80 </span>
+ │ <span class="t-cy">?  MANUAL</span>  #5a  confirmarlo desde FUERA: nmap -p- &lt;IP_PUBLICA_VPS&gt;
+ │ <span class="t-ok">✔    OK</span>    #6   seccomp disponible en el daemon
+ │ <span class="t-ok">✔    OK</span>    #6   AppArmor/SELinux disponible en el daemon
+ │ <span class="t-cy">?  MANUAL</span>  #11  daemon como root, sin userns-remap (opcional; lo compensan #2 #3 #4 en cada contenedor)
+ │ <span class="t-ok">✔    OK</span>    #10  daemon sin modo debug (log en info)
+<span class="t-mute"> │ ·   INFO   #7   sin max-size en daemon.json: cada compose debe llevar su bloque logging</span>
+ │ <span class="t-ok">✔    OK</span>    #2   ningún contenedor --privileged
+ │ <span class="t-am">▲   AVISO</span>  #2   servicios del host con red corriendo como root: cloudflared(pid 5730, cloudflared.service) nginx(pid 1528162, nginx.service)
+<span class="t-mute"> │ ·   INFO   #2   por qué root: systemctl show &lt;unidad&gt; -p User (vacío = root) · el proceso: ps -o user,pid,cmd -p &lt;pid&gt;</span>
+<span class="t-mute"> │ ·   INFO        auditoría completa del host (CIS): ./herramientas.sh host</span>
+<span class="t-mute"> │ ·   INFO        cada contenedor: ./contenedor.sh --todos</span>
+ └─ <span class="t-ok">✔ 8</span> · <span class="t-bad">✘ 0</span> · <span class="t-am">▲ 1</span> · <span class="t-cy">? 3</span>
+
+ ┌──<b>[ RESUMEN ]</b>────────────────────────────────────────────────────────────────────────────────────
+ │
+ │  comprobaciones  <span class="t-ok">✔ 8</span> OK   <span class="t-bad">✘ 0</span> FALLO   <span class="t-am">▲ 1</span> AVISO   <span class="t-cy">? 3</span> MANUAL
+ │  superadas       <span class="t-ok">██████████████████████████</span><span class="t-mute">░░░░</span>  <b>88%</b>  (OK / OK+FALLO+AVISO)
+ │  veredicto       <span class="t-am"><b>▲ REVISAR</b></span>  sin fallos, 1 aviso(s) por valorar
+ │                  3 punto(s) MANUAL: el script no puede decidirlos, revisar a mano
+ │  duración        2s
+ │
+ └─────────────────────────────────────────────────────────────────────────────────────────────────</pre>
+<!-- plantillas:inicio -->
+<pre class="proj__term proj__term--audit mono" data-typer id="shell-dockerfile" role="tabpanel" aria-label="Dockerfile"><span class="t-cy">┌──(</span><b class="t-cy">jorge㉿vps</b><span class="t-cy">)-[</span><b>~/hardened-docker-deploy</b><span class="t-cy">]</span> <span class="t-am">➟ main</span>
+<span class="t-cy">└─$</span> <b data-cmd>cat dockerfile/Dockerfile.python</b>
+<span class="t-mute"># syntax=docker/dockerfile:1</span>
+
+<span class="t-mute"># ── ETAPA 1: build ───────────────────────────────────────────</span>
+<span class="t-mute"># pip y (si hicieran falta) compiladores SOLO viven aquí.</span>
+<span class="t-cy">FROM</span> python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b AS build
+<span class="t-mute"># pipefail: si falla un comando dentro de un pipe, falla el build (hadolint DL4006)</span>
+<span class="t-cy">SHELL</span> [<span class="t-am">"/bin/bash"</span>, <span class="t-am">"-o"</span>, <span class="t-am">"pipefail"</span>, <span class="t-am">"-c"</span>]
+<span class="t-cy">ENV</span> PIP_NO_CACHE_DIR=1 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1
+<span class="t-mute"># Sin WORKDIR, "COPY x ." copia a / (hadolint DL3045)</span>
+<span class="t-cy">WORKDIR</span> /build
+
+<span class="t-mute"># venv en ruta fija → se copia entera a la etapa final</span>
+<span class="t-cy">RUN</span> python -m venv /opt/venv
+<span class="t-cy">ENV</span> PATH=<span class="t-am">"/opt/venv/bin:$PATH"</span>
+
+<span class="t-mute"># Primero solo requirements → la capa de dependencias se cachea</span>
+<span class="t-cy">COPY</span> requirements.txt .
+<span class="t-mute"># pip uninstall: el venv no lleva pip (el del sistema se quita en la etapa final)</span>
+<span class="t-cy">RUN</span> pip install -r requirements.txt \
+ &amp;&amp; pip uninstall -y pip
+
+<span class="t-mute"># Si hay que descargar algo (clave GPG de un repo, binario...) → AQUÍ y comprobando la huella.</span>
+<span class="t-mute"># Ejemplo real (panchi-bot, driver ODBC de SQL Server):</span>
+<span class="t-mute">#   RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends curl gnupg \</span>
+<span class="t-mute">#    &amp;&amp; curl -fsSL https://packages.microsoft.com/keys/microsoft.asc -o /microsoft-prod.asc \</span>
+<span class="t-mute">#    &amp;&amp; gpg --show-keys --with-colons /microsoft-prod.asc | grep -q '^fpr:::::::::&lt;HUELLA&gt;:$' \</span>
+<span class="t-mute">#    &amp;&amp; rm -rf /var/lib/apt/lists/*</span>
+<span class="t-mute">#   → en la etapa final: COPY --from=build /microsoft-prod.asc /usr/share/keyrings/</span>
+<span class="t-mute"># Si una librería necesita compilar (sin wheel binario), en ESTA etapa:</span>
+<span class="t-mute">#   RUN apt-get update &amp;&amp; apt-get install -y --no-install-recommends build-essential libpq-dev</span>
+<span class="t-mute"># Si pip necesita un token (índice privado) → NUNCA ARG/ENV:</span>
+<span class="t-mute">#   RUN --mount=type=secret,id=pip_token PIP_INDEX_URL="https://__token__:$(cat /run/secrets/pip_token)@..." pip install ...</span>
+
+<span class="t-mute"># ── ETAPA 2: imagen final ────────────────────────────────────</span>
+<span class="t-mute"># MISMA imagen base que la etapa 1 (el venv depende de la versión exacta de Python)</span>
+<span class="t-cy">FROM</span> python:3.12-slim@sha256:5e2bdb1b0d542d5039cffb8181c65930093949194a65c365dfb1b0fe13a4fa5b
+
+<span class="t-mute"># Trazabilidad: de qué repo sale la imagen (docker inspect / registries la muestran)</span>
+<span class="t-cy">LABEL</span> org.opencontainers.image.title=<span class="t-am">"mi-app"</span> \
+      org.opencontainers.image.source=<span class="t-am">"https://github.com/&lt;usuario&gt;/&lt;repo&gt;"</span>
+
+<span class="t-mute"># pip del SISTEMA: la imagen base trae /usr/local/bin/pip aparte del del venv.</span>
+<span class="t-mute"># Sin esto, "python -m pip" dice "No module named pip" (python del venv) pero</span>
+<span class="t-mute"># /usr/local/bin/pip sigue funcionando: un atacante podría instalar paquetes</span>
+<span class="t-mute"># en cualquier carpeta escribible (pip install --target). Antes del ENV PATH y del USER.</span>
+<span class="t-cy">RUN</span> /usr/local/bin/python -m pip uninstall -y pip
+
+<span class="t-mute"># PYTHONDONTWRITEBYTECODE: no intenta escribir .pyc (el FS es read-only)</span>
+<span class="t-mute"># PYTHONUNBUFFERED: logs al momento en docker logs</span>
+<span class="t-cy">ENV</span> PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1 \
+    PATH=<span class="t-am">"/opt/venv/bin:$PATH"</span>
+
+<span class="t-mute"># Usuario de sistema, sin shell, sin home, uid fijo (OWASP #2)</span>
+<span class="t-cy">RUN</span> groupadd -r -g 10001 app \
+ &amp;&amp; useradd -r -u 10001 -g app -s /usr/sbin/nologin -M app
+
+<span class="t-mute"># COPY deja todo como root:root → la app NO puede modificar su código ni sus librerías</span>
+<span class="t-cy">COPY</span> --from=build /opt/venv /opt/venv
+<span class="t-cy">WORKDIR</span> /app
+<span class="t-mute"># ← el código de TU app (y añadirlo también a la allowlist del .dockerignore)</span>
+<span class="t-cy">COPY</span> wsgi.py .
+<span class="t-cy">COPY</span> app ./app
+
+<span class="t-cy">USER</span> 10001
+<span class="t-cy">EXPOSE</span> 8000
+
+<span class="t-mute"># python:slim no trae curl ni wget → healthcheck con Python</span>
+<span class="t-mute"># --start-period: margen de arranque (apps que cargan modelos, migraciones...) sin contar fallos</span>
+<span class="t-cy">HEALTHCHECK</span> --interval=30s --timeout=3s --start-period=30s --retries=3 \
+  <span class="t-cy">CMD</span> [<span class="t-am">"python"</span>, <span class="t-am">"-c"</span>, <span class="t-am">"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=2)"</span>]
+
+<span class="t-mute"># gunicorn (nunca el servidor de desarrollo de Flask en producción)</span>
+<span class="t-mute"># --worker-tmp-dir /dev/shm: gunicorn necesita escribir un fichero de latido por worker</span>
+<span class="t-cy">CMD</span> [<span class="t-am">"gunicorn"</span>, <span class="t-am">"--bind"</span>, <span class="t-am">"0.0.0.0:8000"</span>, <span class="t-am">"--workers"</span>, <span class="t-am">"2"</span>, \
+     <span class="t-am">"--worker-tmp-dir"</span>, <span class="t-am">"/dev/shm"</span>, <span class="t-am">"--access-logfile"</span>, <span class="t-am">"-"</span>, <span class="t-am">"wsgi:app"</span>]</pre>
+<pre class="proj__term proj__term--audit mono" data-typer id="shell-compose" role="tabpanel" aria-label="compose.yml"><span class="t-cy">┌──(</span><b class="t-cy">jorge㉿vps</b><span class="t-cy">)-[</span><b>~/hardened-docker-deploy</b><span class="t-cy">]</span> <span class="t-am">➟ main</span>
+<span class="t-cy">└─$</span> <b data-cmd>cat compose/compose.proxy-app-db.yml</b>
+<span class="t-mute"># ─────────────────────────────────────────────────────────────</span>
+<span class="t-mute"># nginx (proxy) + app + PostgreSQL. Estructura sacada de panchi-bot.</span>
+<span class="t-mute">#</span>
+<span class="t-mute"># Cadena: Internet → [Cloudflare Tunnel | nginx del host] → 127.0.0.1:8081 → proxy → app → db</span>
+<span class="t-mute">#</span>
+<span class="t-mute"># Redes:</span>
+<span class="t-mute">#   web_net      proxy ↔ app. Subred y gateway FIJOS: nginx.conf solo se fía de la</span>
+<span class="t-mute">#                cabecera con la IP real si la conexión viene de ese gateway.</span>
+<span class="t-mute">#   backend_net  internal: true → la BD SIN salida a Internet y SIN alcance desde el proxy.</span>
+<span class="t-mute">#</span>
+<span class="t-mute"># Solo el proxy publica puerto. La app NO lleva ports: (solo expose) → no se puede</span>
+<span class="t-mute"># llegar a ella saltándose nginx (cabeceras, rate limit, filtro de Host).</span>
+<span class="t-mute"># ─────────────────────────────────────────────────────────────</span>
+
+<span class="t-mute"># Endurecimiento común (OWASP #3 #4 #7 #8). YAML anchor → mismo bloque en todos.</span>
+<span class="t-cy">x-hardening</span>: &amp;hardening
+  <span class="t-cy">read_only</span>: true
+  <span class="t-cy">cap_drop</span>: [ALL]
+  <span class="t-cy">security_opt</span>:
+    - no-new-privileges:true
+  <span class="t-cy">restart</span>: unless-stopped
+  <span class="t-cy">logging</span>:                           <span class="t-mute"># sin límite, json-file crece hasta llenar el disco</span>
+    <span class="t-cy">driver</span>: json-file
+    <span class="t-cy">options</span>: { max-size: <span class="t-am">"10m"</span>, max-file: <span class="t-am">"3"</span> }
+
+<span class="t-cy">services</span>:
+<span class="t-mute">  # ── PROXY ─────────────────────────────────────────────────</span>
+  <span class="t-cy">proxy</span>:
+    <span class="t-cy">&lt;&lt;</span>: *hardening
+<span class="t-mute">    # uid 101, escucha en 8080 (sin capabilities)</span>
+    <span class="t-cy">image</span>: nginxinc/nginx-unprivileged:1.30-alpine@sha256:f5116ed4606f3eb015dd4a8e28cb9b351476dc0ad4bc6e9f93b19cec130cdf03
+    <span class="t-cy">container_name</span>: mi-app-proxy
+    <span class="t-cy">depends_on</span>:
+      <span class="t-cy">app</span>:
+        <span class="t-cy">condition</span>: service_healthy   <span class="t-mute"># nginx resuelve "app" al arrancar: si no existe, no arranca</span>
+
+    <span class="t-cy">ports</span>:
+      - <span class="t-am">"127.0.0.1:8081:8080"</span>        <span class="t-mute"># OWASP #5a: solo localhost; puerto del host único por proyecto</span>
+
+    <span class="t-cy">volumes</span>:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro   <span class="t-mute"># ver ../nginx/proxy.conf</span>
+
+    <span class="t-cy">tmpfs</span>:                           <span class="t-mute"># pid, y cuerpos de petición/respuesta grandes (client_max_body_size &lt; size)</span>
+      - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+
+    <span class="t-cy">mem_limit</span>: 128m
+    <span class="t-cy">memswap_limit</span>: 128m
+    <span class="t-cy">cpus</span>: 0.5
+    <span class="t-cy">pids_limit</span>: 100                  <span class="t-mute"># por cgroup; NO ulimits.nproc (cuenta el UID en todo el host)</span>
+    <span class="t-cy">ulimits</span>:
+      <span class="t-cy">nofile</span>: { soft: 1024, hard: 2048 }
+
+    <span class="t-cy">networks</span>: [web_net]              <span class="t-mute"># NO está en backend_net → no ve la BD</span>
+
+    <span class="t-cy">healthcheck</span>:
+<span class="t-mute">      # 127.0.0.1 y no localhost: localhost → ::1 y nginx solo escucha IPv4.</span>
+<span class="t-mute">      # /nginx-health lo responde nginx solo → mide nginx, no la app.</span>
+      <span class="t-cy">test</span>: [<span class="t-am">"CMD"</span>, <span class="t-am">"wget"</span>, <span class="t-am">"-qO-"</span>, <span class="t-am">"http://127.0.0.1:8080/nginx-health"</span>]
+      <span class="t-cy">interval</span>: 30s
+      <span class="t-cy">timeout</span>: 3s
+      <span class="t-cy">retries</span>: 3
+
+<span class="t-mute">  # ── APP ───────────────────────────────────────────────────</span>
+  <span class="t-cy">app</span>:
+    <span class="t-cy">&lt;&lt;</span>: *hardening
+    <span class="t-cy">build</span>: .
+    <span class="t-cy">image</span>: mi-app:latest
+    <span class="t-cy">container_name</span>: mi-app
+    <span class="t-cy">init</span>: true                       <span class="t-mute"># tini como PID 1: señales + zombies</span>
+    <span class="t-cy">depends_on</span>:
+      <span class="t-cy">db</span>:
+        <span class="t-cy">condition</span>: service_healthy   <span class="t-mute"># no arrancar hasta que la BD responda</span>
+
+    <span class="t-cy">expose</span>:
+      - <span class="t-am">"8000"</span>                       <span class="t-mute"># solo documenta: SIN ports → inalcanzable desde el host</span>
+
+    <span class="t-cy">environment</span>:                     <span class="t-mute"># SOLO datos no sensibles</span>
+      <span class="t-cy">DB_HOST</span>: db
+      <span class="t-cy">DB_NAME</span>: app
+      <span class="t-cy">DB_USER</span>: app
+    <span class="t-cy">secrets</span>:                         <span class="t-mute"># OWASP #12 → /run/secrets/&lt;nombre&gt;</span>
+      - db_password
+      - flask_secret_key
+
+    <span class="t-cy">tmpfs</span>:
+      - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+
+    <span class="t-cy">mem_limit</span>: 256m                  <span class="t-mute"># medir con docker stats</span>
+    <span class="t-cy">memswap_limit</span>: 256m
+    <span class="t-cy">cpus</span>: 1.0
+    <span class="t-cy">pids_limit</span>: 100
+    <span class="t-cy">ulimits</span>:
+      <span class="t-cy">nofile</span>: { soft: 1024, hard: 2048 }
+
+<span class="t-mute">    # web_net NO es internal → la app tiene salida a Internet (APIs externas).</span>
+<span class="t-mute">    # Workers que solo necesitan salir y hablar con la BD: red aparte (egress_net)</span>
+<span class="t-mute">    # + backend_net, fuera de web_net (así lo hace panchi-bot).</span>
+    <span class="t-cy">networks</span>: [web_net, backend_net]
+<span class="t-mute">    # El healthcheck viene del HEALTHCHECK de la imagen (Dockerfile.python)</span>
+
+<span class="t-mute">  # ── BASE DE DATOS ─────────────────────────────────────────</span>
+  <span class="t-cy">db</span>:
+    <span class="t-cy">&lt;&lt;</span>: *hardening
+    <span class="t-cy">image</span>: postgres:17-alpine@sha256:a77aa70e641402a21411b92b721c58d10f23b50ae5fdd2333efd22d166e1e5f7
+    <span class="t-cy">container_name</span>: mi-app-db
+<span class="t-mute">    # Arranca DIRECTAMENTE como postgres (uid 70 en Alpine, 999 en la imagen Debian).</span>
+<span class="t-mute">    # Sin esto, el entrypoint arranca como root y necesita CHOWN/SETUID... → no se podría cap_drop ALL.</span>
+    <span class="t-cy">user</span>: <span class="t-am">"70:70"</span>
+
+    <span class="t-cy">environment</span>:
+      <span class="t-cy">POSTGRES_DB</span>: app
+      <span class="t-cy">POSTGRES_USER</span>: app
+      <span class="t-cy">POSTGRES_PASSWORD_FILE</span>: /run/secrets/db_password   <span class="t-mute"># *_FILE → lee el secreto del fichero</span>
+    <span class="t-cy">secrets</span>:
+      - db_password
+
+    <span class="t-cy">volumes</span>:
+      - db_data:/var/lib/postgresql/data   <span class="t-mute"># volumen con nombre: hereda dueño 70 de la imagen</span>
+<span class="t-mute">    # SIN ports: → la BD no se publica en el host</span>
+
+    <span class="t-cy">tmpfs</span>:
+      - /tmp:size=16m,mode=1777,noexec,nosuid,nodev
+      - /var/run/postgresql:size=1m,uid=70,gid=70,mode=0700,noexec,nosuid,nodev   <span class="t-mute"># socket unix</span>
+    <span class="t-cy">shm_size</span>: 128m                   <span class="t-mute"># Postgres usa memoria compartida (cuenta dentro de mem_limit)</span>
+
+    <span class="t-cy">mem_limit</span>: 256m
+    <span class="t-cy">memswap_limit</span>: 256m
+    <span class="t-cy">cpus</span>: 1.0
+    <span class="t-cy">pids_limit</span>: 100
+
+    <span class="t-cy">networks</span>: [backend_net]          <span class="t-mute"># SOLO la red interna</span>
+
+    <span class="t-cy">healthcheck</span>:
+      <span class="t-cy">test</span>: [<span class="t-am">"CMD-SHELL"</span>, <span class="t-am">"pg_isready -U app -d app"</span>]
+      <span class="t-cy">interval</span>: 10s
+      <span class="t-cy">timeout</span>: 3s
+      <span class="t-cy">retries</span>: 5
+      <span class="t-cy">start_period</span>: 20s
+
+<span class="t-cy">networks</span>:
+  <span class="t-cy">web_net</span>:
+    <span class="t-cy">name</span>: mi-app_web
+    <span class="t-cy">ipam</span>:
+      <span class="t-cy">config</span>:
+<span class="t-mute">        # Distinta por proyecto. Si se cambia: cambiar también set_real_ip_from en nginx.conf</span>
+        - <span class="t-cy">subnet</span>: 172.30.80.0/24
+          <span class="t-cy">gateway</span>: 172.30.80.1
+  <span class="t-cy">backend_net</span>:
+    <span class="t-cy">name</span>: mi-app_backend
+    <span class="t-cy">internal</span>: true                   <span class="t-mute"># sin salida a Internet y sin puertos publicables</span>
+
+<span class="t-cy">volumes</span>:
+  <span class="t-cy">db_data</span>:
+
+<span class="t-cy">secrets</span>:
+  <span class="t-cy">db_password</span>:
+    <span class="t-cy">file</span>: ./secrets/db_password.txt
+  <span class="t-cy">flask_secret_key</span>:
+    <span class="t-cy">file</span>: ./secrets/flask_secret_key.txt</pre>
+<pre class="proj__term proj__term--audit mono" data-typer id="shell-nginx" role="tabpanel" aria-label="nginx.conf"><span class="t-cy">┌──(</span><b class="t-cy">jorge㉿vps</b><span class="t-cy">)-[</span><b>~/hardened-docker-deploy</b><span class="t-cy">]</span> <span class="t-am">➟ main</span>
+<span class="t-cy">└─$</span> <b data-cmd>cat nginx/proxy.conf</b>
+<span class="t-mute"># ─────────────────────────────────────────────────────────────</span>
+<span class="t-mute"># nginx en contenedor DELANTE de una app (gunicorn, node...). Sacado de panchi-bot.</span>
+<span class="t-mute"># Cadena: Internet → [Cloudflare Tunnel | nginx del host (host-vhost.conf)] (HTTPS)</span>
+<span class="t-mute">#         → 127.0.0.1:8081 → aquí (:8080) → app:8000</span>
+<span class="t-mute"># nginx-unprivileged (uid 101): escucha en 8080, sin capabilities.</span>
+<span class="t-mute"># Sin TLS ni certbot: el HTTPS (y HSTS) va donde se termina el TLS, no aquí.</span>
+<span class="t-mute"># Se monta en /etc/nginx/conf.d/default.conf → ver ../compose/compose.proxy-app-db.yml</span>
+<span class="t-mute"># ─────────────────────────────────────────────────────────────</span>
+
+<span class="t-mute"># ── IP real del visitante ──</span>
+<span class="t-mute"># Lo que entra por el puerto publicado en 127.0.0.1 llega con la IP del GATEWAY de</span>
+<span class="t-mute"># web_net (fijado en el compose). Solo de ahí se acepta la cabecera: si se confiara en</span>
+<span class="t-mute"># toda la subred (o en 172.16.0.0/12), cualquier contenedor podría falsear su IP y</span>
+<span class="t-mute"># saltarse el rate limit. Si se cambia la subred en el compose, cambiarla también aquí.</span>
+<span class="t-mute"># (cloudflared como contenedor dentro de web_net → poner su IP o la subred.)</span>
+<span class="t-cy">set_real_ip_from</span> 172.30.80.1;
+<span class="t-cy">real_ip_header</span>   X-Real-IP;          <span class="t-mute"># nginx del host | CF-Connecting-IP si es Cloudflare Tunnel</span>
+
+<span class="t-cy">server_tokens</span> off;
+
+<span class="t-mute"># ── Rate limit del login (anti fuerza bruta): 10 intentos/min por IP real ──</span>
+<span class="t-mute"># Funciona porque realip ya ha puesto la IP del VISITANTE en $binary_remote_addr.</span>
+<span class="t-cy">limit_req_zone</span> $binary_remote_addr zone=login:10m rate=10r/m;
+<span class="t-cy">limit_req_status</span> 429;
+
+<span class="t-mute"># ── Cache-Control: no-store en todo menos /static/ ──</span>
+<span class="t-mute"># El navegador no guarda páginas con datos de sesión. Valor vacío = no se añade la cabecera.</span>
+<span class="t-mute"># Si la app ya manda su propio Cache-Control saldrían dos → quitar uno de los dos.</span>
+<span class="t-cy">map</span> $uri $cache_control {
+    ~^/static/  <span class="t-am">""</span>;
+    <span class="t-cy">default</span>     <span class="t-am">"no-store"</span>;
+}
+
+<span class="t-mute"># ── WebSocket (solo si la app lo usa; ver location /ws/ más abajo) ──</span>
+<span class="t-mute"># map $http_upgrade $connection_upgrade {</span>
+<span class="t-mute">#     default upgrade;</span>
+<span class="t-mute">#     ''      close;</span>
+<span class="t-mute"># }</span>
+
+<span class="t-mute"># ── Cualquier Host que no sea el mío → se corta la conexión (444) ──</span>
+<span class="t-mute"># Sin esto, un Host falso llega a la app (enlaces de "recuperar contraseña" envenenados,</span>
+<span class="t-mute"># caché...). También responde al healthcheck, que entra por 127.0.0.1 → mide nginx, no la app.</span>
+<span class="t-cy">server</span> {
+    <span class="t-cy">listen</span> 8080 default_server;
+    <span class="t-cy">server_name</span> _;
+
+    <span class="t-cy">location</span> = /nginx-health {
+        <span class="t-cy">access_log</span> off;
+        <span class="t-cy">return</span> 204;
+    }
+    <span class="t-cy">location</span> / {
+        <span class="t-cy">return</span> 444;
+    }
+}
+
+<span class="t-mute"># ── Sin www → con www (opcional) ──</span>
+<span class="t-mute"># server {</span>
+<span class="t-mute">#     listen 8080;</span>
+<span class="t-mute">#     server_name example.com;</span>
+<span class="t-mute">#     return 301 https://www.example.com$request_uri;</span>
+<span class="t-mute"># }</span>
+
+<span class="t-mute"># ── Servidor principal ──</span>
+<span class="t-cy">server</span> {
+    <span class="t-cy">listen</span> 8080;
+    <span class="t-cy">server_name</span> www.example.com localhost;      <span class="t-mute"># ← TU dominio (localhost: pruebas en local)</span>
+
+<span class="t-mute">    # ── Cabeceras de seguridad ──</span>
+<span class="t-mute">    # OJO: ninguna location puede tener add_header, o anularía todas estas.</span>
+<span class="t-mute">    # CSP en Report-Only: avisa en la consola del navegador pero no bloquea. Hacer inventario</span>
+<span class="t-mute">    # de lo que carga la app (CDNs, fuentes, APIs), ajustar y pasar a Content-Security-Policy.</span>
+    <span class="t-cy">add_header</span> Content-Security-Policy-Report-Only <span class="t-am">"default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; font-src 'self'; connect-src 'self'; frame-ancestors 'self'; base-uri 'self'; form-action 'self'; object-src 'none'"</span> always;
+    <span class="t-cy">add_header</span> Cache-Control $cache_control always;
+    <span class="t-cy">add_header</span> X-Content-Type-Options       <span class="t-am">"nosniff"</span> always;
+    <span class="t-cy">add_header</span> X-Frame-Options              <span class="t-am">"SAMEORIGIN"</span> always;
+    <span class="t-cy">add_header</span> Referrer-Policy              <span class="t-am">"strict-origin-when-cross-origin"</span> always;
+    <span class="t-cy">add_header</span> Permissions-Policy           <span class="t-am">"accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()"</span> always;
+    <span class="t-cy">add_header</span> Cross-Origin-Opener-Policy   <span class="t-am">"same-origin"</span> always;
+    <span class="t-cy">add_header</span> Cross-Origin-Resource-Policy <span class="t-am">"same-site"</span> always;
+
+<span class="t-mute">    # ── Lo que se le manda a la app ──</span>
+<span class="t-mute">    # Aquí y NO en cada location: se heredan mientras la location no defina ningún</span>
+<span class="t-mute">    # proxy_set_header propio (misma trampa que add_header).</span>
+    <span class="t-cy">proxy_set_header</span> Host              $host;
+<span class="t-mute">    # $remote_addr ya es la IP real (realip). Se manda UN solo valor:</span>
+<span class="t-mute">    # ProxyFix(x_for=1) en Flask toma el último → el del cliente, no el de Docker.</span>
+    <span class="t-cy">proxy_set_header</span> X-Real-IP         $remote_addr;
+    <span class="t-cy">proxy_set_header</span> X-Forwarded-For   $remote_addr;
+<span class="t-mute">    # Solo se llega por el túnel / nginx del host → siempre HTTPS de cara al cliente</span>
+    <span class="t-cy">proxy_set_header</span> X-Forwarded-Proto https;
+    <span class="t-cy">proxy_hide_header</span> X-Powered-By;
+
+<span class="t-mute">    # ── Límites y tiempos ──</span>
+    <span class="t-cy">client_max_body_size</span>  1m;       <span class="t-mute"># subidas: subirlo, pero SIEMPRE por debajo del tmpfs /tmp (se guardan ahí)</span>
+    <span class="t-cy">client_header_timeout</span> 15s;      <span class="t-mute"># clientes lentos a propósito (slowloris)</span>
+    <span class="t-cy">client_body_timeout</span>   15s;
+    <span class="t-cy">proxy_connect_timeout</span> 5s;
+    <span class="t-cy">proxy_read_timeout</span>    30s;      <span class="t-mute"># = timeout de gunicorn</span>
+    <span class="t-cy">proxy_send_timeout</span>    30s;
+
+<span class="t-mute">    # Contacto para quien encuentre una vulnerabilidad (RFC 9116).</span>
+<span class="t-mute">    # Expires: obligatorio y a menos de 1 año vista → renovarlo.</span>
+    <span class="t-cy">location</span> = /.well-known/security.txt {
+        <span class="t-cy">default_type</span> <span class="t-am">"text/plain; charset=utf-8"</span>;
+        <span class="t-cy">return</span> 200 <span class="t-am">"Contact: mailto:&lt;TU_EMAIL&gt;\nExpires: &lt;AAAA-MM-DD&gt;T00:00:00Z\nPreferred-Languages: es, en\n"</span>;
+    }
+
+<span class="t-mute">    # Ficheros ocultos (.git, .env...) → 404 sin llegar a la app, salvo .well-known</span>
+    <span class="t-cy">location</span> ~ /\.(?!well-known) {
+        <span class="t-cy">return</span> 404;
+    }
+
+<span class="t-mute">    # Extensiones que una app nunca debería servir → 404 sin llegar a la app.</span>
+<span class="t-mute">    # Si la app ofrece descargas con alguna de estas, quitarla de la lista.</span>
+    <span class="t-cy">location</span> ~* \.(env|ini|log|bak|sql|old|swp|pyc)$ {
+        <span class="t-cy">return</span> 404;
+    }
+
+<span class="t-mute">    # Login: rate limit (burst 5 = margen para quien se equivoca un par de veces)</span>
+    <span class="t-cy">location</span> = /auth/login {                    <span class="t-mute"># ← la ruta de login de TU app</span>
+        <span class="t-cy">limit_req</span> zone=login burst=5 nodelay;
+        <span class="t-cy">proxy_pass</span> http://app:8000;
+    }
+
+<span class="t-mute">    # Healthcheck de la app: sin ensuciar el log. Es público (solo dice ok / error).</span>
+    <span class="t-cy">location</span> = /health {
+        <span class="t-cy">access_log</span> off;
+        <span class="t-cy">proxy_pass</span> http://app:8000;
+    }
+
+<span class="t-mute">    # WebSocket: al definir proxy_set_header aquí se dejan de heredar los del server</span>
+<span class="t-mute">    # → hay que repetirlos TODOS.</span>
+<span class="t-mute">    # location ^~ /ws/ {</span>
+<span class="t-mute">    #     proxy_pass http://app:8000;</span>
+<span class="t-mute">    #     proxy_http_version 1.1;</span>
+<span class="t-mute">    #     proxy_set_header Upgrade           $http_upgrade;</span>
+<span class="t-mute">    #     proxy_set_header Connection        $connection_upgrade;</span>
+<span class="t-mute">    #     proxy_set_header Host              $host;</span>
+<span class="t-mute">    #     proxy_set_header X-Real-IP         $remote_addr;</span>
+<span class="t-mute">    #     proxy_set_header X-Forwarded-For   $remote_addr;</span>
+<span class="t-mute">    #     proxy_set_header X-Forwarded-Proto https;</span>
+<span class="t-mute">    #     proxy_read_timeout 1h;                # conexión larga</span>
+<span class="t-mute">    # }</span>
+
+    <span class="t-cy">location</span> / {
+        <span class="t-cy">proxy_pass</span> http://app:8000;
+    }
+}</pre>
+<!-- plantillas:fin -->
+            </div>
+            <figcaption class="proj__demo-cap">fig. 03a — contenedor.sh y host.sh · auditoría del contenedor y del VPS · Dockerfile, compose y nginx.conf de referencia</figcaption>
+          </div>
+        </figure>
+      </article>
+
+      <!-- ── Siege Map ── -->
+      <article class="proj proj--wide" id="siege-map">
+        <div class="proj__content">
+          <header class="proj__head mono">
+            <span class="proj__idx">03/b · threat intel</span>
+            <span class="proj__status">en producción</span>
+          </header>
+          <div class="proj__titlebar">
+            <h3 class="proj__title">Siege Map</h3>
+            <div class="proj__btns mono">
+              <a class="proj__repo-btn" href="https://github.com/jorgearma/siege-map" target="_blank" rel="noopener noreferrer">github</a>
+              <a class="proj__repo-btn" href="https://radar.jorgearmandoescobar.com" target="_blank" rel="noopener noreferrer">demo</a>
+            </div>
+          </div>
+          <p class="proj__tag mono"># mapa en tiempo real de ataques SSH y HTTP</p>
+          <p class="proj__lede">
+            Lee los logs de SSH y Nginx de un VPS, geolocaliza cada IP y la
+            pinta en un mapa mundial con arcos animados hacia el servidor.
+          </p>
+          <ul class="proj__feats mono">
+            <li><span class="proj__arr">→</span> clasifica cada atacante (diccionario, credential stuffing, password spraying, sondeo) con TTPs de MITRE ATT&amp;CK</li>
+            <li><span class="proj__arr">→</span> ficha por IP con ASN, reputación de AbuseIPDB y puntuación de amenaza</li>
+            <li><span class="proj__arr">→</span> exporta a STIX 2.1 y CSV; las IPs de visitantes HTTP se guardan truncadas a /24</li>
+          </ul>
+          <ul class="proj__stack mono">
+            <li>python</li><li>fastapi</li><li>websocket</li><li>react</li><li>leaflet</li><li>docker</li>
+          </ul>
+        </div>
+
+        <figure class="proj__demo" aria-label="capturas del mapa">
+          <div class="proj__demo-frame">
+            <div class="proj__demo-bar">
+              <span class="proj__demo-dot proj__demo-dot--red"></span>
+              <span class="proj__demo-dot proj__demo-dot--amber"></span>
+              <span class="proj__demo-dot proj__demo-dot--green"></span>
+              <span class="proj__demo-title">siege map — live stream</span>
+            </div>
+            <div class="proj__demo-screen">
+              <div class="proj__carousel" data-carousel>
+                <div class="proj__carousel-track">
+                  <img src="assets/siege-01-globe.webp" alt="Siege Map — modo globo con arcos en vivo desde el origen de cada ataque" width="1910" height="870" loading="lazy">
+                  <img src="assets/siege-02-tracelock.webp" alt="Siege Map — modo mapa plano con el callout TRACE LOCK sobre una IP atacante" width="1910" height="883" loading="lazy">
+                  <img src="assets/siege-03-ssh-bots.webp" alt="Siege Map — INTEL: bots SSH, usuarios probados, redes y paises de origen" width="1910" height="592" loading="lazy">
+                  <img src="assets/siege-04-http-probes.webp" alt="Siege Map — INTEL: qué buscan los bots web (.env, .git, WordPress)" width="1909" height="840" loading="lazy">
+                  <img src="assets/siege-05-visitors.webp" alt="Siege Map — INTEL: visitantes reales frente a tráfico automatizado" width="1910" height="715" loading="lazy">
+                </div>
+                <button class="proj__carousel-btn proj__carousel-btn--prev" aria-label="captura anterior">‹</button>
+                <button class="proj__carousel-btn proj__carousel-btn--next" aria-label="captura siguiente">›</button>
+                <div class="proj__carousel-dots" aria-hidden="true">
+                  <span class="proj__carousel-dot is-active"></span>
+                  <span class="proj__carousel-dot"></span>
+                  <span class="proj__carousel-dot"></span>
+                  <span class="proj__carousel-dot"></span>
+                  <span class="proj__carousel-dot"></span>
+                </div>
+              </div>
+            </div>
+            <figcaption class="proj__demo-cap">fig. 03b — siege map · 5 vistas · clic para ampliar</figcaption>
+          </div>
+          <p class="proj__demo-sell">
+            En producción sobre un VPS propio: cada IP de estas capturas es un
+            atacante <b>real</b>, geolocalizado, clasificado con MITRE ATT&amp;CK
+            y puntuado en vivo. Nada de datos de juguete.
+          </p>
+        </figure>
+      </article>
+
       <!-- ── Dogscan ── -->
       <article class="proj proj--wide" id="dogscan">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">03/a · ofensiva</span>
+            <span class="proj__idx">03/c · ofensiva</span>
             <span class="proj__status">v1.5.0</span>
           </header>
           <div class="proj__titlebar">
@@ -560,7 +1158,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
       <article class="proj proj--wide" id="atalaya">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">03/b · defensiva</span>
+            <span class="proj__idx">03/d · defensiva</span>
             <span class="proj__status">en producción</span>
           </header>
           <div class="proj__titlebar">
@@ -611,75 +1209,8 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
                 </div>
               </div>
             </div>
-            <figcaption class="proj__demo-cap">fig. 03b — atalaya · 4 paneles · clic para ampliar</figcaption>
+            <figcaption class="proj__demo-cap">fig. 03d — atalaya · 4 paneles · clic para ampliar</figcaption>
           </div>
-        </figure>
-      </article>
-
-      <!-- ── Siege Map ── -->
-      <article class="proj proj--wide" id="siege-map">
-        <div class="proj__content">
-          <header class="proj__head mono">
-            <span class="proj__idx">03/c · threat intel</span>
-            <span class="proj__status">en producción</span>
-          </header>
-          <div class="proj__titlebar">
-            <h3 class="proj__title">Siege Map</h3>
-            <div class="proj__btns mono">
-              <a class="proj__repo-btn" href="https://github.com/jorgearma/siege-map" target="_blank" rel="noopener noreferrer">github</a>
-              <a class="proj__repo-btn" href="https://radar.jorgearmandoescobar.com" target="_blank" rel="noopener noreferrer">demo</a>
-            </div>
-          </div>
-          <p class="proj__tag mono"># mapa en tiempo real de ataques SSH y HTTP</p>
-          <p class="proj__lede">
-            Lee los logs de SSH y Nginx de un VPS, geolocaliza cada IP y la
-            pinta en un mapa mundial con arcos animados hacia el servidor.
-          </p>
-          <ul class="proj__feats mono">
-            <li><span class="proj__arr">→</span> clasifica cada atacante (diccionario, credential stuffing, password spraying, sondeo) con TTPs de MITRE ATT&amp;CK</li>
-            <li><span class="proj__arr">→</span> ficha por IP con ASN, reputación de AbuseIPDB y puntuación de amenaza</li>
-            <li><span class="proj__arr">→</span> exporta a STIX 2.1 y CSV; las IPs de visitantes HTTP se guardan truncadas a /24</li>
-          </ul>
-          <ul class="proj__stack mono">
-            <li>python</li><li>fastapi</li><li>websocket</li><li>react</li><li>leaflet</li><li>docker</li>
-          </ul>
-        </div>
-
-        <figure class="proj__demo" aria-label="capturas del mapa">
-          <div class="proj__demo-frame">
-            <div class="proj__demo-bar">
-              <span class="proj__demo-dot proj__demo-dot--red"></span>
-              <span class="proj__demo-dot proj__demo-dot--amber"></span>
-              <span class="proj__demo-dot proj__demo-dot--green"></span>
-              <span class="proj__demo-title">siege map — live stream</span>
-            </div>
-            <div class="proj__demo-screen">
-              <div class="proj__carousel" data-carousel>
-                <div class="proj__carousel-track">
-                  <img src="assets/siege-01-globe.webp" alt="Siege Map — modo globo con arcos en vivo desde el origen de cada ataque" width="1910" height="870" loading="lazy">
-                  <img src="assets/siege-02-tracelock.webp" alt="Siege Map — modo mapa plano con el callout TRACE LOCK sobre una IP atacante" width="1910" height="883" loading="lazy">
-                  <img src="assets/siege-03-ssh-bots.webp" alt="Siege Map — INTEL: bots SSH, usuarios probados, redes y paises de origen" width="1910" height="592" loading="lazy">
-                  <img src="assets/siege-04-http-probes.webp" alt="Siege Map — INTEL: qué buscan los bots web (.env, .git, WordPress)" width="1909" height="840" loading="lazy">
-                  <img src="assets/siege-05-visitors.webp" alt="Siege Map — INTEL: visitantes reales frente a tráfico automatizado" width="1910" height="715" loading="lazy">
-                </div>
-                <button class="proj__carousel-btn proj__carousel-btn--prev" aria-label="captura anterior">‹</button>
-                <button class="proj__carousel-btn proj__carousel-btn--next" aria-label="captura siguiente">›</button>
-                <div class="proj__carousel-dots" aria-hidden="true">
-                  <span class="proj__carousel-dot is-active"></span>
-                  <span class="proj__carousel-dot"></span>
-                  <span class="proj__carousel-dot"></span>
-                  <span class="proj__carousel-dot"></span>
-                  <span class="proj__carousel-dot"></span>
-                </div>
-              </div>
-            </div>
-            <figcaption class="proj__demo-cap">fig. 03c — siege map · 5 vistas · clic para ampliar</figcaption>
-          </div>
-          <p class="proj__demo-sell">
-            En producción sobre un VPS propio: cada IP de estas capturas es un
-            atacante <b>real</b>, geolocalizado, clasificado con MITRE ATT&amp;CK
-            y puntuado en vivo. Nada de datos de juguete.
-          </p>
         </figure>
       </article>
 
@@ -769,7 +1300,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
         </li>
         <li>
           <span class="contact__k">cv</span>
-          <a class="contact__v" href="#">jae-cv.pdf</a>
+          <a class="contact__v" href="assets/cv-jorge-armando-escobar.pdf" target="_blank" rel="noopener">cv-jorge-armando-escobar.pdf <span aria-hidden="true">↗</span></a>
         </li>
       </ul>
 

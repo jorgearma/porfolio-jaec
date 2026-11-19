@@ -16,55 +16,6 @@
      DATOS · edita aquí para actualizar el contenido del sitio
      ══════════════════════════════════════════════════════════════════ */
 
-  /* ── features de Panchi-Bot ────────────────────────────────────── */
-  const FEATURES = [
-    {
-      idx:   "f/01",
-      title: "WhatsApp provider-agnóstico",
-      body:  "Twilio y Meta Cloud API son intercambiables mediante una variable " +
-             "de entorno. Los controladores, managers y BD no saben cuál está " +
-             "activo. Una interfaz común, dos implementaciones, verificación " +
-             "HMAC específica para cada una.",
-      code:  "WHATSAPP_PROVIDER=meta&nbsp;·&nbsp;twilio",
-    },
-    {
-      idx:   "f/02",
-      title: "Arquitectura en capas",
-      body:  '<span class="mono">blueprints → controllers → managers → services.</span> ' +
-             "Una regla de importación estricta: nadie importa hacia arriba. " +
-             "Los tests aíslan cada capa y la capa de services es el único " +
-             "punto de contacto con el mundo exterior.",
-      doc:   {
-        href: "https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/controllers.md",
-        text: "ver docs",
-      },
-    },
-    {
-      idx:   "f/03",
-      title: "Máquina de estados en Redis",
-      body:  "El flujo de registro y de pedido vive en Redis como estado " +
-             "efímero. Transiciones validadas, TTL por conversación, y " +
-             "recuperación elegante si el usuario desaparece a mitad del flujo.",
-      doc:   {
-        href: "https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/managers/gestor_redis.md",
-        text: "ver docs",
-      },
-    },
-    {
-      idx:   "f/04",
-      title: "Triple verificación HMAC",
-      body:  'Tres webhooks entrantes, tres algoritmos de firma distintos: ' +
-             'Twilio (<span class="mono">X-Twilio-Signature</span>), ' +
-             'Meta (<span class="mono">HMAC-SHA256</span> con app secret), ' +
-             'Monei (<span class="mono">HMAC</span> con webhook secret). Ningún ' +
-             "endpoint confía en el cliente.",
-      doc:   {
-        href: "https://github.com/jorgearma/panchi-bot/blob/master/docs/backend/blueprints.md",
-        text: "ver docs",
-      },
-    },
-  ];
-
   /* ── diagramas de arquitectura (ASCII) ────────────────────────── */
   const ARCH_PANELS = [
     {
@@ -426,28 +377,6 @@
         `<div class="arch__tabs" role="tablist">${tabsHTML}</div>` +
         `<span class="arch__file">panchi-bot/diagrams.txt</span>` +
       `</div>${panelsHTML}${docsLinks}`;
-  }
-
-  /* ── feature cards ─────────────────────────────────────────────── */
-  const featContainer = $("[data-features]");
-  if (featContainer) {
-    featContainer.innerHTML = FEATURES.map((f) => {
-      const code = f.code
-        ? `<p class="feat__code mono">${f.code}</p>`
-        : "";
-      const doc = f.doc
-        ? `<a class="feat__doc mono" href="${f.doc.href}" target="_blank" rel="noopener noreferrer">` +
-          `${f.doc.text} ${ICON_EXT()}</a>`
-        : "";
-      return (
-        `<article class="feat">` +
-          `<span class="feat__idx mono">${f.idx}</span>` +
-          `<h3 class="feat__title">${f.title}</h3>` +
-          `<p class="feat__body">${f.body}</p>` +
-          code + doc +
-        `</article>`
-      );
-    }).join("");
   }
 
   /* ── write-up cards ────────────────────────────────────────────── */
@@ -1433,7 +1362,7 @@
   }
 
   /* ── 03 · scroll reveal (sections + features) ──────────────────── */
-  /* nota: .feat y .wu se renderizan antes de llegar aquí          */
+  /* nota: .wu se renderiza antes de llegar aquí          */
   const targets = [
     ...$$(".section__head"),
     ...$$(".whoami__head"),
@@ -1445,7 +1374,6 @@
     ...$$(".adlab__credit"),
     ...$$(".metrics"),
     ...$$(".arch"),
-    ...$$(".feat"),
     ...$$(".stack"),
     ...$$(".proj"),
     ...$$(".skills__col"),
@@ -1607,6 +1535,89 @@
       if (e.key === "ArrowRight") lbNavigate(1);
     }
   });
+
+  /* ── 06b · carrusel de shells simuladas (03d · contenedor.sh, host.sh)
+     Cada <pre data-typer> trae su salida completa en el HTML (sin JS
+     se ven todas seguidas). Con JS: una shell visible a la vez; al
+     mostrarse por primera vez teclea el comando y vuelca las líneas
+     una a una con autoscroll. Pestañas y flechas cambian de shell. */
+  const shells = document.querySelector("[data-shells]");
+  if (shells) {
+    const calm   = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const pres   = Array.from(shells.querySelectorAll("[data-typer]"));
+    const tabs   = Array.from(shells.querySelectorAll("[data-shell-tab]"));
+    const count  = shells.querySelector("[data-shell-count]");
+    const CMD    = /(<b data-cmd[^>]*>)[^<]*(<\/b>)/;
+    const cursor = '<span class="proj__term-cursor"></span>';
+    const sleep  = (ms) => new Promise((r) => setTimeout(r, ms));
+
+    // prepara cada shell: solo el prompt vacío, y devuelve su animación
+    const runs = pres.map((pre) => {
+      if (calm) return () => {};
+      const lines     = pre.innerHTML.split("\n");
+      const promptLen = lines.findIndex((l) => l.includes("data-cmd")) + 1;
+      const cmd       = pre.querySelector("[data-cmd]")?.textContent || "";
+      const head      = lines.slice(0, promptLen).join("\n");
+      const empty     = head.replace(CMD, "$1$2");
+      const out       = lines.slice(promptLen);
+      let started = false;
+      pre.innerHTML = empty + cursor;
+
+      return async () => {
+        if (started) return;
+        started = true;
+        await sleep(400);
+        const cmdNode = pre.querySelector("[data-cmd]");
+        for (let i = 1; i <= cmd.length; i++) {
+          cmdNode.textContent = cmd.slice(0, i);
+          await sleep(38 + Math.random() * 50);
+        }
+        await sleep(450);
+        let buf = head;
+        for (const ln of out) {
+          buf += "\n" + ln;
+          pre.innerHTML = buf;
+          pre.scrollTop = pre.scrollHeight;
+          await sleep(ln.trim() ? 45 : 140);
+        }
+        pre.innerHTML = buf + "\n" + empty + cursor;
+        pre.scrollTop = pre.scrollHeight;
+      };
+    });
+
+    let current = 0;
+    let visible = false;   // no animar hasta que el bloque entre en pantalla
+    const goTo = (idx) => {
+      current = (idx + pres.length) % pres.length;
+      pres.forEach((p, i) => { p.hidden = i !== current; });
+      tabs.forEach((t, i) => {
+        t.classList.toggle("is-active", i === current);
+        t.setAttribute("aria-selected", String(i === current));
+      });
+      if (count) count.textContent = `${current + 1}/${pres.length}`;
+      if (visible) runs[current]();
+    };
+
+    tabs.forEach((t, i) => t.addEventListener("click", () => goTo(i)));
+    shells.querySelector("[data-shell-prev]")?.addEventListener("click", () => goTo(current - 1));
+    shells.querySelector("[data-shell-next]")?.addEventListener("click", () => goTo(current + 1));
+    shells.classList.add("is-ready");
+    goTo(0);
+
+    if ("IntersectionObserver" in window) {
+      const sio = new IntersectionObserver((entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          sio.disconnect();
+          visible = true;
+          runs[current]();
+        }
+      }, { threshold: 0.35 });
+      sio.observe(shells);
+    } else {
+      visible = true;
+      runs[current]();
+    }
+  }
 
   /* ── 07 · console easter egg ────────────────────────────────────── */
   if (typeof console !== "undefined") {

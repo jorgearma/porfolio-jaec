@@ -247,7 +247,7 @@ em { font-style: italic; }
   position: relative;
   max-width: var(--page-max);
   margin: 0 auto;
-  padding: clamp(20px, 3vw, 48px) var(--pad) clamp(24px, 4vw, 48px);
+  padding: clamp(10px, 1.5vw, 24px) var(--pad) clamp(24px, 4vw, 48px);
   min-height: 88svh;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
@@ -570,6 +570,7 @@ em { font-style: italic; }
 .hero__actions {
   margin-top: clamp(30px, 4vw, 48px);
   display: flex;
+  align-items: flex-end;                 /* alinea por abajo: la pestaña sobresale arriba */
   gap: 14px;
   flex-wrap: wrap;
 }
@@ -592,20 +593,51 @@ em { font-style: italic; }
 .btn svg { transition: transform .35s var(--ease); }
 .btn:hover svg { transform: translateX(4px); }
 
+/* principal: carpeta de expediente — caja ámbar con pestaña encima
+   que referencia la sección de destino. Se rellena al pasar el ratón. */
 .btn--primary {
+  margin-top: 20px;                      /* hueco para la pestaña */
+  border-color: var(--amber);
+  background: rgba(255, 182, 39, .06);
+  font-weight: 700;
+}
+.btn__tab {
+  position: absolute;
+  bottom: 100%; left: -1px;
+  padding: 4px 16px 3px 10px;
   background: var(--amber);
   color: #141005;
-  border-color: var(--amber);
+  font-family: var(--f-label);
+  font-weight: 400;
+  font-size: 10px;
+  letter-spacing: 0.2em;
+  white-space: nowrap;
+  clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 100%, 0 100%);
 }
 .btn--primary:hover {
-  background: var(--ink);
-  border-color: var(--ink);
+  background: var(--amber);
+  color: #141005;
 }
 
-.btn--ghost:hover {
-  border-color: var(--amber);
-  color: var(--amber);
+/* secundario: visor fantasma — solo las esquinas del marco del dossier,
+   en gris; al pasar el ratón se vuelven ámbar y crecen. */
+.btn--ghost {
+  border-color: transparent;
+  color: var(--ink-dim);
 }
+.btn__c {
+  position: absolute;
+  width: 8px; height: 8px;
+  border: 0 solid var(--ink-mute);
+  transition: width .45s var(--ease), height .45s var(--ease), border-color .3s;
+  pointer-events: none;
+}
+.btn__c--tl { top: -1px;    left: -1px;  border-top-width: 1.5px;    border-left-width: 1.5px; }
+.btn__c--tr { top: -1px;    right: -1px; border-top-width: 1.5px;    border-right-width: 1.5px; }
+.btn__c--bl { bottom: -1px; left: -1px;  border-bottom-width: 1.5px; border-left-width: 1.5px; }
+.btn__c--br { bottom: -1px; right: -1px; border-bottom-width: 1.5px; border-right-width: 1.5px; }
+.btn--ghost:hover { color: var(--amber); }
+.btn--ghost:hover .btn__c { width: 14px; height: 14px; border-color: var(--amber); }
 
 /* right column wrapper — dossier photo + vitals stack */
 .hero__right {
@@ -984,7 +1016,34 @@ em { font-style: italic; }
   color: var(--ink-mute);
 }
 .hero__side-row span:last-child { color: var(--ink); }
-.hero__ok { color: var(--ok) !important; }
+
+/* ── valores en platino satinado (dossier__meta + hero__side) ──
+   El metal va solo en las letras: degradado recortado al texto + sombra
+   de 1px para darle canto. Las etiquetas se quedan apagadas para que el
+   contraste haga el resto. El destello animado vive en el bloque
+   prefers-reduced-motion del final.                                   */
+.dossier__meta > div,
+.hero__side-row { align-items: baseline; }
+
+.metal {
+  font-weight: 700;
+  background-image:
+    linear-gradient(105deg, transparent 40%, rgba(255,255,255,.95) 50%, transparent 60%),
+    linear-gradient(180deg, #f2f4f6 0%, #c9ced4 45%, #9ea5ac 60%, #dde1e5 100%);
+  background-size: 300% 100%, 100% 100%;
+  background-repeat: no-repeat;
+  background-position: 150% 0, 0 0;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 1px 0 rgba(0,0,0,.9));
+}
+.metal--ok {
+  background-image:
+    linear-gradient(105deg, transparent 40%, rgba(255,255,255,.95) 50%, transparent 60%),
+    linear-gradient(180deg, #e6ffe6 0%, #a6e6a6 45%, #6fbf6f 60%, #c8f2c8 100%);
+}
 
 
 @media (max-width: 860px) {
@@ -1029,7 +1088,9 @@ em { font-style: italic; }
     background-image: repeating-linear-gradient(to bottom, transparent 0px, transparent 2px, rgba(0,0,0,.2) 2px, rgba(0,0,0,.2) 3px);
     z-index: 3; pointer-events: none;
   }
-  .hero__actions { width: 100%; }
+  .hero__actions { width: 100%; align-items: stretch; }
+  /* mismo hueco que la pestaña del principal → ambos botones igual de altos */
+  .hero__actions .btn--ghost { margin-top: 20px; }
   .hero__actions .btn {
     flex: 1;
     justify-content: center;
@@ -1312,6 +1373,8 @@ em { font-style: italic; }
 }
 .whoami__dl dt { color: var(--ink-mute); }
 .whoami__dl dd { margin: 0; color: var(--ink); }
+.whoami__dl dd a { border-bottom: 1px dashed currentColor; }
+.whoami__dl dd a:hover { color: var(--amber); }
 .whoami__badge { color: var(--accent); font-size: 10px; opacity: .8; }
 
 .whoami__copy {
@@ -1400,23 +1463,92 @@ em { font-style: italic; }
   margin-left: auto;
   align-items: center;
 }
+/* enlaces de sección como anexos del expediente: cajita con pestaña
+   "ANEXO 01-A" encima (mini versión del botón principal del hero).
+   Los enlaces en vivo (--live) llevan la pestaña en ámbar y REC/PLAY.
+   Al pasar el ratón, el dominio de destino se "teclea" debajo.       */
 .case__link {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 8px;
+  margin-top: 16px;                      /* hueco para la pestaña */
   font-size: 11px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--ink-mute);
+  color: var(--ink-dim);
   text-decoration: none;
-  padding: 5px 12px;
+  padding: 6px 12px;
   border: 1px solid var(--rule);
-  transition: color .2s, border-color .2s;
+  transition: color .25s, border-color .25s;
 }
-.case__link:hover { color: var(--ink); border-color: var(--ink-mute); }
-.case__link--demo { color: var(--amber); border-color: var(--amber); opacity: .85; }
-.case__link--demo:hover { opacity: 1; color: var(--amber); border-color: var(--amber); }
-.case__link-dot { font-size: 8px; }
+.case__link-tab {
+  position: absolute;
+  bottom: 100%; left: -1px;
+  padding: 2px 12px 1px 6px;
+  font-family: var(--f-label);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  white-space: nowrap;
+  background: var(--rule);
+  color: var(--ink-mute);
+  clip-path: polygon(0 0, calc(100% - 5px) 0, 100% 100%, 0 100%);
+  transition: background .25s, color .25s;
+}
+.case__link-arr {
+  color: var(--amber-dim);
+  transition: transform .3s var(--ease), color .25s;
+}
+/* los dominios viven al final de .case__links (no dentro de cada enlace)
+   para que todos aparezcan en el mismo sitio: debajo del grupo, a la
+   derecha. :has() muestra el que corresponde al enlace activo.        */
+.case__links { position: relative; }
+.case__link-dest {
+  position: absolute;
+  top: calc(100% + 7px); right: 0;
+  white-space: nowrap;
+  font-size: 10px;
+  letter-spacing: 0.04em;
+  text-transform: none;
+  color: var(--ink-mute);
+  clip-path: inset(0 100% 0 0);
+  transition: clip-path .5s steps(18);
+  pointer-events: none;
+}
+.case__link-dest::before { content: "→ "; color: var(--ok); }
+
+.case__link--live { border-color: rgba(255, 182, 39, .45); }
+.case__link--live .case__link-tab { background: rgba(255, 182, 39, .8); color: #141005; }
+
+.case__link:hover { color: var(--ink); border-color: var(--amber); }
+.case__link:hover .case__link-tab { background: var(--amber); color: #141005; }
+.case__link:hover .case__link-arr { transform: translate(2px, -2px); color: var(--amber); }
+.case__links:has(> a:nth-of-type(1):is(:hover, :focus-visible)) > .case__link-dest:nth-of-type(1),
+.case__links:has(> a:nth-of-type(2):is(:hover, :focus-visible)) > .case__link-dest:nth-of-type(2) {
+  clip-path: inset(0 0 0 0);
+}
+
+.case__link-rec,
+.case__link-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--f-label);
+  font-size: 9px;
+  letter-spacing: 0.18em;
+}
+.case__link-rec { color: var(--danger); }
+.case__link-rec::before {
+  content: "";
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: var(--danger);
+  box-shadow: 0 0 6px rgba(229, 72, 77, .8);
+}
+.case__link-play { color: var(--amber); }
+@media (prefers-reduced-motion: reduce) {
+  .case__link-dest { transition: none; }
+}
 
 .case__lede {
   font-family: var(--f-mono);
@@ -2475,6 +2607,25 @@ em { font-style: italic; }
   .hero__actions  { animation-delay: .70s; }
   .dossier        { animation-delay: .32s; }
   .hero__side     { animation-delay: .86s; }
+
+  /* punto REC del enlace "demo en vivo" */
+  .case__link-rec::before { animation: case-rec 1.6s ease-in-out infinite; }
+
+  /* destello que recorre los valores en platino, fila a fila */
+  .metal { animation: metal-shine 7s ease-in-out infinite; }
+  .dossier__meta > div:nth-child(2) .metal { animation-delay: .18s; }
+  .dossier__meta > div:nth-child(3) .metal { animation-delay: .36s; }
+  .dossier__meta > div:nth-child(4) .metal { animation-delay: .54s; }
+  .hero__side-row:nth-child(1) .metal { animation-delay: .72s; }
+  .hero__side-row:nth-child(2) .metal { animation-delay: .90s; }
+  .hero__side-row:nth-child(3) .metal { animation-delay: 1.08s; }
+  .hero__side-row:nth-child(4) .metal { animation-delay: 1.26s; }
+  .hero__side-row:nth-child(5) .metal { animation-delay: 1.44s; }
+}
+@keyframes case-rec { 50% { opacity: .25; } }
+@keyframes metal-shine {
+  0%, 70% { background-position: 150% 0, 0 0; }
+  100%    { background-position: -50% 0, 0 0; }
 }
 @keyframes rise {
   from { opacity: 0; transform: translateY(24px); }
@@ -2548,6 +2699,63 @@ em { font-style: italic; }
 .t-am   { color: var(--amber); }
 .t-cy   { color: #6ea8ff; }
 @media (max-width: 860px) { .proj__term { font-size: 10.5px; padding: 12px; } }
+.t-bad  { color: var(--danger); }
+
+/* ── 03d · shell simulada de contenedor.sh (salida ancha y larga) ── */
+.proj__term--audit {
+  font-family: var(--f-mono), "DejaVu Sans Mono", "Menlo", "Consolas", monospace;
+  font-size: 11px;
+  line-height: 1.45;
+  height: 560px;          /* fija: no salta al cambiar de shell */
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+.proj__term-cursor {
+  display: inline-block;
+  width: .6em;
+  height: 1.1em;
+  margin-left: 1px;
+  vertical-align: text-bottom;
+  background: var(--amber);
+  animation: term-blink 1s steps(1) infinite;
+}
+@keyframes term-blink { 50% { opacity: 0; } }
+@media (max-width: 860px) { .proj__term--audit { font-size: 9.5px; height: 440px; } }
+
+/* carrusel de shells: pestañas + flechas encima del terminal */
+.proj__shells-nav {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 8px;
+  border-bottom: 1px solid var(--rule);
+  font-size: 11px;
+}
+.proj__shells-btn,
+.proj__shells-tab {
+  font: inherit;
+  color: var(--ink-mute);
+  background: transparent;
+  border: 1px solid transparent;
+  padding: 3px 9px;
+  cursor: pointer;
+  transition: color .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
+}
+.proj__shells-btn { font-size: 15px; line-height: 1; padding: 2px 8px; }
+.proj__shells-btn:hover,
+.proj__shells-tab:hover { color: var(--ink); border-color: var(--rule); }
+.proj__shells-tab.is-active {
+  color: var(--amber);
+  border-color: rgba(255, 182, 39, .4);
+  background: var(--amber-soft);
+}
+.proj__shells-btn:focus-visible,
+.proj__shells-tab:focus-visible { outline: 1px solid var(--amber); outline-offset: 1px; }
+.proj__shells-count { margin-left: auto; color: var(--ink-mute); padding: 0 6px; }
+.proj__shells .proj__term[hidden] { display: none; }
+/* sin JS no hay pestañas: se ven las dos salidas seguidas */
+.proj__shells:not(.is-ready) .proj__shells-nav { display: none; }
 
 /* ═══════════ nordwind ad lab ═══════════ */
 .adlab__top {
