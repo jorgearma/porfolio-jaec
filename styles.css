@@ -2540,7 +2540,34 @@ em { font-style: italic; }
   margin-bottom: clamp(32px, 4vw, 56px);
 }
 .adlab__shot { padding: 0; }
-.adlab__brief .case__footer { flex-wrap: wrap; gap: 10px 24px; margin-bottom: 0; }
+.adlab .stack:last-child { margin-bottom: 0; }
+
+/* enlaces de pie como chips, en una fila propia bajo el rótulo "leer" */
+.adlab__brief .case__footer {
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 0;
+  padding-top: 18px;
+}
+.adlab__brief .case__footer-label { flex-basis: 100%; margin-bottom: 2px; }
+.adlab__brief .case__footer-link {
+  gap: 8px;
+  padding: 8px 14px;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  background: rgba(255, 255, 255, 0.015);
+  transition: color .2s, border-color .2s, background .2s;
+}
+.adlab__brief .case__footer-link svg { color: var(--amber); transition: transform .2s; }
+.adlab__brief .case__footer-link:hover {
+  opacity: 1;
+  color: var(--amber);
+  border-color: var(--amber);
+  background: rgba(255, 182, 39, 0.08);
+}
+.adlab__brief .case__footer-link:hover svg { transform: translate(2px, -2px); }
 
 /* cadena de ataque · pasos numerados unidos por la regla superior */
 .chain {

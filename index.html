@@ -360,18 +360,20 @@
     <div class="adlab__top">
       <div class="adlab__brief">
         <p class="case__lede">
-          Un dominio Active Directory montado, saboteado y atacado por mí.
-          De cero credenciales a Domain Admin y DCSync completo.
+          Monté un dominio de Active Directory desde cero, lo saboteé a propósito
+          y lo ataqué de cero credenciales a Domain Admin y DCSync completo.
+          Los dos lados de AD: construir, romper y entender.
         </p>
         <p class="case__lede case__lede--body">
-          Tres fases: construir un dominio limpio (DC + cliente), plantar
-          misconfiguraciones a propósito y explotarlas desde Kali. Todo con
-          herramientas manuales — impacket, netexec y hashcat, sin Metasploit.
+          Para explotar bien un entorno hay que saber cómo está hecho. Levanté el
+          dominio limpio (DC + cliente, modelo AGDLP), planté las
+          misconfiguraciones y las exploté desde Kali — todo manual, con impacket,
+          netexec y hashcat, sin Metasploit. Metodología OSCP.
         </p>
         <p class="case__lede case__lede--body">
-          El replay reproduce la cadena paso a paso sobre el grafo del dominio
-          y explica en cada uno por qué funciona, cómo se arregla y cómo se
-          detecta.
+          Y no me quedo en el exploit: cada paso documenta por qué funciona, cómo
+          se corrige y cómo se detecta (con sus Event IDs). También la mirada del
+          que defiende.
         </p>
         <div class="case__footer mono">
           <span class="case__footer-label">leer</span>
@@ -386,18 +388,35 @@
         </div>
       </div>
 
-      <figure class="proj__demo adlab__shot" aria-label="replay del ataque">
+      <figure class="proj__demo adlab__shot" aria-label="capturas del laboratorio">
         <div class="proj__demo-frame">
           <div class="proj__demo-bar">
             <span class="proj__demo-dot proj__demo-dot--red"></span>
             <span class="proj__demo-dot proj__demo-dot--amber"></span>
             <span class="proj__demo-dot proj__demo-dot--green"></span>
-            <span class="proj__demo-title">nordwind ad lab — replay · paso 7 de 8</span>
+            <span class="proj__demo-title">nordwind ad lab — el laboratorio</span>
           </div>
           <div class="proj__demo-screen">
-            <img src="assets/nordwind-replay.webp" alt="Replay del ataque en el paso de DCSync: grafo del dominio comprometido y salida de secretsdump" width="1360" height="772" loading="lazy">
+            <div class="proj__carousel" data-carousel>
+              <div class="proj__carousel-track">
+                <img src="assets/nordwind-01-portada.webp" alt="Portada del laboratorio: de cero credenciales a Domain Admin, con terminal resumen del ataque" loading="lazy">
+                <img src="assets/nordwind-02-sdprop-grafo.webp" alt="El ataque: paso de abuso de ACL, el grafo del dominio y un ACCESS_DENIED devuelto por SDProp" loading="lazy">
+                <img src="assets/nordwind-03-sdprop-cards.webp" alt="Por qué falló, qué enseña y cómo se detecta el abuso de ACL frenado por AdminSDHolder" loading="lazy">
+                <img src="assets/nordwind-04-agdlp.webp" alt="Cómo funciona AD por dentro: modelo AGDLP y cadena de grupos de un usuario" loading="lazy">
+                <img src="assets/nordwind-05-acl-quiz.webp" alt="Comprobación de acceso del token contra la ACL y bloque de autoevaluación sobre AD" loading="lazy">
+              </div>
+              <button class="proj__carousel-btn proj__carousel-btn--prev" aria-label="captura anterior">‹</button>
+              <button class="proj__carousel-btn proj__carousel-btn--next" aria-label="captura siguiente">›</button>
+              <div class="proj__carousel-dots" aria-hidden="true">
+                <span class="proj__carousel-dot is-active"></span>
+                <span class="proj__carousel-dot"></span>
+                <span class="proj__carousel-dot"></span>
+                <span class="proj__carousel-dot"></span>
+                <span class="proj__carousel-dot"></span>
+              </div>
+            </div>
           </div>
-          <figcaption class="proj__demo-cap">fig. 02 — replay del ataque · dcsync · clic para ampliar</figcaption>
+          <figcaption class="proj__demo-cap">fig. 02 — el laboratorio · 5 vistas · clic para ampliar</figcaption>
         </div>
       </figure>
     </div>
@@ -445,12 +464,6 @@
         <li>BloodHound</li>
       </ul>
     </div>
-
-    <p class="adlab__credit mono">
-      Laboratorio propio en red aislada. La base de infraestructura (empresa ficticia, AGDLP y scripts de aprovisionamiento) es de
-      <a href="https://github.com/maciej-stawowy/active-directory-lab" target="_blank" rel="noopener noreferrer">Maciej Stawowy</a> (MIT);
-      el sabotaje, la cadena de ataque, el replay y la documentación son míos.
-    </p>
   </section>
 
   <!-- ──────────────── HERRAMIENTAS DE SEGURIDAD ──────────────── -->
@@ -627,18 +640,24 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
             <div class="proj__demo-screen">
               <div class="proj__carousel" data-carousel>
                 <div class="proj__carousel-track">
-                  <img src="assets/siege-map-dashboard.webp" alt="Siege Map — mapa, patrones de ataque y feed en vivo" width="1600" height="770" loading="lazy">
-                  <img src="assets/siege-map-arcs.webp" alt="Siege Map — arcos animados desde el origen de cada ataque" width="1600" height="770" loading="lazy">
+                  <img src="assets/siege-01-globe.webp" alt="Siege Map — modo globo con arcos en vivo desde el origen de cada ataque" width="1910" height="870" loading="lazy">
+                  <img src="assets/siege-02-tracelock.webp" alt="Siege Map — modo mapa plano con el callout TRACE LOCK sobre una IP atacante" width="1910" height="883" loading="lazy">
+                  <img src="assets/siege-03-ssh-bots.webp" alt="Siege Map — INTEL: bots SSH, usuarios probados, redes y paises de origen" width="1910" height="592" loading="lazy">
+                  <img src="assets/siege-04-http-probes.webp" alt="Siege Map — INTEL: qué buscan los bots web (.env, .git, WordPress)" width="1909" height="840" loading="lazy">
+                  <img src="assets/siege-05-visitors.webp" alt="Siege Map — INTEL: visitantes reales frente a tráfico automatizado" width="1910" height="715" loading="lazy">
                 </div>
                 <button class="proj__carousel-btn proj__carousel-btn--prev" aria-label="captura anterior">‹</button>
                 <button class="proj__carousel-btn proj__carousel-btn--next" aria-label="captura siguiente">›</button>
                 <div class="proj__carousel-dots" aria-hidden="true">
                   <span class="proj__carousel-dot is-active"></span>
                   <span class="proj__carousel-dot"></span>
+                  <span class="proj__carousel-dot"></span>
+                  <span class="proj__carousel-dot"></span>
+                  <span class="proj__carousel-dot"></span>
                 </div>
               </div>
             </div>
-            <figcaption class="proj__demo-cap">fig. 03c — siege map · 2 capturas · clic para ampliar</figcaption>
+            <figcaption class="proj__demo-cap">fig. 03c — siege map · 5 vistas · clic para ampliar</figcaption>
           </div>
         </figure>
       </article>
