@@ -1,83 +1,74 @@
 # jae-portfolio
 
-Portafolio personal de **Jorge Armando Escobar** — backend / sistemas /
-ciberseguridad. Construido a mano, sin frameworks, servido con
-`nginx:alpine` dentro de un contenedor Docker.
+Portafolio de **Jorge Armando Escobar**, pentester junior (Active Directory
+y web) con base en backend. En línea en
+[jorgearmandoescobar.com](https://jorgearmandoescobar.com).
 
-## Stack del portafolio
+Construido a mano, sin frameworks ni build step, y desplegado en un VPS
+propio con un contenedor endurecido según la OWASP Docker Security Cheat Sheet.
 
-| Capa        | Tecnología                            |
-|-------------|---------------------------------------|
-| Contenido   | HTML5 semántico                       |
-| Estilos     | CSS moderno (grid, variables, clamp)  |
-| Interacción | Vanilla JS (IntersectionObserver)     |
-| Tipografía  | Redaction + Commit Mono + Departure Mono (auto-alojadas) |
-| Runtime     | `nginx:1.27-alpine`                   |
-| Contenedor  | Docker + Docker Compose               |
-| Proxy       | Nginx del VPS + Let's Encrypt         |
+## Stack
 
-Sin build step. Sin `node_modules`. Sin bundler. Sin framework.
-El dossier completo cabe en tres archivos y pesa menos que una
-imagen de stock.
+| Capa        | Tecnología                                                  |
+|-------------|-------------------------------------------------------------|
+| Contenido   | HTML5 semántico                                             |
+| Estilos     | CSS moderno (grid, variables, `clamp()`)                    |
+| Interacción | Vanilla JS: scroll reveal, shell interactiva con reto (flag) |
+| Tipografía  | Redaction + Commit Mono + Departure Mono (auto-alojadas)    |
+| Runtime     | `nginx-unprivileged` (alpine, sin root, fijado por digest)  |
+| Exposición  | Cloudflare Tunnel (cloudflared en el mismo compose)         |
+
+Sin `node_modules`, sin bundler y sin framework: el sitio son tres archivos.
 
 ## Estructura
 
 ```
 porfolio/
-├── index.html          # una sola página, todas las secciones
-├── styles.css          # terminal editorial · ≈ 900 líneas
-├── main.js             # uptime, typed prompt, scroll reveal
-├── Dockerfile          # nginx-unprivileged, sin root, fijado por digest
-├── docker-compose.yml  # expone 127.0.0.1:8089, endurecido (OWASP)
-├── nginx.conf          # config dentro del contenedor
-├── .dockerignore
-├── DEPLOY.md           # deploy en el VPS (Cloudflare Tunnel)
-└── README.md
+├── index.html           # una sola página, todas las secciones
+├── styles.css           # estética de terminal editorial
+├── main.js              # datos (write-ups, logs), shell interactiva, scroll reveal
+├── assets/              # imágenes, CV (es/en), fuentes
+├── Dockerfile           # nginx-unprivileged, uid 101, fijado por digest
+├── docker-compose.yml   # portfolio + cloudflared, read-only, cap_drop ALL, red internal
+├── nginx.conf           # config del nginx DENTRO del contenedor (cabeceras, CSP, security.txt)
+├── DEPLOY.md            # despliegue en el VPS
+├── DOCKER_SECURITY.md   # decisiones de hardening, regla a regla
+├── SHELL.md             # cómo funciona la shell del hero (contiene la solución del reto)
+├── scripts/             # auditoría Docker del VPS y generador de plantillas
+└── .github/             # Dependabot + CI: hadolint, gitleaks, trivy y SBOM
 ```
 
 ## Desarrollo local
 
 ```bash
-# opción 1 — sin docker, un servidor estático de 30 líneas:
-python3 -m http.server 8088
-# → http://127.0.0.1:8088
+# opción 1: sin Docker, lo más rápido para iterar
+python3 -m http.server 8088      # → http://127.0.0.1:8088
 
-# opción 2 — igual que en producción:
-docker compose up --build
-# → http://127.0.0.1:8089
+# opción 2: igual que en producción
+docker compose up --build portfolio
 ```
 
-## Deploy en el VPS
+## Despliegue
 
-Cloudflare (HTTPS) → túnel → cloudflared → `127.0.0.1:8089` → contenedor.
-Sin nginx en el host ni puertos web abiertos. Instrucciones en [`DEPLOY.md`](./DEPLOY.md).
+Visitante → Cloudflare (HTTPS + HSTS) → túnel → contenedor `cloudflared` →
+red interna → contenedor `jae-portfolio` (nginx sin root, :8080).
+
+El VPS no abre 80 ni 443 y el contenedor del portfolio no publica puertos
+ni tiene salida a Internet. Detalles en [`DEPLOY.md`](./DEPLOY.md) y
+[`DOCKER_SECURITY.md`](./DOCKER_SECURITY.md).
 
 ## Secciones
 
-- **00/tcp · whoami** — perfil técnico como archivo de dossier.
-- **01/tcp · Panchi-Bot** — case study detallado del proyecto insignia:
-  plataforma completa de operaciones para restaurante, WhatsApp
-  provider-agnóstico (Twilio ⟷ Meta), arquitectura en capas,
-  máquina de estados en Redis, triple verificación HMAC, NLP en
-  español con SpaCy + OpenAI, workers RQ, paneles por rol.
-- **02/tcp · Nordwind AD Lab** — laboratorio de Active Directory: de cero credenciales a Domain Admin.
-- **03/tcp · Herramientas de seguridad** — Dogscan, Atalaya, Siege Map.
-- **04/tcp · Write-ups** — field reports de CTF.
-- **05/tcp · Arsenal** — stack técnico por capas.
-- **06/tcp · Contacto** — canal directo.
-
-## Cosas a personalizar antes de publicar
-
-Los siguientes placeholders están marcados y hay que reemplazarlos:
-
-- `hola@ejemplo.com` → tu email real
-- `github.com/tu-usuario` → tu GitHub
-- `linkedin.com/in/tu-usuario` → tu LinkedIn
-- `jae-cv.pdf` → enlace al CV
-- La descripción de VPS Control / Cyber Toolkit es provisional:
-  cuando me pases detalles, afino el copy.
+- **00/tcp · whoami**: perfil del candidato.
+- **01/tcp · api-audit**: pentest de API a un cliente real (BOLA, BFLA, IA de pago expuesta), publicado anonimizado.
+- **02/tcp · ad-lab**: Nordwind AD Lab, de cero credenciales a Domain Admin y DCSync.
+- **03/tcp · panchi-bot**: bot de pedidos por WhatsApp con pagos, en producción.
+- **04/tcp · herramientas**: Hardened Docker Deploy, Siege Map y Atalaya.
+- **05/tcp · write-ups**: máquinas de Hack The Box.
+- **06/tcp · arsenal**: herramientas y método.
+- **07/tcp · contacto**.
 
 ## Licencia
 
-Código del portafolio: MIT. Contenido (textos, datos personales):
+Código del portafolio: MIT. Contenido (textos, imágenes, datos personales):
 © 2026 Jorge Armando Escobar.
