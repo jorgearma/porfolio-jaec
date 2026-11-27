@@ -2680,7 +2680,7 @@ em { font-style: italic; }
 
 .contact__cursor { color: var(--amber); }
 
-/* ═══════════ salida de terminal dentro de una demo (dogscan) ═══════════ */
+/* ═══════════ salida de terminal dentro de una demo ═══════════ */
 .proj__demo-screen--term { aspect-ratio: auto !important; }
 .proj__demo, .proj__demo-frame { min-width: 0; }
 .proj__term {

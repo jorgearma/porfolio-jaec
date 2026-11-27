@@ -327,16 +327,6 @@
     { platform: "HTB", diff: "medium", os: "linux",   name: "Bastard", tags: ["drupal", "web", "privesc"],                         href: "#" },
     { platform: "HTB", diff: "easy",   os: "linux",   name: "Shocker", tags: ["shellshock", "cgi", "sudo"],                        href: "#" },
     { platform: "HTB", diff: "medium", os: "windows", name: "Optimum", tags: ["httpfileserver", "cve-2014-6287", "privesc"],       href: "#" },
-    { platform: "HTB", diff: "hard",   os: "linux",   name: "Valentine", tags: ["heartbleed", "openssl", "ssh"],                   href: "#" },
-    { platform: "HTB", diff: "easy",   os: "linux",   name: "Nibbles", tags: ["web", "php", "sudo"],                               href: "#" },
-    { platform: "HTB", diff: "medium", os: "windows", name: "Active",  tags: ["active-directory", "gpp", "kerberoasting"],         href: "#" },
-    { platform: "HTB", diff: "easy",   os: "linux",   name: "Bashed",  tags: ["web", "sudo", "cron"],                              href: "#" },
-    { platform: "HTB", diff: "hard",   os: "windows", name: "Silo",    tags: ["oracle", "odat", "volatility"],                     href: "#" },
-    { platform: "HTB", diff: "easy",   os: "linux",   name: "Lame",    tags: ["smb", "samba", "metasploit"],                       href: "#" },
-    { platform: "HTB", diff: "medium", os: "linux",   name: "Beep",    tags: ["lfi", "elastix", "sudo"],                           href: "#" },
-    { platform: "HTB", diff: "easy",   os: "windows", name: "Legacy",  tags: ["smb", "ms08-067", "xp"],                            href: "#" },
-    { platform: "HTB", diff: "medium", os: "linux",   name: "Cronos",  tags: ["dns", "sqli", "cron"],                               href: "#" },
-    { platform: "HTB", diff: "hard",   os: "linux",   name: "Jail",    tags: ["nfs", "buffer-overflow", "kernel"],                  href: "#" },
   ];
 
   /* ══════════════════════════════════════════════════════════════════
@@ -613,7 +603,6 @@
       `80/tcp   ${ok("open")}     panchi-bot (flask, en prod)`,
       `443/tcp  ${ok("open")}     atalaya (detección en VPS)`,
       `8000/tcp ${ok("open")}     api-audit (caso real, nov 2025)`,
-      `1337/tcp ${ok("open")}     dogscan (nmap + módulos)`,
       `3389/tcp ${key("filtered")} crtp (en progreso)`,
       `&nbsp;`,
       `Service detection performed. 1 candidato listo para contratar.`,
@@ -666,12 +655,6 @@
               `  Observabilidad y seguridad de host en tiempo real.`,
               `  Dashboard para un VPS en producción.`,
               `  ${link("https://github.com/jorgearma/atalaya", "github.com/jorgearma/atalaya →")}`,
-            ]),
-            "dogscan.md": F([
-              `  ${key("# Dogscan")}`,
-              `  Enumeración ofensiva de servicios de red.`,
-              `  Wrapper de Nmap orientado a pentesting y preparación OSCP.`,
-              `  ${link("https://github.com/jorgearma/tools", "github.com/jorgearma/tools →")}`,
             ]),
           }),
           writeups: D(wuFiles),
@@ -756,7 +739,7 @@
     const SECTIONS = {
       "panchi-bot": "panchibot", panchibot: "panchibot",
       "api-audit": "apiaudit", apiaudit: "apiaudit", auditoria: "apiaudit",
-      atalaya: "atalaya", dogscan: "dogscan",
+      atalaya: "atalaya",
       herramientas: "herramientas",
       nordwind: "adlab", "ad-lab": "adlab", adlab: "adlab", "nordwind-ad-lab": "adlab",
       "siege-map": "siege-map", siegemap: "siege-map",
@@ -769,7 +752,7 @@
       const el = has(SECTIONS, name) && document.getElementById(SECTIONS[name]);
       if (!el) return fail(1, [
         raw ? escHtml(`open: no sé abrir '${raw}'`) : "uso: open &lt;sección&gt;",
-        dim("prueba: api-audit · panchi-bot · atalaya · dogscan · writeups · arsenal · contacto"),
+        dim("prueba: api-audit · panchi-bot · atalaya · writeups · arsenal · contacto"),
       ]);
       setTimeout(() => el.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth", block: "start" }), 350);
       return [`abriendo ${escHtml(name)}…`];
@@ -890,10 +873,10 @@
           `${key("Uptime")}: ${Math.max(1, Math.round(performance.now() / 60000))} min (tu visita)`,
           `${key("Shell")}: zsh simulada · 0 dependencias`,
           `${key("Rol")}: pentester junior · backend`,
-          `${key("Lenguajes")}: python bash sql javascript`,
-          `${key("Frameworks")}: flask sqlalchemy pydantic pytest`,
-          `${key("Infra")}: linux docker nginx systemd`,
-          `${key("Seguridad")}: nmap burp owasp-top-10 hardening`,
+          `${key("Recon")}: nmap gobuster ffuf feroxbuster`,
+          `${key("Web/API")}: burp curl owasp-api-top-10`,
+          `${key("AD")}: bloodhound impacket netexec hashcat`,
+          `${key("Scripting")}: python bash scapy pwntools`,
           `${key("Foco")}: Active Directory (CRTP)`,
           `${key("Estado")}: ${ok("open to work")} · Madrid / remote`,
         ];
@@ -910,7 +893,6 @@
           `${h("a3f9c1e")} ${dim("(")}${ok("HEAD -> main")}${dim(")")} wip: CRTP — Active Directory en nordwind-ad-lab`,
           `${h("7d2e4b0")} feat: 52 máquinas HTB comprometidas (con permiso)`,
           `${h("c41a9f3")} merge: PR aceptado en web-check (32k★) — RFC 9116`,
-          `${h("9e0b7d2")} feat: dogscan — enumeración post-nmap sin ruido`,
           `${h("5b8c2a6")} feat: atalaya — detección de amenazas en mi VPS`,
           `${h("e17f3d9")} fix: CSP sin inline en este portfolio (auto-auditoría)`,
           `${h("2c6d8f1")} feat: panchi-bot en producción (pedidos por WhatsApp)`,
@@ -1543,7 +1525,7 @@
      se ven todas seguidas). Con JS: una shell visible a la vez; al
      mostrarse por primera vez teclea el comando y vuelca las líneas
      una a una con autoscroll. Pestañas y flechas cambian de shell. */
-  // puede haber varios carruseles (03d Docker Deploy, 02/tcp pentest de API)
+  // puede haber varios carruseles (03d Docker Deploy, 01/tcp pentest de API)
   document.querySelectorAll("[data-shells]").forEach((shells) => {
     const calm   = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const pres   = Array.from(shells.querySelectorAll("[data-typer]"));
