@@ -316,6 +316,42 @@ em { font-style: italic; }
 .hero__last  { display: block; color: var(--ink); }
 .hero__last::before { content: none; }
 .hero__stop  { display: none; }
+/* pixel art tras el apellido (16×21) · colores por clase: la CSP no permite style= */
+.hero__sprite {
+  display: inline-block;
+  height: .82em;
+  width: auto;
+  aspect-ratio: 18 / 21;
+  margin-left: .32em;
+  vertical-align: -0.02em;
+}
+.px-H { fill: #3d2c1f; }   /* pelo */
+.px-h { fill: #634833; }   /* brillo del pelo */
+.px-S { fill: #e2a97c; }   /* piel */
+.px-s { fill: #b67d55; }   /* piel en sombra */
+.px-M { fill: #9a5440; }   /* boca */
+.px-G { fill: #050505; }   /* montura negra */
+.px-L { fill: #222a35; }   /* cristal */
+.px-W { fill: #c9d4e0; }   /* reflejo */
+.px-T { fill: #34404f; }   /* sudadera */
+.px-K { fill: #a59d89; }   /* tapa del portátil */
+.px-k { fill: #7b7465; }   /* base del portátil */
+.px-D { fill: #0d0f12; }   /* pantalla */
+.px-A { fill: var(--amber); }
+.px-O { fill: var(--ok); }
+.px-C { fill: var(--amber); animation: term-blink 1s steps(1) infinite; }   /* cursor */
+/* saludo cada 10 s: 1,5 s agitando la mano (2 fotogramas × 2) y vuelve a sujetar el portátil */
+.spr-wave1, .spr-wave2 { opacity: 0; }
+.spr-rest, .spr-wave1, .spr-wave2 { animation: 10s step-end 2s infinite; }
+.spr-rest  { animation-name: spr-rest; }
+.spr-wave1 { animation-name: spr-wave1; }
+.spr-wave2 { animation-name: spr-wave2; }
+@keyframes spr-rest  { 0% { opacity: 0; } 15% { opacity: 1; } 100% { opacity: 1; } }
+@keyframes spr-wave1 { 0% { opacity: 1; } 3.75% { opacity: 0; } 7.5% { opacity: 1; } 11.25% { opacity: 0; } 100% { opacity: 0; } }
+@keyframes spr-wave2 { 0% { opacity: 0; } 3.75% { opacity: 1; } 7.5% { opacity: 0; } 11.25% { opacity: 1; } 15% { opacity: 0; } 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) {
+  .px-C, .spr-rest, .spr-wave1, .spr-wave2 { animation: none; }
+}
 /* mini dossier junto al nombre: oculto en desktop */
 .hero__name-dossier { display: none; }
 
