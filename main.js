@@ -322,11 +322,16 @@
 
   /* ── write-ups CTF ─────────────────────────────────────────────── */
   const WRITEUPS = [
-    { platform: "HTB", diff: "easy",   os: "linux",   name: "Broker",  tags: ["activemq", "cve-2023-46604", "nginx"],              href: "https://panchi.gitbook.io/untitled/broker/broker_report" },
-    { platform: "HTB", diff: "easy",   os: "windows", name: "Blue",    tags: ["ms17-010", "eternalblue", "smb"],                   href: "#" },
-    { platform: "HTB", diff: "medium", os: "linux",   name: "Bastard", tags: ["drupal", "web", "privesc"],                         href: "#" },
-    { platform: "HTB", diff: "easy",   os: "linux",   name: "Shocker", tags: ["shellshock", "cgi", "sudo"],                        href: "#" },
-    { platform: "HTB", diff: "medium", os: "windows", name: "Optimum", tags: ["httpfileserver", "cve-2014-6287", "privesc"],       href: "#" },
+    { platform: "HTB", diff: "medium", os: "windows", name: "Hospital", href: "https://github.com/jorgearma/Pentesting-Reports/tree/main/hospital",
+      desc: "DC Windows con una VM Ubuntu: subida de .phar, LPE de kernel en la VM y phishing con Ghostscript hasta SYSTEM." },
+    { platform: "HTB", diff: "medium", os: "linux",   name: "Surveillance", href: "https://github.com/jorgearma/Pentesting-Reports/tree/main/surveillance",
+      desc: "RCE en CraftCMS, credenciales en un backup, túnel SSH hasta ZoneMinder y sudo mal configurado hasta root." },
+    { platform: "HTB", diff: "medium", os: "linux",   name: "Pit", href: "https://github.com/jorgearma/Pentesting-Reports/tree/main/pit",
+      desc: "SNMP filtra usuario y ruta, RCE en SeedDMS, terminal de Cockpit y script de SNMP extend hasta root." },
+    { platform: "HTB", diff: "medium", os: "linux",   name: "Node", href: "https://github.com/jorgearma/Pentesting-Reports/tree/main/node",
+      desc: "API Express que filtra hashes, backup cifrado con credenciales de Mongo y binario SUID hasta root." },
+    { platform: "HTB", diff: "easy",   os: "linux",   name: "Broker", href: "https://github.com/jorgearma/Pentesting-Reports/tree/main/broker",
+      desc: "RCE en Apache ActiveMQ (CVE-2023-46604) y sudo sobre nginx para escalar a root." },
   ];
 
   /* ══════════════════════════════════════════════════════════════════
@@ -373,20 +378,17 @@
   const wuContainer = $("[data-writeups]");
   if (wuContainer) {
     wuContainer.innerHTML = WRITEUPS.map((w) => {
-      const tags = w.tags.map((t) => `<li>${t}</li>`).join("");
       return (
-        `<article class="wu">` +
+        `<a class="wu" href="${w.href}" target="_blank" rel="noopener noreferrer" aria-label="Write-up de ${w.name} (se abre en otra pestaña)">` +
           `<header class="wu__head mono">` +
             `<span class="wu__platform">${w.platform}</span>` +
             `<span class="wu__diff wu__diff--${w.diff}">● ${w.diff}</span>` +
             `<span class="wu__os">${w.os}</span>` +
           `</header>` +
           `<h3 class="wu__name">${w.name}</h3>` +
-          `<ul class="wu__tags mono">${tags}</ul>` +
-          `<a class="wu__link mono" href="${w.href}" target="_blank" rel="noopener noreferrer">` +
-            `ver write-up ${ICON_EXT()}` +
-          `</a>` +
-        `</article>`
+          `<p class="wu__desc">${w.desc}</p>` +
+          `<span class="wu__link mono" aria-hidden="true">ver write-up ${ICON_EXT()}</span>` +
+        `</a>`
       );
     }).join("");
   }
@@ -570,7 +572,7 @@
       wuFiles[w.name.toLowerCase() + ".md"] = F([
         `  ${key("# " + w.name)}`,
         `  ${dim(`${w.platform} · ${w.diff} · ${w.os}`)}`,
-        `  tags: ${w.tags.join(", ")}`,
+        `  ${w.desc}`,
         w.href !== "#" ? `  ${link(w.href, "leer write-up →")}` : `  ${dim("write-up aún sin publicar")}`,
       ]);
     });

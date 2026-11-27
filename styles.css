@@ -1890,7 +1890,13 @@ em { font-style: italic; }
   gap: 10px;
   transition: background .2s;
 }
+.wu {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
 .wu:hover { background: var(--bg-2); }
+.wu:focus-visible { outline: 1px solid var(--amber); outline-offset: -1px; }
 .wu__head {
   display: flex;
   align-items: center;
@@ -1916,20 +1922,12 @@ em { font-style: italic; }
   color: var(--ink);
   margin: 0;
 }
-.wu__tags {
-  list-style: none;
-  margin: 0; padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  flex: 1;
-}
-.wu__tags li {
-  font-size: 10px;
-  letter-spacing: 0.08em;
+.wu__desc {
+  font-size: 14px;
+  line-height: 1.5;
   color: var(--ink-mute);
-  background: var(--bg-3);
-  padding: 3px 8px;
+  margin: 0;
+  flex: 1;
 }
 .wu__link {
   display: inline-flex;
@@ -1943,7 +1941,8 @@ em { font-style: italic; }
   margin-top: auto;
   transition: color .2s;
 }
-.wu__link:hover { color: var(--amber); }
+.wu:hover .wu__link,
+.wu:focus-visible .wu__link { color: var(--amber); }
 
 /* ═══════════ projects (herramientas) ═══════════ */
 
