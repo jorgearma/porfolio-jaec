@@ -40,11 +40,12 @@
     </div>
     <div class="statusbar__right mono">
       <a href="#adlab" class="statusbar__link"><b>01</b><i>/tcp</i> ad-lab</a>
-      <a href="#panchibot" class="statusbar__link"><b>02</b><i>/tcp</i> panchi-bot</a>
-      <a href="#herramientas" class="statusbar__link"><b>03</b><i>/tcp</i> herramientas</a>
-      <a href="#writeups" class="statusbar__link"><b>04</b><i>/tcp</i> write-ups</a>
-      <a href="#stack" class="statusbar__link"><b>05</b><i>/tcp</i> arsenal</a>
-      <a href="#contact" class="statusbar__link"><b>06</b><i>/tcp</i> contacto</a>
+      <a href="#apiaudit" class="statusbar__link"><b>02</b><i>/tcp</i> api-audit</a>
+      <a href="#panchibot" class="statusbar__link"><b>03</b><i>/tcp</i> panchi-bot</a>
+      <a href="#herramientas" class="statusbar__link"><b>04</b><i>/tcp</i> herramientas</a>
+      <a href="#writeups" class="statusbar__link"><b>05</b><i>/tcp</i> write-ups</a>
+      <a href="#stack" class="statusbar__link"><b>06</b><i>/tcp</i> arsenal</a>
+      <a href="#contact" class="statusbar__link"><b>07</b><i>/tcp</i> contacto</a>
     </div>
   </header>
 
@@ -253,6 +254,7 @@
           <dt>base</dt><dd>madrid · es</dd>
           <dt>foco</dt><dd>pentesting · análisis de vulns</dd>
           <dt>cert</dt><dd>crtp · oscp <span class="whoami__badge mono">← en preparación</span></dd>
+          <dt>experiencia</dt><dd><a href="#apiaudit">pentest de API en producción</a> · freelance</dd>
           <dt>htb</dt><dd>52 máquinas comprometidas</dd>
           <dt>open source</dt><dd><a href="https://github.com/Lissy93/web-check/pull/292" target="_blank" rel="noopener noreferrer">PR #292 en web-check (35k★)</a> · RFC 9116</dd>
           <dt>disponibilidad</dt><dd><span class="ok">● abierto a ofertas</span></dd>
@@ -264,7 +266,9 @@
 
         <p class="lede">
           Pentester junior que viene del backend: sé cómo se construye una aplicación,
-          y por eso sé dónde suele romperse. 52 máquinas comprometidas en Hack The Box,
+          y por eso sé dónde suele romperse. Lo he demostrado en un caso real: un
+          <a class="case__lede-link" href="#apiaudit">pentest a una API en producción</a>
+          con dos hallazgos críticos. Además, 52 máquinas comprometidas en Hack The Box,
           un laboratorio de Active Directory montado y atacado de cero a Domain Admin,
           y un
           <a class="case__lede-link" href="https://github.com/Lissy93/web-check/pull/292" target="_blank" rel="noopener noreferrer">PR mergeado en web-check</a>
@@ -404,19 +408,222 @@
     </div>
   </section>
 
+  <!-- ──────────────── CASO REAL: AUDITORÍA DE API ──────────────── -->
+  <section class="section case" id="apiaudit">
+    <header class="section__head">
+      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">api-audit</span><span class="port__info">freelance · cliente real · nov 2025</span></p>
+      <h2 class="section__title">Pentest de API · cliente real</h2>
+      <span class="section__line" aria-hidden="true"></span>
+      <div class="case__links mono">
+        <a class="case__link" href="https://github.com/jorgearma/api-security-assessment" target="_blank" rel="noopener noreferrer">
+          <span class="case__link-tab" aria-hidden="true">anexo 02-A</span>
+          <span>write-up</span><span class="case__link-arr" aria-hidden="true">↗</span>
+        </a>
+        <span class="case__link-dest" aria-hidden="true">github.com/jorgearma/api-security-assessment</span>
+      </div>
+    </header>
+
+    <div class="adlab__top case__top">
+      <div class="adlab__brief">
+        <p class="case__lede">
+          Cualquiera en Internet podía leer, modificar y borrar los datos
+          personales de cualquier usuario, y usar gratis la IA de pago del
+          cliente. Lo encontré en la API en producción de una plataforma web
+          con IA (empresa de software, LATAM), en 5 días y como freelance.
+        </p>
+        <p class="case__lede case__lede--body">
+          Empecé en caja negra: el fuzzing destapó la documentación OpenAPI
+          expuesta en producción, y con ella el mapa completo de la API. Probé
+          el control de acceso endpoint por endpoint con Burp Suite y curl, y
+          limité las escrituras a un registro que creé yo: ningún dato real
+          tocado. Tras los primeros hallazgos, el cliente me abrió el código.
+        </p>
+        <p class="case__lede case__lede--body">
+          Con el código encontré la causa raíz (la validación del token
+          existía, pero solo en algunos endpoints) y propuse aplicarla a nivel
+          de router, reutilizando lo que ya había. También ajusté la severidad
+          con evidencias: rebajé un hallazgo que desde fuera parecía crítico y
+          subí otro por su impacto económico, que CVSS no mide. Publicado
+          anonimizado, con autorización del cliente.
+        </p>
+      </div>
+
+      <!-- evidencia RECREADA con datos ficticios (dominio, rutas e IDs inventados), igual que en el write-up.
+           Mismo carrusel de shells que Docker Deploy: main.js teclea el comando y vuelca las líneas. -->
+      <figure class="proj__demo adlab__shot" aria-label="evidencia recreada del pentest: recon, hallazgos y corrección">
+        <div class="proj__demo-frame">
+          <div class="proj__demo-bar">
+            <span class="proj__demo-dot proj__demo-dot--red"></span>
+            <span class="proj__demo-dot proj__demo-dot--amber"></span>
+            <span class="proj__demo-dot proj__demo-dot--green"></span>
+            <span class="proj__demo-title mono">kali@kali: ~/api-audit</span>
+          </div>
+          <div class="proj__demo-screen proj__demo-screen--term proj__shells" data-shells>
+            <div class="proj__shells-nav mono" role="tablist" aria-label="fases del pentest">
+              <button class="proj__shells-btn" data-shell-prev aria-label="shell anterior">‹</button>
+              <button class="proj__shells-tab is-active" role="tab" aria-selected="true" aria-controls="api-recon" data-shell-tab>recon</button>
+              <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="api-h01" data-shell-tab>H-01 BOLA</button>
+              <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="api-h03" data-shell-tab>H-03 IA</button>
+              <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="api-informe" data-shell-tab>hallazgos</button>
+              <button class="proj__shells-tab" role="tab" aria-selected="false" aria-controls="api-fix" data-shell-tab>fix.py</button>
+              <span class="proj__shells-count" data-shell-count>1/5</span>
+              <button class="proj__shells-btn" data-shell-next aria-label="shell siguiente">›</button>
+            </div>
+<pre class="proj__term proj__term--audit mono" data-typer id="api-recon" role="tabpanel" aria-label="recon"><span class="t-cy">┌──(</span><b class="t-cy">kali㉿kali</b><span class="t-cy">)-[</span><b>~/api-audit</b><span class="t-cy">]</span> <span class="t-am">➟ caja negra</span>
+<span class="t-cy">└─$</span> <b data-cmd>curl -s https://api.cliente.example/openapi.json | jq -r '.paths | keys[]'</b>
+/api/participants/{id}
+/api/speech-to-text
+/api/teams
+<span class="t-dim"># … + rutas del agente de IA y de evaluaciones</span>
+
+ ┌──<b>[ RECON ]</b>── api.cliente.example ──────────────────────────
+ │
+ │ <span class="t-ok">✔  HALLADO</span>   fuzzing de rutas → /docs (Swagger UI) responde 200
+ │ <span class="t-ok">✔  HALLADO</span>   /openapi.json público: endpoints, métodos y esquemas
+<span class="t-mute"> │ ·   INFO     FastAPI genera /docs por defecto; nadie lo desactivó</span>
+ │ <span class="t-am">▲  SIGUIENTE</span> probar cada ruta sin token → ¿la acepta?
+ └─ <span class="t-cy">[i] H-05 · el mapa completo de la API en segundos</span></pre>
+<pre class="proj__term proj__term--audit mono" data-typer id="api-h01" role="tabpanel" aria-label="H-01 BOLA"><span class="t-dim"># H-01 · sin token, solo cambiando el ID (registro de prueba propio)</span>
+<span class="t-cy">┌──(</span><b class="t-cy">kali㉿kali</b><span class="t-cy">)-[</span><b>~/api-audit</b><span class="t-cy">]</span> <span class="t-am">➟ caja negra</span>
+<span class="t-cy">└─$</span> <b data-cmd>curl -s https://api.cliente.example/api/participants/90000001 | jq .</b>
+{
+  "status": <span class="t-ok">200</span>,
+  "message": "Participant retrieved successfully",
+  "content": {
+    "name": "Registro De Prueba",
+    "document_id": <span class="t-am">"90000001"</span>,
+    "email": <span class="t-am">"prueba@ejemplo.test"</span>,
+    "attempts": 1,
+    "is_completed": false
+  }
+}
+
+<span class="t-cy">┌──(</span><b class="t-cy">kali㉿kali</b><span class="t-cy">)-[</span><b>~/api-audit</b><span class="t-cy">]</span> <span class="t-am">➟ caja negra</span>
+<span class="t-cy">└─$</span> <b>curl -s -X PUT https://api.cliente.example/api/participants/90000001 \
+    -H "Content-Type: application/json" \
+    -d '{"name":"Registro Modificado","email":"modificado@ejemplo.test"}'</b>
+{"status":<span class="t-ok">200</span>,"message":"Participant updated successfully"}
+
+ ┌──<b>[ H-01 ]</b>── BOLA · OWASP API1 ──────────────────────────────
+ │
+ │ <span class="t-bad">✘   FALLO</span>   GET · PUT · DELETE sin token sobre /api/participants/{id}
+ │ <span class="t-bad">✘   FALLO</span>   el ID es el documento de identidad: secuencial y predecible
+ │ <span class="t-bad">✘   FALLO</span>   expone documento, email y resultados de cualquier usuario
+<span class="t-mute"> │ ·   INFO    escrituras limitadas a mi registro: ningún dato real tocado</span>
+ └─ <span class="t-bad"><b>CRÍTICA</b></span> · CVSS 3.1 <b>9.8</b> · AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</pre>
+<pre class="proj__term proj__term--audit mono" data-typer id="api-h03" role="tabpanel" aria-label="H-03 IA de pago"><span class="t-dim"># H-03 · el servicio de IA de pago del cliente, sin token</span>
+<span class="t-cy">┌──(</span><b class="t-cy">kali㉿kali</b><span class="t-cy">)-[</span><b>~/api-audit</b><span class="t-cy">]</span> <span class="t-am">➟ caja negra</span>
+<span class="t-cy">└─$</span> <b data-cmd>curl -s -X POST https://api.cliente.example/api/speech-to-text -F "audio_file=@prueba.wav;type=audio/wav"</b>
+{"status":<span class="t-ok">200</span>,"message":"Audio transcribed successfully","content":"esto es una prueba, uno, dos."}
+
+ ┌──<b>[ H-03 ]</b>── Unrestricted Resource Consumption · OWASP API4 ──
+ │
+ │ <span class="t-bad">✘   FALLO</span>   sin autenticación: cualquiera puede transcribir
+ │ <span class="t-bad">✘   FALLO</span>   sin límite de tamaño de fichero
+ │ <span class="t-bad">✘   FALLO</span>   sin rate limiting
+ │ <span class="t-am">▲   IMPACTO</span> cada petición la paga el cliente al proveedor de IA
+<span class="t-mute"> │ ·   INFO    riesgo: facturas inesperadas, cuota agotada y DoS</span>
+ │
+ │  CVSS 3.1    <b>7.5</b>  <span class="t-am">ALTA</span>     <span class="t-mute">(no mide el impacto económico)</span>
+ │  negocio          <span class="t-bad"><b>CRÍTICA</b></span>  <span class="t-mute">(abuso automatizado = dinero)</span>
+ └─ <span class="t-cy">[i] dos cifras coherentes: cada una mide una cosa distinta</span></pre>
+<pre class="proj__term proj__term--audit mono" data-typer id="api-informe" role="tabpanel" aria-label="hallazgos"><span class="t-cy">┌──(</span><b class="t-cy">kali㉿kali</b><span class="t-cy">)-[</span><b>~/api-audit</b><span class="t-cy">]</span> <span class="t-am">➟ informe</span>
+<span class="t-cy">└─$</span> <b data-cmd>cat hallazgos.txt</b>
+
+ ┌──<b>[ HALLAZGOS ]</b>── api.cliente.example · 13–17 nov 2025 ─────
+ │
+ │ <span class="t-bad">✘ CRÍTICA</span>  H-01  BOLA: datos personales por ID     API1  <b>9.8</b>
+ │ <span class="t-bad">✘ CRÍTICA</span>  H-02  CRUD de equipos sin auth          API5  <b>9.8</b>
+ │ <span class="t-am">▲ ALTA</span>     H-03  IA de pago como proxy público     API4  <b>7.5</b>
+ │ <span class="t-am">▲ MEDIA</span>    H-04  agente de IA sin auth             API5  <b>6.5</b>
+<span class="t-mute"> │ · INFO     H-05  OpenAPI en producción             API8    —</span>
+ └─ <span class="t-bad">✘ 2</span> · <span class="t-am">▲ 2</span> · <span class="t-mute">· 1</span>
+
+ ┌──<b>[ CAJA GRIS ]</b>── código del backend, cedido por el cliente ──
+ │
+ │  causa raíz   la validación de token existía, pero solo en
+ │               algunos endpoints: cada uno tenía que acordarse
+ │  H-04         desde fuera parecía prompt injection persistente;
+ │               el código mostró que no → <span class="t-am">rebajada a MEDIA</span>
+ │  H-03         CVSS alta → <span class="t-bad">crítica por impacto de negocio</span>
+ │  fix          un único cambio cierra H-01, H-02 y H-04 → fix.py
+ │
+ └──────────────────────────────────────────────────────────────</pre>
+<pre class="proj__term proj__term--audit mono" data-typer id="api-fix" role="tabpanel" aria-label="fix.py"><span class="t-cy">┌──(</span><b class="t-cy">kali㉿kali</b><span class="t-cy">)-[</span><b>~/api-audit</b><span class="t-cy">]</span> <span class="t-am">➟ caja gris</span>
+<span class="t-cy">└─$</span> <b data-cmd>cat remediacion/fix.py</b>
+<span class="t-dim"># autenticación a nivel de router, no endpoint por endpoint</span>
+<span class="t-cy">from</span> fastapi <span class="t-cy">import</span> APIRouter, Depends
+
+router = APIRouter(
+    prefix=<span class="t-ok">"/api/participants"</span>,
+    dependencies=[Depends(require_valid_token)],   <span class="t-dim"># la validación que ya existía</span>
+)
+
+@router.get(<span class="t-ok">"/{participant_id}"</span>)
+<span class="t-cy">def</span> <b>get_participant</b>(participant_id: str, user = Depends(current_user)):
+    participant = repo.get(participant_id)
+    <span class="t-cy">if</span> participant <span class="t-cy">is</span> None <span class="t-cy">or not</span> user.can_access(participant):   <span class="t-dim"># propiedad / rol</span>
+        <span class="t-cy">raise</span> HTTPException(status_code=<span class="t-am">404</span>)
+    <span class="t-cy">return</span> participant
+
+ ┌──<b>[ REMEDIACIÓN ]</b>─────────────────────────────────────────────
+ │
+ │ <span class="t-ok">✔</span>  H-01 H-02 H-04   token en todo el router + propiedad y roles
+ │ <span class="t-ok">✔</span>  H-01             no usar el documento de identidad como ID
+ │ <span class="t-ok">✔</span>  H-03             CAPTCHA invisible + token de un solo uso,
+ │                    límite de tamaño/MIME y rate limiting
+ │ <span class="t-ok">✔</span>  H-05             FastAPI(docs_url=None, openapi_url=None)
+ │ <span class="t-ok">✔</span>  todos            registro de actividad · probar antes en staging
+ └─ <span class="t-cy">[i] reutiliza el código existente: sin rediseñar nada</span></pre>
+          </div>
+          <figcaption class="proj__demo-cap">fig. 02 — evidencia recreada con datos ficticios · ninguna respuesta es real · 5 vistas</figcaption>
+        </div>
+      </figure>
+    </div>
+
+    <!-- cadena de la auditoría -->
+    <ol class="chain mono" aria-label="fases de la auditoría">
+      <li class="chain__step">
+        <span class="chain__n">01</span>
+        <span class="chain__name">Recon · /docs expuesto</span>
+        <span class="chain__res">fuzzing → OpenAPI en producción → mapa completo de la API</span>
+      </li>
+      <li class="chain__step chain__step--end">
+        <span class="chain__n">02</span>
+        <span class="chain__name">BOLA · crítica</span>
+        <span class="chain__res">leer, editar y borrar datos personales de cualquier usuario por ID</span>
+      </li>
+      <li class="chain__step chain__step--end">
+        <span class="chain__n">03</span>
+        <span class="chain__name">BFLA · crítica</span>
+        <span class="chain__res">CRUD completo de equipos sin token, incluida carga masiva por CSV</span>
+      </li>
+      <li class="chain__step">
+        <span class="chain__n">04</span>
+        <span class="chain__name">IA de pago como proxy público</span>
+        <span class="chain__res">sin auth ni límites: CVSS 7.5, crítica por impacto de negocio</span>
+      </li>
+      <li class="chain__step">
+        <span class="chain__n">05</span>
+        <span class="chain__name">Caja gris · remediación</span>
+        <span class="chain__res">causa raíz en el código, severidad ajustada y fix a nivel de router</span>
+      </li>
+    </ol>
+  </section>
+
   <!-- ──────────────── CASE STUDY: PANCHI-BOT ──────────────── -->
   <section class="section case" id="panchibot">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">02/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">panchi-bot</span><span class="port__info">case study</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">03/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">panchi-bot</span><span class="port__info">case study</span></p>
       <h2 class="section__title">Panchi-Bot</h2>
       <span class="section__line" aria-hidden="true"></span>
       <div class="case__links mono">
         <a class="case__link" href="https://www.panchibot.es" target="_blank" rel="noopener noreferrer">
-          <span class="case__link-tab" aria-hidden="true">anexo 02-A</span>
+          <span class="case__link-tab" aria-hidden="true">anexo 03-A</span>
           <span>landing</span><span class="case__link-arr" aria-hidden="true">↗</span>
         </a>
         <a class="case__link case__link--live" href="https://www.panchibot.es/demo" target="_blank" rel="noopener noreferrer">
-          <span class="case__link-tab" aria-hidden="true">anexo 02-B</span>
+          <span class="case__link-tab" aria-hidden="true">anexo 03-B</span>
           <span class="case__link-rec" aria-hidden="true">rec</span><span>demo en vivo</span><span class="case__link-arr" aria-hidden="true">↗</span>
         </a>
         <span class="case__link-dest" aria-hidden="true">panchibot.es</span>
@@ -460,7 +667,7 @@
           <div class="proj__demo-screen">
             <img src="assets/panchi-demo-apps-v2.webp" width="1194" height="760" alt="Demo operativa: apps internas de picking y reparto en móvil, con pedidos activos, cola y cobros en efectivo u online" loading="lazy">
           </div>
-          <figcaption class="proj__demo-cap">fig. 02 — demo operativa · picking y reparto · clic para ampliar</figcaption>
+          <figcaption class="proj__demo-cap">fig. 03 — demo operativa · picking y reparto · clic para ampliar</figcaption>
         </div>
       </figure>
     </div>
@@ -488,7 +695,7 @@
   <!-- ──────────────── HERRAMIENTAS DE SEGURIDAD ──────────────── -->
   <section class="section projects" id="herramientas">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">03/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">hardening · siege map · dogscan · atalaya</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">04/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">herramientas</span><span class="port__info">hardening · siege map · dogscan · atalaya</span></p>
       <h2 class="section__title">Herramientas de seguridad</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
@@ -499,7 +706,7 @@
       <article class="proj proj--wide" id="hardened-docker">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">03/a · hardening</span>
+            <span class="proj__idx">04/a · hardening</span>
             <span class="proj__status">owasp</span>
           </header>
           <div class="proj__titlebar">
@@ -1018,7 +1225,7 @@
 }</pre>
 <!-- plantillas:fin -->
             </div>
-            <figcaption class="proj__demo-cap">fig. 03a — contenedor.sh y host.sh · auditoría del contenedor y del VPS · Dockerfile, compose y nginx.conf de referencia</figcaption>
+            <figcaption class="proj__demo-cap">fig. 04a — contenedor.sh y host.sh · auditoría del contenedor y del VPS · Dockerfile, compose y nginx.conf de referencia</figcaption>
           </div>
         </figure>
       </article>
@@ -1027,7 +1234,7 @@
       <article class="proj proj--wide" id="siege-map">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">03/b · threat intel</span>
+            <span class="proj__idx">04/b · threat intel</span>
             <span class="proj__status">en producción</span>
           </header>
           <div class="proj__titlebar">
@@ -1080,7 +1287,7 @@
                 </div>
               </div>
             </div>
-            <figcaption class="proj__demo-cap">fig. 03b — siege map · 5 vistas · clic para ampliar</figcaption>
+            <figcaption class="proj__demo-cap">fig. 04b — siege map · 5 vistas · clic para ampliar</figcaption>
           </div>
           <p class="proj__demo-sell">
             En producción sobre un VPS propio: cada IP de estas capturas es un
@@ -1094,7 +1301,7 @@
       <article class="proj proj--wide" id="dogscan">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">03/c · ofensiva</span>
+            <span class="proj__idx">04/c · ofensiva</span>
             <span class="proj__status">v1.5.0</span>
           </header>
           <div class="proj__titlebar">
@@ -1158,7 +1365,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
       <article class="proj proj--wide" id="atalaya">
         <div class="proj__content">
           <header class="proj__head mono">
-            <span class="proj__idx">03/d · defensiva</span>
+            <span class="proj__idx">04/d · defensiva</span>
             <span class="proj__status">en producción</span>
           </header>
           <div class="proj__titlebar">
@@ -1209,7 +1416,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
                 </div>
               </div>
             </div>
-            <figcaption class="proj__demo-cap">fig. 03d — atalaya · 4 paneles · clic para ampliar</figcaption>
+            <figcaption class="proj__demo-cap">fig. 04d — atalaya · 4 paneles · clic para ampliar</figcaption>
           </div>
         </figure>
       </article>
@@ -1221,7 +1428,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
   <!-- tarjetas generadas por main.js (WRITEUPS) · edita el array para añadir/quitar -->
   <section class="section writeups" id="writeups">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">04/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">write-ups</span><span class="port__info">field reports</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">05/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">write-ups</span><span class="port__info">field reports</span></p>
       <h2 class="section__title">Write-ups</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
@@ -1232,7 +1439,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
   <!-- ──────────────── STACK GENERAL ──────────────── -->
   <section class="section skills" id="stack">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">05/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">arsenal</span><span class="port__info">stack técnico</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">06/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">arsenal</span><span class="port__info">stack técnico</span></p>
       <h2 class="section__title">Arsenal</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>
@@ -1268,7 +1475,7 @@ Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</span>
   <!-- ──────────────── CONTACTO ──────────────── -->
   <section class="section contact" id="contact">
     <header class="section__head">
-      <p class="port" aria-hidden="true"><span class="port__num">06/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">contacto</span><span class="port__info">canal directo</span></p>
+      <p class="port" aria-hidden="true"><span class="port__num">07/tcp</span><span class="port__state"><i>filtered</i><b>open</b></span><span class="port__svc">contacto</span><span class="port__info">canal directo</span></p>
       <h2 class="section__title">Abrir canal</h2>
       <span class="section__line" aria-hidden="true"></span>
     </header>

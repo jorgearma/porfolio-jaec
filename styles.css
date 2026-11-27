@@ -2769,6 +2769,7 @@ em { font-style: italic; }
 .case__top { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
 .adlab__shot { padding: 0; }
 .adlab .stack:last-child { margin-bottom: 0; }
+.case .chain:last-child { margin-bottom: 0; }
 
 /* enlaces de pie como chips, en una fila propia bajo el rótulo "leer" */
 .adlab__brief .case__footer {

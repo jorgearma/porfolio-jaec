@@ -606,12 +606,13 @@
       `Starting Nmap 7.95 ( https://nmap.org )`,
       `Nmap scan report for jorge.local (127.0.0.1)`,
       `Host is up (0.00042s latency).`,
-      dim(`Not shown: 65530 closed tcp ports (cosas que aún no sé)`),
+      dim(`Not shown: 65529 closed tcp ports (cosas que aún no sé)`),
       `&nbsp;`,
       key(`PORT     STATE    SERVICE`),
       `22/tcp   ${ok("open")}     linux · docker · nginx`,
       `80/tcp   ${ok("open")}     panchi-bot (flask, en prod)`,
       `443/tcp  ${ok("open")}     atalaya (detección en VPS)`,
+      `8000/tcp ${ok("open")}     api-audit (caso real, nov 2025)`,
       `1337/tcp ${ok("open")}     dogscan (nmap + módulos)`,
       `3389/tcp ${key("filtered")} crtp (en progreso)`,
       `&nbsp;`,
@@ -754,6 +755,7 @@
     /* `open <algo>` → sección de la página a la que hace scroll */
     const SECTIONS = {
       "panchi-bot": "panchibot", panchibot: "panchibot",
+      "api-audit": "apiaudit", apiaudit: "apiaudit", auditoria: "apiaudit",
       atalaya: "atalaya", dogscan: "dogscan",
       herramientas: "herramientas",
       nordwind: "adlab", "ad-lab": "adlab", adlab: "adlab", "nordwind-ad-lab": "adlab",
@@ -767,7 +769,7 @@
       const el = has(SECTIONS, name) && document.getElementById(SECTIONS[name]);
       if (!el) return fail(1, [
         raw ? escHtml(`open: no sé abrir '${raw}'`) : "uso: open &lt;sección&gt;",
-        dim("prueba: panchi-bot · atalaya · dogscan · writeups · arsenal · contacto"),
+        dim("prueba: api-audit · panchi-bot · atalaya · dogscan · writeups · arsenal · contacto"),
       ]);
       setTimeout(() => el.scrollIntoView({ behavior: REDUCE ? "auto" : "smooth", block: "start" }), 350);
       return [`abriendo ${escHtml(name)}…`];
@@ -1541,8 +1543,8 @@
      se ven todas seguidas). Con JS: una shell visible a la vez; al
      mostrarse por primera vez teclea el comando y vuelca las líneas
      una a una con autoscroll. Pestañas y flechas cambian de shell. */
-  const shells = document.querySelector("[data-shells]");
-  if (shells) {
+  // puede haber varios carruseles (03d Docker Deploy, 02/tcp pentest de API)
+  document.querySelectorAll("[data-shells]").forEach((shells) => {
     const calm   = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const pres   = Array.from(shells.querySelectorAll("[data-typer]"));
     const tabs   = Array.from(shells.querySelectorAll("[data-shell-tab]"));
@@ -1551,8 +1553,9 @@
     const cursor = '<span class="proj__term-cursor"></span>';
     const sleep  = (ms) => new Promise((r) => setTimeout(r, ms));
 
-    // prepara cada shell: solo el prompt vacío, y devuelve su animación
-    const runs = pres.map((pre) => {
+    // prepara cada shell. Solo la primera se anima (prompt vacío → teclea →
+    // vuelca); el resto aparece ya impreso, con el prompt final esperando.
+    const runs = pres.map((pre, idx) => {
       if (calm) return () => {};
       const lines     = pre.innerHTML.split("\n");
       const promptLen = lines.findIndex((l) => l.includes("data-cmd")) + 1;
@@ -1560,6 +1563,12 @@
       const head      = lines.slice(0, promptLen).join("\n");
       const empty     = head.replace(CMD, "$1$2");
       const out       = lines.slice(promptLen);
+      if (idx > 0) {
+        // prompt final sin los comentarios que pueda llevar delante (# H-01 …)
+        const prompt = empty.split("\n").slice(-2).join("\n");
+        pre.innerHTML += "\n\n" + prompt + cursor;
+        return () => {};
+      }
       let started = false;
       pre.innerHTML = empty + cursor;
 
@@ -1580,7 +1589,7 @@
           pre.scrollTop = pre.scrollHeight;
           await sleep(ln.trim() ? 45 : 140);
         }
-        pre.innerHTML = buf + "\n" + empty + cursor;
+        pre.innerHTML = buf + "\n\n" + empty + cursor;   // línea en blanco antes del prompt final
         pre.scrollTop = pre.scrollHeight;
       };
     });
@@ -1617,7 +1626,7 @@
       visible = true;
       runs[current]();
     }
-  }
+  });
 
   /* ── 07 · console easter egg ────────────────────────────────────── */
   if (typeof console !== "undefined") {
